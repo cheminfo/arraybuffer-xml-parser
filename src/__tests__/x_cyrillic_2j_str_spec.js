@@ -1,6 +1,6 @@
-"use strict";
 
-const parser = require("../src/parser");
+
+const parser = require("../parser");
 
 describe("XMLParser", function() {
 

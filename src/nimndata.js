@@ -1,4 +1,5 @@
-'use strict';
+
+
 const char = function(a) {
   return String.fromCharCode(a);
 };
@@ -133,8 +134,8 @@ function hasData(jObj) {
   }
 }
 
-const x2j = require('./xmlstr2xmlnode');
 const buildOptions = require('./util').buildOptions;
+const x2j = require('./xmlstr2xmlnode');
 
 const convert2nimn = function(node, e_schema, options) {
   options = buildOptions(options, x2j.defaultOptions, x2j.props);

@@ -1,11 +1,12 @@
-"use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+
 const he = require("he");
 
+const parser = require("../parser");
+const validator = require("../validator");
+
 describe("XMLParser", function() {
-    
+
     it("should parse attributes having '>' in value", function() {
         const xmlData = `<? xml version = "1.0" encoding = "UTF - 8" ?>
         <testStep type="restrequest" name="test step name (bankId -> Error)" id="90e453d3-30cd-4958-a3be-61ecfe7a7cbe">
@@ -76,7 +77,7 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
-    
+
     it("should parse attributes with valid names", function() {
         const xmlData = `<a:root xmlns:a="urn:none" xmlns:a-b="urn:none">
         <a:a attr="2foo&ampbar&apos;">1</a:a>
@@ -120,7 +121,7 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
-    
+
     it("should parse tagName without whitespace chars", function() {
         const xmlData = `<a:root
          attr='df'>val
@@ -250,33 +251,33 @@ describe("XMLParser", function() {
         const xmlData = `<?xml version="1.0"?><tag></tag`;
         expect(() =>{
             parser.parse(xmlData);
-        }).toThrowError("Closing Tag is not closed.")
+        }).toThrow("Closing Tag is not closed.")
     })
     it("should error for when any tag is left to close", function(){
         const xmlData = `<?xml version="1.0"?><!-- bad `;
         expect(() =>{
             parser.parse(xmlData);
-        }).toThrowError("Comment is not closed.")
+        }).toThrow("Comment is not closed.")
     })
     it("should error for when any tag is left to close", function(){
         const xmlData = `<?xml version="1.0"?><![CDATA ]`;
         expect(() =>{
             parser.parse(xmlData);
-        }).toThrowError("CDATA is not closed.")
+        }).toThrow("CDATA is not closed.")
     })
     it("should error for when any tag is left to close", function(){
         const xmlData = `<?xml version="1.0"?><!DOCTYPE `;
         expect(() =>{
             parser.parse(xmlData);
-        }).toThrowError("DOCTYPE is not closed.")
+        }).toThrow("DOCTYPE is not closed.")
     })
     it("should error for when any tag is left to close", function(){
         const xmlData = `<?xml version="1.0"?><?pi  `;
         expect(() =>{
             parser.parse(xmlData);
-        }).toThrowError("Pi Tag is not closed.")
+        }).toThrow("Pi Tag is not closed.")
     })
-    
+
     it("should parse XML when there is a space after tagname", function() {
         const xmlData = `<tag ><![CDATA[undefined]]><nested>undefined</nested></tag>`;
         const expected = {

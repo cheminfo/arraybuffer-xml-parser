@@ -1,7 +1,7 @@
-"use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+
+const parser = require("../parser");
+const validator = require("../validator");
 
 describe("XMLParser", function() {
     it("should parse multiline tag value when tags without spaces", function() {

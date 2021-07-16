@@ -1,8 +1,9 @@
-"use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+
 const he = require("he");
+
+const parser = require("../parser");
+const validator = require("../validator");
 
 describe("XMLParser", function() {
     it("should parse attributes with valid names", function() {
@@ -267,7 +268,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should not validate a tag with attribute presents without value ", function() {
+    it("should not validate a tag with attribute presents without value", function() {
         const xmlData = `<rootNode ab cd='ef'></rootNode>`;
         const expected = {
             "err": {

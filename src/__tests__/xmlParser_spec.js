@@ -1,7 +1,7 @@
-"use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+
+const parser = require("../parser");
+const validator = require("../validator");
 
 describe("XMLParser", function() {
 
@@ -687,7 +687,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should not trim tag value if not allowed ", function() {
+    it("should not trim tag value if not allowed", function() {
         const xmlData = "<rootNode>       123        </rootNode>";
         const expected = {
             "rootNode": "       123        "
@@ -700,7 +700,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should not trim tag value but not parse if not allowed ", function() {
+    it("should not trim tag value but not parse if not allowed", function() {
         const xmlData = "<rootNode>       123        </rootNode>";
         const expected = {
             "rootNode": "123"
@@ -789,7 +789,7 @@ describe("XMLParser", function() {
             }
         };
 
-        var result = validator.validate(xmlData);
+        let result = validator.validate(xmlData);
         expect(result).toBe(true);
 
         result = parser.parse(xmlData,{trimValues:false});
@@ -805,7 +805,7 @@ describe("XMLParser", function() {
 
         expect(() => {
             parser.parse(xmlData,{trimValues:true}, true);
-        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.`)
+        }).toThrow(`Closing tag 'tag' doesn't have proper closing.`)
 
     });
 

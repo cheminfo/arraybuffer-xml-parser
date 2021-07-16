@@ -1,6 +1,7 @@
-"use strict";
 
-const Parser = require("../src/parser").j2xParser;
+
+const Parser = require("../parser").j2xParser;
+
 const he = require("he");
 
 describe("XMLParser", function() {
@@ -21,7 +22,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse text property to tag value ", function() {
+    it("should parse text property to tag value", function() {
         const jObj = {
             a: {
                 b: {
@@ -249,7 +250,7 @@ describe("XMLParser", function() {
                                       cdataTagName:   "__cdata",
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
+                                      tagValueProcessor: a=> { a= `${ a}`; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
@@ -300,7 +301,7 @@ describe("XMLParser", function() {
                                       attrNodeName:     "@",
                                       encodeHTMLchar:   true,
                                       supressEmptyNode: true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
+                                      tagValueProcessor: a=> { a= `${ a}`; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
@@ -338,7 +339,7 @@ describe("XMLParser", function() {
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
                                       format:         true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
+                                      tagValueProcessor: a=> { a= `${ a}`; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
@@ -429,7 +430,7 @@ describe("XMLParser", function() {
             },
         });
         const result = parser.parse(jObj);
-        const expected = '<root><element><date>'+dateVar.toString()+'</date></element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>'+dateVar.toString()+'</date></root>';
+        const expected = `<root><element><date>${dateVar.toString()}</date></element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>${dateVar.toString()}</date></root>`;
         //console.log(result);
         //console.log(expected);
         expect(result).toEqual(expected);

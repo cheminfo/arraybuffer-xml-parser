@@ -1,6 +1,6 @@
-"use strict";
 
-const validator = require("../src/validator");
+
+const validator = require("../validator");
 
 describe("XMLParser", function() {
     it("should validate big XML file", function() {

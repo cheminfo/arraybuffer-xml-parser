@@ -1,8 +1,9 @@
-"use strict";
+
 
 const fs = require("fs");
 const path = require("path");
-const validator = require("../src/validator");
+
+const validator = require("../validator");
 
 function validate(xmlData, error, line = 1) {
     const result = validator.validate(xmlData);
@@ -21,7 +22,7 @@ function validate(xmlData, error, line = 1) {
 }
 
 function validateFile(fileName, ...args) {
-    const fileNamePath = path.join(__dirname, "assets/" + fileName);
+    const fileNamePath = path.join(__dirname, `assets/${ fileName}`);
     validate(fs.readFileSync(fileNamePath).toString(), ...args);
 }
 
@@ -176,14 +177,7 @@ describe("XMLParser", function () {
         validate("<name><![CDATA[]]><![CDATA[^[ ].*$]]></name>");
     });
 
-    it("should return false when tag starts with xml or XML etc", function () {
-        /* const error = (tag) => ({
-            InvalidTag: `Tag '${tag}' is an invalid name.`
-        });
-        validate("<xmlNode  abc='123' bc='567'>val</xmlNode>", error("xmlNode"));
-        validate("<XmLNode  abc='123' bc='567'></XmLNode>", error("XmLNode"));
-        validate("<xMLNode/>", error("xMLNode")); */
-    });
+    it.todo("should return false when tag starts with xml or XML etc");
 
     it("should return true for valid tag", function () {
         validate("<ns:start_tag-2.0></ns:start_tag-2.0>");
@@ -272,7 +266,7 @@ describe("XMLParser", function () {
             '<h1></h1>' +
             '<?mso-contentType something="val"?>');
     });
-    
+
     it("should validate XML PIs", function () {
         validate('<h1><?mso?> abc</h1>');
     });

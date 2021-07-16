@@ -1,22 +1,8 @@
-'use strict';
+
 
 const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
-const regx =
-  '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
-  .replace(/NAME/g, util.nameRegexp);
-
-//const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
-//const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
-
-//polyfill
-if (!Number.parseInt && window.parseInt) {
-  Number.parseInt = window.parseInt;
-}
-if (!Number.parseFloat && window.parseFloat) {
-  Number.parseFloat = window.parseFloat;
-}
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
@@ -194,7 +180,7 @@ const getTraversalObj = function(xmlData, options) {
         } */
         if(currentNode){
           if(currentNode.val){
-            currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tagName, textData , options);
+            currentNode.val = `${util.getValue(currentNode.val) }${ processTagValue(tagName, textData , options)}`;
           }else{
             currentNode.val = processTagValue(tagName, textData , options);
           }
@@ -228,7 +214,7 @@ const getTraversalObj = function(xmlData, options) {
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if(textData){
-          currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(currentNode.tagname, textData , options);
+          currentNode.val = `${util.getValue(currentNode.val) }${ processTagValue(currentNode.tagname, textData , options)}`;
           textData = "";
         }
 
@@ -270,7 +256,7 @@ const getTraversalObj = function(xmlData, options) {
         //save text to parent node
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
-            currentNode.val = util.getValue(currentNode.val) + '' + processTagValue( currentNode.tagname, textData, options);
+            currentNode.val = `${util.getValue(currentNode.val) }${ processTagValue( currentNode.tagname, textData, options)}`;
           }
         }
 

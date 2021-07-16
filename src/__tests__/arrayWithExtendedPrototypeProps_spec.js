@@ -1,6 +1,6 @@
-'use strict';
 
-const parser = require('../src/parser');
+
+const parser = require('../parser');
 
 describe('XMLParser array with extended prototype props', function() {
   it('should parse all the tags as an array no matter how many occurences excluding premitive values when arrayMode is set to true', function() {

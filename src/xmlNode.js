@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = function(tagname, parent, val) {
   this.tagname = tagname;

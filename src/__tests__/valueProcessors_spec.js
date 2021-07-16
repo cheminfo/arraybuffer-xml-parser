@@ -1,8 +1,9 @@
-"use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+
 const he = require("he");
+
+const parser = require("../parser");
+const validator = require("../validator");
 
 describe("XMLParser", function() {
 
