@@ -1,11 +1,10 @@
+const nameStartChar =
+  ':A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
+const nameChar = `${nameStartChar}\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040`;
+const nameRegexp = `[${nameStartChar}][${nameChar}]*`;
+const regexName = new RegExp(`^${nameRegexp}$`);
 
-
-const nameStartChar = ':A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
-const nameChar = `${nameStartChar }\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040`;
-const nameRegexp = `[${ nameStartChar }][${ nameChar }]*`
-const regexName = new RegExp(`^${ nameRegexp }$`);
-
-const getAllMatches = function(string, regex) {
+const getAllMatches = function (string, regex) {
   const matches = [];
   let match = regex.exec(string);
   while (match) {
@@ -20,16 +19,16 @@ const getAllMatches = function(string, regex) {
   return matches;
 };
 
-const isName = function(string) {
+const isName = function (string) {
   const match = regexName.exec(string);
   return !(match === null || typeof match === 'undefined');
 };
 
-exports.isExist = function(v) {
+exports.isExist = function (v) {
   return typeof v !== 'undefined';
 };
 
-exports.isEmptyObject = function(obj) {
+exports.isEmptyObject = function (obj) {
   return Object.keys(obj).length === 0;
 };
 
@@ -38,13 +37,13 @@ exports.isEmptyObject = function(obj) {
  * @param {*} target
  * @param {*} a
  */
-exports.merge = function(target, a, arrayMode) {
+exports.merge = function (target, a, arrayMode) {
   if (a) {
     const keys = Object.keys(a); // will return an array of own properties
     const len = keys.length; //don't make it inline
     for (let i = 0; i < len; i++) {
       if (arrayMode === 'strict') {
-        target[keys[i]] = [ a[keys[i]] ];
+        target[keys[i]] = [a[keys[i]]];
       } else {
         target[keys[i]] = a[keys[i]];
       }
@@ -55,7 +54,7 @@ exports.merge = function(target, a, arrayMode) {
   return Object.assign(b,a);
 } */
 
-exports.getValue = function(v) {
+exports.getValue = function (v) {
   if (exports.isExist(v)) {
     return v;
   } else {
@@ -66,7 +65,7 @@ exports.getValue = function(v) {
 // const fakeCall = function(a) {return a;};
 // const fakeCallNoReturn = function() {};
 
-exports.buildOptions = function(options, defaultOptions, props) {
+exports.buildOptions = function (options, defaultOptions, props) {
   let newOptions = {};
   if (!options) {
     return defaultOptions; //if there are not options
@@ -99,8 +98,8 @@ exports.isTagNameInArrayMode = function (tagName, arrayMode, parentTagName) {
     return !!arrayMode(tagName, parentTagName);
   }
 
-  return arrayMode === "strict";
-}
+  return arrayMode === 'strict';
+};
 
 exports.isName = isName;
 exports.getAllMatches = getAllMatches;

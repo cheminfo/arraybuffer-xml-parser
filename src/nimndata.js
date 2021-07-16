@@ -1,6 +1,4 @@
-
-
-const char = function(a) {
+const char = function (a) {
   return String.fromCharCode(a);
 };
 
@@ -33,7 +31,7 @@ const charsArr = [
   chars.arrStart,
 ];
 
-const _e = function(node, e_schema, options) {
+const _e = function (node, e_schema, options) {
   if (typeof e_schema === 'string') {
     //premitive
     if (node && node[0] && node[0].val !== undefined) {
@@ -77,7 +75,11 @@ const _e = function(node, e_schema, options) {
           //options.textNodeName will not present in both maps, take it's value from val
           //options.attrNodeName will be present in attrsMap
           let r;
-          if (!options.ignoreAttributes && node.attrsMap && node.attrsMap[key]) {
+          if (
+            !options.ignoreAttributes &&
+            node.attrsMap &&
+            node.attrsMap[key]
+          ) {
             r = _e(node.attrsMap[key], e_schema[key], options);
           } else if (key === options.textNodeName) {
             r = _e(node.val, e_schema[key], options);
@@ -94,7 +96,7 @@ const _e = function(node, e_schema, options) {
   }
 };
 
-const getValue = function(a /*, type*/) {
+const getValue = function (a /*, type*/) {
   switch (a) {
     case undefined:
       return chars.missingPremitive;
@@ -107,14 +109,14 @@ const getValue = function(a /*, type*/) {
   }
 };
 
-const processValue = function(str, r) {
+const processValue = function (str, r) {
   if (!isAppChar(r[0]) && !isAppChar(str[str.length - 1])) {
     str += chars.boundryChar;
   }
   return str + r;
 };
 
-const isAppChar = function(ch) {
+const isAppChar = function (ch) {
   return charsArr.indexOf(ch) !== -1;
 };
 
@@ -137,7 +139,7 @@ function hasData(jObj) {
 const buildOptions = require('./util').buildOptions;
 const x2j = require('./xmlstr2xmlnode');
 
-const convert2nimn = function(node, e_schema, options) {
+const convert2nimn = function (node, e_schema, options) {
   options = buildOptions(options, x2j.defaultOptions, x2j.props);
   return _e(node, e_schema, options);
 };

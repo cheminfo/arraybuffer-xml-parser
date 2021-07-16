@@ -1,78 +1,77 @@
+const he = require('he');
 
+const parser = require('../parser');
+const validator = require('../validator');
 
-const he = require("he");
+describe('XMLParser', function () {
+  it('1a. should support single stopNode', function () {
+    const xmlData = `<issue><title>test 1</title><fix1><p>p 1</p><div class="show">div 1</div></fix1></issue>`;
+    const expected = {
+      issue: {
+        title: 'test 1',
+        fix1: '<p>p 1</p><div class="show">div 1</div>',
+      },
+    };
 
-const parser = require("../parser");
-const validator = require("../validator");
-
-describe("XMLParser", function() {
-    it("1a. should support single stopNode", function() {
-        const xmlData = `<issue><title>test 1</title><fix1><p>p 1</p><div class="show">div 1</div></fix1></issue>`;
-        const expected = {
-            "issue": {
-                "title": "test 1",
-                "fix1": "<p>p 1</p><div class=\"show\">div 1</div>"
-            }
-        };
-
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            stopNodes: ["fix1"]
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      stopNodes: ['fix1'],
     });
 
-    it("1b. 3. should support more than one stopNodes, with or without attr", function() {
-        const xmlData = `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><div class="show">div 1</div></fix1><fix2><p>p 2</p><div class="show">div 2</div></fix2></issue>`;
-        const expected = {
-            "issue": {
-				"title": "test 1",
-				"fix1": {
-					"#text": "<p>p 1</p><div class=\"show\">div 1</div>",
-					"lang": "en"
-				},
-				"fix2": "<p>p 2</p><div class=\"show\">div 2</div>"
-			}
-        };
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            stopNodes: ["fix1", "fix2"]
-        });
+    result = validator.validate(xmlData);
+    expect(result).toBe(true);
+  });
 
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+  it('1b. 3. should support more than one stopNodes, with or without attr', function () {
+    const xmlData = `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><div class="show">div 1</div></fix1><fix2><p>p 2</p><div class="show">div 2</div></fix2></issue>`;
+    const expected = {
+      issue: {
+        title: 'test 1',
+        fix1: {
+          '#text': '<p>p 1</p><div class="show">div 1</div>',
+          lang: 'en',
+        },
+        fix2: '<p>p 2</p><div class="show">div 2</div>',
+      },
+    };
 
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      stopNodes: ['fix1', 'fix2'],
     });
 
-  it("1c. have two stopNodes, one within the other", function() {
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+    result = validator.validate(xmlData);
+    expect(result).toBe(true);
+  });
+
+  it('1c. have two stopNodes, one within the other', function () {
     const xmlData = `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><fix2><p>p 2</p><div class="show">div 2</div></fix2><div class="show">div 1</div></fix1></issue>`;
     const expected = {
-      "issue": {
-        "title": "test 1",
-        "fix1": {
-          "#text": "<p>p 1</p><fix2><p>p 2</p><div class=\"show\">div 2</div></fix2><div class=\"show\">div 1</div>",
-          "lang": "en"
-        }
-      }
+      issue: {
+        title: 'test 1',
+        fix1: {
+          '#text':
+            '<p>p 1</p><fix2><p>p 2</p><div class="show">div 2</div></fix2><div class="show">div 1</div>',
+          lang: 'en',
+        },
+      },
     };
 
     let result = parser.parse(xmlData, {
-      attributeNamePrefix: "",
-      ignoreAttributes:    false,
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
       parseAttributeValue: true,
-      stopNodes: ["fix1", "fix2"]
+      stopNodes: ['fix1', 'fix2'],
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -82,43 +81,43 @@ describe("XMLParser", function() {
     expect(result).toBe(true);
   });
 
-    it("2a. stop node has nothing in it", function() {
-        const xmlData = `<issue><title>test 1</title><fix1></fix1></issue>`;
-        const expected = {
-            "issue": {
-				"title": "test 1",
-				"fix1": ""
-			}
-        };
+  it('2a. stop node has nothing in it', function () {
+    const xmlData = `<issue><title>test 1</title><fix1></fix1></issue>`;
+    const expected = {
+      issue: {
+        title: 'test 1',
+        fix1: '',
+      },
+    };
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            stopNodes: ["fix1", "fix2"]
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      stopNodes: ['fix1', 'fix2'],
     });
 
-  it("2b. stop node is self-closing", function() {
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+    result = validator.validate(xmlData);
+    expect(result).toBe(true);
+  });
+
+  it('2b. stop node is self-closing', function () {
     const xmlData = `<issue><title>test 1</title><fix1/></issue>`;
     const expected = {
-      "issue": {
-        "title": "test 1",
-        "fix1": ""
-      }
+      issue: {
+        title: 'test 1',
+        fix1: '',
+      },
     };
 
     let result = parser.parse(xmlData, {
-      attributeNamePrefix: "",
-      ignoreAttributes:    false,
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
       parseAttributeValue: true,
-      stopNodes: ["fix1", "fix2"]
+      stopNodes: ['fix1', 'fix2'],
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -128,8 +127,8 @@ describe("XMLParser", function() {
     expect(result).toBe(true);
   });
 
-    it("4. cdata", function() {
-        const xmlData = `<?xml version='1.0'?>
+  it('4. cdata', function () {
+    const xmlData = `<?xml version='1.0'?>
 <issue>
     <fix1>
         <phone>+122233344550</phone>
@@ -142,47 +141,47 @@ describe("XMLParser", function() {
 		<![CDATA[<some>Mohan</some>]]>
 	</fix2>
 </issue>`;
-        const expected = {
-            "issue": {
-				"fix1": "\n        <phone>+122233344550</phone>\n        <fix2><![CDATA[<fix1>Jack</fix1>]]><![CDATA[Jack]]></fix2>\n        <name><![CDATA[<some>Mohan</some>]]></name>\n        <blank><![CDATA[]]></blank>\n        <regx><![CDATA[^[ ].*$]]></regx>\n    ",
-				"fix2": "\n\t\t<![CDATA[<some>Mohan</some>]]>\n\t"
-			}
-        };
+    const expected = {
+      issue: {
+        fix1: '\n        <phone>+122233344550</phone>\n        <fix2><![CDATA[<fix1>Jack</fix1>]]><![CDATA[Jack]]></fix2>\n        <name><![CDATA[<some>Mohan</some>]]></name>\n        <blank><![CDATA[]]></blank>\n        <regx><![CDATA[^[ ].*$]]></regx>\n    ',
+        fix2: '\n\t\t<![CDATA[<some>Mohan</some>]]>\n\t',
+      },
+    };
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix:    "",
-            ignoreAttributes:       false,
-            parseAttributeValue:    true,
-            stopNodes: ["fix1", "fix2"]
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData, {
-            allowBooleanAttributes: true
-        });
-        expect(result).toBe(true);
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      stopNodes: ['fix1', 'fix2'],
     });
 
-    it("5. stopNode at root level", function() {
-        const xmlData = `<fix1><p>p 1</p><div class="show">div 1</div></fix1>`;
-        const expected = {
-            "fix1": "<p>p 1</p><div class=\"show\">div 1</div>"
-        };
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            stopNodes: ["fix1", "fix2"]
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData, {
-            allowBooleanAttributes: true
-        });
-        expect(result).toBe(true);
+    result = validator.validate(xmlData, {
+      allowBooleanAttributes: true,
     });
+    expect(result).toBe(true);
+  });
+
+  it('5. stopNode at root level', function () {
+    const xmlData = `<fix1><p>p 1</p><div class="show">div 1</div></fix1>`;
+    const expected = {
+      fix1: '<p>p 1</p><div class="show">div 1</div>',
+    };
+
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      stopNodes: ['fix1', 'fix2'],
+    });
+
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+    result = validator.validate(xmlData, {
+      allowBooleanAttributes: true,
+    });
+    expect(result).toBe(true);
+  });
 });

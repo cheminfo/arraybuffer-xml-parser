@@ -1,5 +1,3 @@
-
-
 const util = require('./util');
 
 const defaultOptions = {
@@ -27,12 +25,11 @@ exports.validate = function (xmlData, options) {
   }
 
   for (let i = 0; i < xmlData.length; i++) {
-
-    if (xmlData[i] === '<' && xmlData[i+1] === '?') {
-      i+=2;
-      i = readPI(xmlData,i);
+    if (xmlData[i] === '<' && xmlData[i + 1] === '?') {
+      i += 2;
+      i = readPI(xmlData, i);
       if (i.err) return i;
-    }else if (xmlData[i] === '<') {
+    } else if (xmlData[i] === '<') {
       //starting of tag
       //read until you reach to '>' avoiding any '>' in attribute value
 
@@ -50,12 +47,15 @@ exports.validate = function (xmlData, options) {
         }
         //read tagname
         let tagName = '';
-        for (; i < xmlData.length &&
+        for (
+          ;
+          i < xmlData.length &&
           xmlData[i] !== '>' &&
           xmlData[i] !== ' ' &&
           xmlData[i] !== '\t' &&
           xmlData[i] !== '\n' &&
-          xmlData[i] !== '\r'; i++
+          xmlData[i] !== '\r';
+          i++
         ) {
           tagName += xmlData[i];
         }
@@ -71,16 +71,25 @@ exports.validate = function (xmlData, options) {
         if (!validateTagName(tagName)) {
           let msg;
           if (tagName.trim().length === 0) {
-            msg = "There is an unnecessary space between tag name and backward slash '</ ..'.";
+            msg =
+              "There is an unnecessary space between tag name and backward slash '</ ..'.";
           } else {
             msg = `Tag '${tagName}' is an invalid name.`;
           }
-          return getErrorObject('InvalidTag', msg, getLineNumberForPosition(xmlData, i));
+          return getErrorObject(
+            'InvalidTag',
+            msg,
+            getLineNumberForPosition(xmlData, i),
+          );
         }
 
         const result = readAttributeStr(xmlData, i);
         if (result === false) {
-          return getErrorObject('InvalidAttr', `Attributes for '${tagName}' have open quote.`, getLineNumberForPosition(xmlData, i));
+          return getErrorObject(
+            'InvalidAttr',
+            `Attributes for '${tagName}' have open quote.`,
+            getLineNumberForPosition(xmlData, i),
+          );
         }
         let attrStr = result.value;
         i = result.index;
@@ -96,17 +105,36 @@ exports.validate = function (xmlData, options) {
             //the result from the nested function returns the position of the error within the attribute
             //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
             //this gives us the absolute index in the entire xml, which we can use to find the line at last
-            return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line));
+            return getErrorObject(
+              isValid.err.code,
+              isValid.err.msg,
+              getLineNumberForPosition(
+                xmlData,
+                i - attrStr.length + isValid.err.line,
+              ),
+            );
           }
         } else if (closingTag) {
           if (!result.tagClosed) {
-            return getErrorObject('InvalidTag', `Closing tag '${tagName}' doesn't have proper closing.`, getLineNumberForPosition(xmlData, i));
+            return getErrorObject(
+              'InvalidTag',
+              `Closing tag '${tagName}' doesn't have proper closing.`,
+              getLineNumberForPosition(xmlData, i),
+            );
           } else if (attrStr.trim().length > 0) {
-            return getErrorObject('InvalidTag', `Closing tag '${tagName}' can't have attributes or invalid starting.`, getLineNumberForPosition(xmlData, i));
+            return getErrorObject(
+              'InvalidTag',
+              `Closing tag '${tagName}' can't have attributes or invalid starting.`,
+              getLineNumberForPosition(xmlData, i),
+            );
           } else {
             const otg = tags.pop();
             if (tagName !== otg) {
-              return getErrorObject('InvalidTag', `Closing tag '${otg}' is expected inplace of '${tagName}'.`, getLineNumberForPosition(xmlData, i));
+              return getErrorObject(
+                'InvalidTag',
+                `Closing tag '${otg}' is expected inplace of '${tagName}'.`,
+                getLineNumberForPosition(xmlData, i),
+              );
             }
 
             //when there are no more tags, we reached the root level.
@@ -120,12 +148,23 @@ exports.validate = function (xmlData, options) {
             //the result from the nested function returns the position of the error within the attribute
             //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
             //this gives us the absolute index in the entire xml, which we can use to find the line at last
-            return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line));
+            return getErrorObject(
+              isValid.err.code,
+              isValid.err.msg,
+              getLineNumberForPosition(
+                xmlData,
+                i - attrStr.length + isValid.err.line,
+              ),
+            );
           }
 
           //if the root level has been reached before ...
           if (reachedRoot === true) {
-            return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
+            return getErrorObject(
+              'InvalidXml',
+              'Multiple possible root nodes found.',
+              getLineNumberForPosition(xmlData, i),
+            );
           } else {
             tags.push(tagName);
           }
@@ -141,16 +180,21 @@ exports.validate = function (xmlData, options) {
               i++;
               i = readCommentAndCDATA(xmlData, i);
               continue;
-            } else if (xmlData[i+1] === '?') {
+            } else if (xmlData[i + 1] === '?') {
               i = readPI(xmlData, ++i);
               if (i.err) return i;
-            } else{
+            } else {
               break;
             }
           } else if (xmlData[i] === '&') {
             const afterAmp = validateAmpersand(xmlData, i);
-            if (afterAmp === -1)
-              {return getErrorObject('InvalidChar', "char '&' is not expected.", getLineNumberForPosition(xmlData, i));}
+            if (afterAmp === -1) {
+              return getErrorObject(
+                'InvalidChar',
+                "char '&' is not expected.",
+                getLineNumberForPosition(xmlData, i),
+              );
+            }
             i = afterAmp;
           }
         } //end of reading tag text value
@@ -159,17 +203,30 @@ exports.validate = function (xmlData, options) {
         }
       }
     } else {
-      if (xmlData[i] === ' ' || xmlData[i] === '\t' || xmlData[i] === '\n' || xmlData[i] === '\r') {
+      if (
+        xmlData[i] === ' ' ||
+        xmlData[i] === '\t' ||
+        xmlData[i] === '\n' ||
+        xmlData[i] === '\r'
+      ) {
         continue;
       }
-      return getErrorObject('InvalidChar', `char '${xmlData[i]}' is not expected.`, getLineNumberForPosition(xmlData, i));
+      return getErrorObject(
+        'InvalidChar',
+        `char '${xmlData[i]}' is not expected.`,
+        getLineNumberForPosition(xmlData, i),
+      );
     }
   }
 
   if (!tagFound) {
     return getErrorObject('InvalidXml', 'Start tag expected.', 1);
   } else if (tags.length > 0) {
-    return getErrorObject('InvalidXml', `Invalid '${JSON.stringify(tags, null, 4).replace(/\r?\n/g, '')}' found.`, 1);
+    return getErrorObject(
+      'InvalidXml',
+      `Invalid '${JSON.stringify(tags, null, 4).replace(/\r?\n/g, '')}' found.`,
+      1,
+    );
   }
 
   return true;
@@ -187,7 +244,11 @@ function readPI(xmlData, i) {
       //tagname
       let tagname = xmlData.substr(start, i - start);
       if (i > 5 && tagname === 'xml') {
-        return getErrorObject('InvalidXml', 'XML declaration allowed only at the start of the document.', getLineNumberForPosition(xmlData, i));
+        return getErrorObject(
+          'InvalidXml',
+          'XML declaration allowed only at the start of the document.',
+          getLineNumberForPosition(xmlData, i),
+        );
       } else if (xmlData[i] === '?' && xmlData[i + 1] === '>') {
         //check if valid attribut string
         i++;
@@ -201,10 +262,18 @@ function readPI(xmlData, i) {
 }
 
 function readCommentAndCDATA(xmlData, i) {
-  if (xmlData.length > i + 5 && xmlData[i + 1] === '-' && xmlData[i + 2] === '-') {
+  if (
+    xmlData.length > i + 5 &&
+    xmlData[i + 1] === '-' &&
+    xmlData[i + 2] === '-'
+  ) {
     //comment
     for (i += 3; i < xmlData.length; i++) {
-      if (xmlData[i] === '-' && xmlData[i + 1] === '-' && xmlData[i + 2] === '>') {
+      if (
+        xmlData[i] === '-' &&
+        xmlData[i + 1] === '-' &&
+        xmlData[i + 2] === '>'
+      ) {
         i += 2;
         break;
       }
@@ -241,7 +310,11 @@ function readCommentAndCDATA(xmlData, i) {
     xmlData[i + 7] === '['
   ) {
     for (i += 8; i < xmlData.length; i++) {
-      if (xmlData[i] === ']' && xmlData[i + 1] === ']' && xmlData[i + 2] === '>') {
+      if (
+        xmlData[i] === ']' &&
+        xmlData[i + 1] === ']' &&
+        xmlData[i + 2] === '>'
+      ) {
         i += 2;
         break;
       }
@@ -288,14 +361,17 @@ function readAttributeStr(xmlData, i) {
   return {
     value: attrStr,
     index: i,
-    tagClosed: tagClosed
+    tagClosed: tagClosed,
   };
 }
 
 /**
  * Select all the attributes whether valid or invalid.
  */
-const validAttrStrRegxp = new RegExp('(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s\\S])*?)\\5)?', 'g');
+const validAttrStrRegxp = new RegExp(
+  '(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s\\S])*?)\\5)?',
+  'g',
+);
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
@@ -310,23 +386,39 @@ function validateAttributeString(attrStr, options) {
   for (let i = 0; i < matches.length; i++) {
     if (matches[i][1].length === 0) {
       //nospace before attribute name: a="sd"b="saf"
-      return getErrorObject('InvalidAttr', `Attribute '${matches[i][2]}' has no space in starting.`, getPositionFromMatch(attrStr, matches[i][0]))
+      return getErrorObject(
+        'InvalidAttr',
+        `Attribute '${matches[i][2]}' has no space in starting.`,
+        getPositionFromMatch(attrStr, matches[i][0]),
+      );
     } else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {
       //independent attribute: ab
-      return getErrorObject('InvalidAttr', `boolean attribute '${matches[i][2]}' is not allowed.`, getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject(
+        'InvalidAttr',
+        `boolean attribute '${matches[i][2]}' is not allowed.`,
+        getPositionFromMatch(attrStr, matches[i][0]),
+      );
     }
     /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
     const attrName = matches[i][2];
     if (!validateAttrName(attrName)) {
-      return getErrorObject('InvalidAttr', `Attribute '${attrName}' is an invalid name.`, getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject(
+        'InvalidAttr',
+        `Attribute '${attrName}' is an invalid name.`,
+        getPositionFromMatch(attrStr, matches[i][0]),
+      );
     }
     if (!attrNames.hasOwnProperty(attrName)) {
       //check for duplicate attribute.
       attrNames[attrName] = 1;
     } else {
-      return getErrorObject('InvalidAttr', `Attribute '${attrName}' is repeated.`, getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject(
+        'InvalidAttr',
+        `Attribute '${attrName}' is repeated.`,
+        getPositionFromMatch(attrStr, matches[i][0]),
+      );
     }
   }
 
@@ -340,10 +432,12 @@ function validateNumberAmpersand(xmlData, i) {
     re = /[\da-fA-F]/;
   }
   for (; i < xmlData.length; i++) {
-    if (xmlData[i] === ';')
-      {return i;}
-    if (!xmlData[i].match(re))
-      {break;}
+    if (xmlData[i] === ';') {
+      return i;
+    }
+    if (!xmlData[i].match(re)) {
+      break;
+    }
   }
   return -1;
 }
@@ -351,18 +445,21 @@ function validateNumberAmpersand(xmlData, i) {
 function validateAmpersand(xmlData, i) {
   // https://www.w3.org/TR/xml/#dt-charref
   i++;
-  if (xmlData[i] === ';')
-    {return -1;}
+  if (xmlData[i] === ';') {
+    return -1;
+  }
   if (xmlData[i] === '#') {
     i++;
     return validateNumberAmpersand(xmlData, i);
   }
   let count = 0;
   for (; i < xmlData.length; i++, count++) {
-    if (xmlData[i].match(/\w/) && count < 20)
-      {continue;}
-    if (xmlData[i] === ';')
-      {break;}
+    if (xmlData[i].match(/\w/) && count < 20) {
+      continue;
+    }
+    if (xmlData[i] === ';') {
+      break;
+    }
     return -1;
   }
   return i;

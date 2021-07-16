@@ -1,18 +1,29 @@
-
-
 const util = require('./util');
 
-const convertToJson = function(node, options, parentTagName) {
+const convertToJson = function (node, options, parentTagName) {
   const jObj = {};
 
   // when no child node or attr is present
-  if ((!node.child || util.isEmptyObject(node.child)) && (!node.attrsMap || util.isEmptyObject(node.attrsMap))) {
+  if (
+    (!node.child || util.isEmptyObject(node.child)) &&
+    (!node.attrsMap || util.isEmptyObject(node.attrsMap))
+  ) {
     return util.isExist(node.val) ? node.val : '';
   }
 
   // otherwise create a textnode if node has some text
-  if (util.isExist(node.val) && !(typeof node.val === 'string' && (node.val === '' || node.val === options.cdataPositionChar))) {
-    const asArray = util.isTagNameInArrayMode(node.tagname, options.arrayMode, parentTagName)
+  if (
+    util.isExist(node.val) &&
+    !(
+      typeof node.val === 'string' &&
+      (node.val === '' || node.val === options.cdataPositionChar)
+    )
+  ) {
+    const asArray = util.isTagNameInArrayMode(
+      node.tagname,
+      options.arrayMode,
+      parentTagName,
+    );
     jObj[options.textNodeName] = asArray ? [node.val] : node.val;
   }
 
@@ -25,12 +36,16 @@ const convertToJson = function(node, options, parentTagName) {
       jObj[tagName] = [];
       for (let tag in node.child[tagName]) {
         if (node.child[tagName].hasOwnProperty(tag)) {
-          jObj[tagName].push(convertToJson(node.child[tagName][tag], options, tagName));
+          jObj[tagName].push(
+            convertToJson(node.child[tagName][tag], options, tagName),
+          );
         }
       }
     } else {
       const result = convertToJson(node.child[tagName][0], options, tagName);
-      const asArray = (options.arrayMode === true && typeof result === 'object') || util.isTagNameInArrayMode(tagName, options.arrayMode, parentTagName);
+      const asArray =
+        (options.arrayMode === true && typeof result === 'object') ||
+        util.isTagNameInArrayMode(tagName, options.arrayMode, parentTagName);
       jObj[tagName] = asArray ? [result] : result;
     }
   }

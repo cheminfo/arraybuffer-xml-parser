@@ -1,5 +1,3 @@
-
-
 // Copyright 2013 Timothy J Fontaine <tjfontaine@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -58,18 +56,18 @@ function ReadToEnd(opts) {
 module.exports = ReadToEnd;
 util.inherits(ReadToEnd, stream.Transform);
 
-ReadToEnd.prototype._transform = function(chunk, encoding, done) {
+ReadToEnd.prototype._transform = function (chunk, encoding, done) {
   this._buff += chunk.toString(this._rte_encoding);
   this.push(chunk);
   done();
 };
 
-ReadToEnd.prototype._flush = function(done) {
+ReadToEnd.prototype._flush = function (done) {
   this.emit('complete', undefined, this._buff);
   done();
 };
 
-ReadToEnd.readToEnd = function(stream, options, cb) {
+ReadToEnd.readToEnd = function (stream, options, cb) {
   if (!cb) {
     cb = options;
     options = {};
@@ -79,7 +77,7 @@ ReadToEnd.readToEnd = function(stream, options, cb) {
 
   stream.pipe(dest);
 
-  stream.on('error', function(err) {
+  stream.on('error', function (err) {
     stream.unpipe(dest);
     cb(err);
   });

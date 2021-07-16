@@ -1,53 +1,50 @@
+const he = require('he');
 
+const parser = require('../parser');
+const validator = require('../validator');
 
-const he = require("he");
+describe('XMLParser', function () {
+  it('should decode HTML entities if allowed', function () {
+    const xmlData = '<rootNode>       foo&ampbar&apos;        </rootNode>';
+    const expected = {
+      rootNode: "foo&bar'",
+    };
+    const result = parser.parse(xmlData, {
+      parseNodeValue: false,
+      decodeHTMLchar: true,
+      tagValueProcessor: (a) => he.decode(a),
+    });
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+  });
 
-const parser = require("../parser");
-const validator = require("../validator");
+  it('should decode HTML entities / char', function () {
+    const xmlData = `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`;
+    const expected = {
+      element: {
+        id: 7,
+        data: 'foo bar',
+        bug: "foo&ampbar'",
+      },
+    };
 
-describe("XMLParser", function() {
-
-    it("should decode HTML entities if allowed", function() {
-        const xmlData = "<rootNode>       foo&ampbar&apos;        </rootNode>";
-        const expected = {
-            "rootNode": "foo&bar'"
-        };
-        const result = parser.parse(xmlData, {
-            parseNodeValue: false,
-            decodeHTMLchar: true,
-            tagValueProcessor : a => he.decode(a)
-        });
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      decodeHTMLchar: true,
+      attrValueProcessor: (a) => he.decode(a, { isAttributeValue: true }),
     });
 
-    it("should decode HTML entities / char", function() {
-        const xmlData = `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`;
-        const expected = {
-            "element": {
-                "id":   7,
-                "data": "foo bar",
-                "bug":  "foo&ampbar'"
-            }
-        };
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            decodeHTMLchar:      true,
-            attrValueProcessor: a => he.decode(a, {isAttributeValue: true})
-        });
+    result = validator.validate(xmlData);
+    expect(result).toBe(true);
+  });
 
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
-    });
-
-    it("tag value processor should be called with value and tag name", function() {
-        const xmlData = `<?xml version='1.0'?>
+  it('tag value processor should be called with value and tag name', function () {
+    const xmlData = `<?xml version='1.0'?>
         <any_name>
             <person>
                 start
@@ -58,51 +55,40 @@ describe("XMLParser", function() {
             </person>
         </any_name>`;
 
-        const expected = {
-            "any_name": {
-                "person": {
-                    "#text": "startmiddleend",
-                    "name1": "Jack 1",
-                    "name2": 35
-                }
-            }
-        };
+    const expected = {
+      any_name: {
+        person: {
+          '#text': 'startmiddleend',
+          name1: 'Jack 1',
+          name2: 35,
+        },
+      },
+    };
 
-        const resultMap = {}
-        const result = parser.parse(xmlData, {
-            tagValueProcessor: (val, tagName) => {
-                if(resultMap[tagName]){
-                    resultMap[tagName].push(val)
-                }else{
-                    resultMap[tagName] = [val];
-                }
-                return val;
-            }
-        });
-        //console.log(JSON.stringify(result,null,4));
-        //console.log(JSON.stringify(resultMap,null,4));
-        expect(result).toEqual(expected);
-        expect(resultMap).toEqual({
-            "any_name": [
-                "",
-                ""
-            ],
-            "person": [
-                "start",
-                "middle",
-                "end"
-            ],
-            "name1": [
-                "Jack 1"
-            ],
-            "name2": [
-                "35"
-            ]
-        });
+    const resultMap = {};
+    const result = parser.parse(xmlData, {
+      tagValueProcessor: (val, tagName) => {
+        if (resultMap[tagName]) {
+          resultMap[tagName].push(val);
+        } else {
+          resultMap[tagName] = [val];
+        }
+        return val;
+      },
     });
+    //console.log(JSON.stringify(result,null,4));
+    //console.log(JSON.stringify(resultMap,null,4));
+    expect(result).toEqual(expected);
+    expect(resultMap).toEqual({
+      any_name: ['', ''],
+      person: ['start', 'middle', 'end'],
+      name1: ['Jack 1'],
+      name2: ['35'],
+    });
+  });
 
-    it("result should have no value if tag processor returns nothing", function() {
-        const xmlData = `<?xml version='1.0'?>
+  it('result should have no value if tag processor returns nothing', function () {
+    const xmlData = `<?xml version='1.0'?>
         <any_name>
             <person>
                 start
@@ -113,25 +99,24 @@ describe("XMLParser", function() {
             </person>
         </any_name>`;
 
-        const expected = {
-            "any_name": {
-                "person": {
-                    "name1": "",
-                    "name2": ""
-                }
-            }
-        };
+    const expected = {
+      any_name: {
+        person: {
+          name1: '',
+          name2: '',
+        },
+      },
+    };
 
-        const result = parser.parse(xmlData, {
-            tagValueProcessor: (val, tagName) => {
-            }
-        });
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+    const result = parser.parse(xmlData, {
+      tagValueProcessor: (val, tagName) => {},
     });
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+  });
 
-    it("result should have constant value returned by tag processor", function() {
-        const xmlData = `<?xml version='1.0'?>
+  it('result should have constant value returned by tag processor', function () {
+    const xmlData = `<?xml version='1.0'?>
         <any_name>
             <person>
                 <name1>Jack 1</name1 >
@@ -139,66 +124,60 @@ describe("XMLParser", function() {
             </person>
         </any_name>`;
 
-        const expected = {
-            "any_name": {
-                "#text" : "fxpfxp",
-                "person": {
-                    "#text" : "fxpfxpfxp",
-                    "name1": "fxp",
-                    "name2": "fxp"
-                }
-            }
-        };
+    const expected = {
+      any_name: {
+        '#text': 'fxpfxp',
+        person: {
+          '#text': 'fxpfxpfxp',
+          name1: 'fxp',
+          name2: 'fxp',
+        },
+      },
+    };
 
-        const result = parser.parse(xmlData, {
-            tagValueProcessor: (val, tagName) => {
-                return "fxp"
-            }
-        });
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+    const result = parser.parse(xmlData, {
+      tagValueProcessor: (val, tagName) => {
+        return 'fxp';
+      },
+    });
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+  });
+
+  it('attribute parser should be called with  atrribute name and value', function () {
+    const xmlData = `<element id="7" data="foo bar" bug="foo n bar"/>`;
+    const expected = {
+      element: {
+        id: 7,
+        data: 'foo bar',
+        bug: 'foo n bar',
+      },
+    };
+
+    const resultMap = {};
+
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      decodeHTMLchar: true,
+      attrValueProcessor: (val, attrName) => {
+        if (resultMap[attrName]) {
+          resultMap[attrName].push(val);
+        } else {
+          resultMap[attrName] = [val];
+        }
+        return val;
+      },
     });
 
-    it("attribute parser should be called with  atrribute name and value", function() {
-        const xmlData = `<element id="7" data="foo bar" bug="foo n bar"/>`;
-        const expected = {
-            "element": {
-                "id":   7,
-                "data": "foo bar",
-                "bug":  "foo n bar"
-            }
-        };
+    //console.log(JSON.stringify(resultMap,null,4));
+    expect(result).toEqual(expected);
 
-        const resultMap = {}
-
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            decodeHTMLchar:      true,
-            attrValueProcessor: (val, attrName) => {
-                if(resultMap[attrName]){
-                    resultMap[attrName].push(val)
-                }else{
-                    resultMap[attrName] = [val];
-                }
-                return val;
-            }
-        });
-
-        //console.log(JSON.stringify(resultMap,null,4));
-        expect(result).toEqual(expected);
-
-        expect(resultMap).toEqual({
-            "id": [
-                "7"
-            ],
-            "data": [
-                "foo bar"
-            ],
-            "bug": [
-                "foo n bar"
-            ]
-        });
+    expect(resultMap).toEqual({
+      id: ['7'],
+      data: ['foo bar'],
+      bug: ['foo n bar'],
     });
+  });
 });

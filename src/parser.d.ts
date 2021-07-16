@@ -7,7 +7,11 @@ type X2jOptions = {
   allowBooleanAttributes: boolean;
   parseNodeValue: boolean;
   parseAttributeValue: boolean;
-  arrayMode: boolean | 'strict' | RegExp | ((tagName: string, parentTagName: string) => boolean);
+  arrayMode:
+    | boolean
+    | 'strict'
+    | RegExp
+    | ((tagName: string, parentTagName: string) => boolean);
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
@@ -36,30 +40,34 @@ type J2xOptions = {
 };
 type J2xOptionsOptional = Partial<J2xOptions>;
 
-type ESchema = string | object | Array<string|object>;
+type ESchema = string | object | Array<string | object>;
 
 type ValidationError = {
-  err: { code: string; msg: string, line: number };
+  err: { code: string; msg: string; line: number };
 };
 
-export function parse(xmlData: string, options?: X2jOptionsOptional, validationOptions?: validationOptionsOptional | boolean): any;
+export function parse(
+  xmlData: string,
+  options?: X2jOptionsOptional,
+  validationOptions?: validationOptionsOptional | boolean,
+): any;
 export function convert2nimn(
   node: any,
   e_schema: ESchema,
-  options?: X2jOptionsOptional
+  options?: X2jOptionsOptional,
 ): any;
 export function getTraversalObj(
   xmlData: string,
-  options?: X2jOptionsOptional
+  options?: X2jOptionsOptional,
 ): any;
 export function convertToJson(node: any, options?: X2jOptionsOptional): any;
 export function convertToJsonString(
   node: any,
-  options?: X2jOptionsOptional
+  options?: X2jOptionsOptional,
 ): string;
 export function validate(
   xmlData: string,
-  options?: validationOptionsOptional
+  options?: validationOptionsOptional,
 ): true | ValidationError;
 export class j2xParser {
   constructor(options: J2xOptionsOptional);
@@ -68,5 +76,5 @@ export class j2xParser {
 export function parseToNimn(
   xmlData: string,
   schema: any,
-  options: Partial<X2jOptions>
+  options: Partial<X2jOptions>,
 ): any;
