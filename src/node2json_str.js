@@ -10,7 +10,7 @@ const convertToJsonString = function (node, options) {
   return _cToJsonStr(node, options, 0);
 };
 
-const _cToJsonStr = function (node, options, level) {
+const _cToJsonStr = function (node, options) {
   let jObj = '{';
 
   //traver through all the children
@@ -60,10 +60,6 @@ function stringval(v) {
   } else {
     return `"${v}"`;
   }
-}
-
-function indentate(options, level) {
-  return options.indentBy.repeat(level);
 }
 
 exports.convertToJsonString = convertToJsonString;
