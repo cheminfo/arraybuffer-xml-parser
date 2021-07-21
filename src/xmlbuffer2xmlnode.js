@@ -274,7 +274,7 @@ const getTraversalObj = function (xmlData, options) {
         i = closeIndex + 2;
       } else {
         //Opening tag
-        const result = closingIndexForOpeningTag(xmlData, i + 1); //todo implement this
+        const result = closingIndexForOpeningTag(xmlData, i + 1);
         let tagExp = result.data;
         const closeIndex = result.index;
         const separatorIndex = tagExp.indexOf(' ');
