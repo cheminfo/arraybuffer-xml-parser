@@ -114,6 +114,8 @@ exports.bufferIndexOf = function (buffer, string, index = 0) {
         foundIndex = i;
       }
       found++;
+    } else {
+      found = 0;
     }
   }
   return foundIndex;
