@@ -105,18 +105,34 @@ exports.isName = isName;
 exports.getAllMatches = getAllMatches;
 exports.nameRegexp = nameRegexp;
 
-exports.bufferIndexOf = function (buffer, string, index = 0) {
+exports.arrayIndexOf = function (array, string, index = 0) {
   let found = 0;
   let foundIndex = 0;
-  for (let i = index; i < buffer.length && found < string.length; i++) {
-    if (buffer[i + found] === string[found]) {
+  for (let i = index; i < array.length && found < string.length; i++) {
+    if (array[i + found] === string[found]) {
       if (!found) {
         foundIndex = i;
       }
       found++;
     } else {
       found = 0;
+      foundIndex = 0;
     }
   }
   return foundIndex;
+};
+
+exports.trimArray = function (array) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== 0x20) {
+      array = new Uint8Array(array.buffer, i, array.length - i);
+      i = array.length;
+    }
+  }
+  for (let i = array.length - 1; i >= 0; i--) {
+    if (array[i] !== 0x20) {
+      array = new Uint8Array(array.buffer, 0, i);
+      i = 0;
+    }
+  }
 };

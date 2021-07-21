@@ -69,7 +69,7 @@ function processTagValue(tagName, val, options) {
 function resolveNameSpace(tagname, options) {
   if (options.ignoreNameSpace) {
     const tags = tagname.split(':');
-    const prefix = tagname.charAt(0) === '/' ? '/' : '';
+    const prefix = tagname[0] === 0x2f ? '/' : '';
     if (tags[0] === 'xmlns') {
       return '';
     }
@@ -80,6 +80,7 @@ function resolveNameSpace(tagname, options) {
   return tagname;
 }
 
+//No need to change this unless it's too slow
 function parseValue(val, shouldParse, parseTrueNumberOnly) {
   if (shouldParse && typeof val === 'string') {
     let parsed;
@@ -169,16 +170,18 @@ const getTraversalObj = function (xmlData, options) {
         // === 47 if UTF-8
         //Closing Tag
         const closeIndex = findClosingIndex(
-          //TODO Adapt to arraybuffer
+          //TODid Adapt to arraybuffer
           xmlData,
           '>',
           i,
           'Closing Tag is not closed.',
         );
-        let tagName = xmlData.substring(i + 2, closeIndex).trim(); //new arraybuffer
+        let tagName = util.trimArray(
+          new Uint8Array(xmlData.buffer, i + 2, closeIndex - i - 2),
+        ); //new arraybuffer
 
         if (options.ignoreNameSpace) {
-          const colonIndex = tagName.indexOf(':'); //TODO Implement equivalent function
+          const colonIndex = util.arrayIndexOf(tagName, ':');
           if (colonIndex !== -1) {
             tagName = tagName.substr(colonIndex + 1);
           }
@@ -370,7 +373,7 @@ function closingIndexForOpeningTag(data, i) {
 }
 
 function findClosingIndex(xmlData, str, i, errMsg) {
-  const closingIndex = bufferIndexOf(xmlData, str, i);
+  const closingIndex = util.arrayIndexOf(xmlData, str, i);
   if (closingIndex === -1) {
     throw new Error(errMsg);
   } else {
