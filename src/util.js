@@ -104,3 +104,17 @@ exports.isTagNameInArrayMode = function (tagName, arrayMode, parentTagName) {
 exports.isName = isName;
 exports.getAllMatches = getAllMatches;
 exports.nameRegexp = nameRegexp;
+
+exports.bufferIndexOf = function (buffer, string, index = 0) {
+  let found = 0;
+  let foundIndex = 0;
+  for (let i = index; i < buffer.length && found < string.length; i++) {
+    if (buffer[i + found] === string[found]) {
+      if (!found) {
+        foundIndex = i;
+      }
+      found++;
+    }
+  }
+  return foundIndex;
+};
