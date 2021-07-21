@@ -370,7 +370,7 @@ function closingIndexForOpeningTag(data, i) {
 }
 
 function findClosingIndex(xmlData, str, i, errMsg) {
-  const closingIndex = xmlData.indexOf(str, i);
+  const closingIndex = bufferIndexOf(xmlData, str, i);
   if (closingIndex === -1) {
     throw new Error(errMsg);
   } else {
