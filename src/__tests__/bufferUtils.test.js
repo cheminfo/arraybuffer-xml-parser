@@ -31,3 +31,29 @@ describe('arrayIndexOf', function () {
     expect(bufferUtils.arrayIndexOf(notIn, testString)).toStrictEqual(-1);
   });
 });
+describe('arraySplit', function () {
+  it('should split the array using a separator', function () {
+    expect(
+      bufferUtils.arraySplit(
+        new Uint8Array([1, 2, 3, 4, 5, 12, 6, 7, 8, 9]),
+        12,
+      ),
+    ).toStrictEqual([
+      new Uint8Array([1, 2, 3, 4, 5]),
+      new Uint8Array([6, 7, 8, 9]),
+    ]);
+    expect(
+      bufferUtils.arraySplit(
+        new Uint8Array([1, 2, 12, 4, 5, 12, 6, 7, 8, 9]),
+        12,
+      ),
+    ).toStrictEqual([
+      new Uint8Array([1, 2]),
+      new Uint8Array([4, 5]),
+      new Uint8Array([6, 7, 8, 9]),
+    ]);
+    expect(
+      bufferUtils.arraySplit(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 12]), 12),
+    ).toStrictEqual([new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8])]);
+  });
+});

@@ -33,3 +33,20 @@ exports.arrayIndexOf = function (array, referenceArray, index = 0) {
   }
   return foundIndex;
 };
+
+exports.arraySplit = function (array, separator) {
+  const split = [];
+  let lowerbound = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] === separator) {
+      split.push(new Uint8Array(array.buffer, lowerbound, i - lowerbound));
+      lowerbound = i + 1;
+    }
+  }
+  if (lowerbound !== array.length) {
+    split.push(
+      new Uint8Array(array.buffer, lowerbound, array.length - lowerbound),
+    );
+  }
+  return split;
+};
