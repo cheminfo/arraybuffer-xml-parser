@@ -57,3 +57,47 @@ describe('arraySplit', function () {
     ).toStrictEqual([new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8])]);
   });
 });
+describe('arrayParseInt', function () {
+  it('should parse an arrayBuffer into an int', function () {
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([0x31, 0x34, 0x32, 0x38, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(142857);
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([0x31, 0x34, 0x32, 0x20, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(142);
+  });
+});
+
+describe('arrayParseFloat', function () {
+  it('should parse an arrayBuffer into a float', function () {
+    expect(
+      bufferUtils.arrayParseFloat(
+        new Uint8Array([0x31, 0x2e, 0x34, 0x32, 0x38, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(1.42857);
+    expect(
+      bufferUtils.arrayParseFloat(
+        new Uint8Array([0x31, 0x2e, 0x34, 0x32, 0x38, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(1.42857);
+    expect(
+      bufferUtils.arrayParseFloat(
+        new Uint8Array([0x31, 0x34, 0x32, 0x38, 0x35, 0x37, 0x45, 0x2d, 0x35]),
+      ),
+    ).toStrictEqual(1.42857);
+    expect(
+      bufferUtils.arrayParseFloat(
+        new Uint8Array([0x31, 0x34, 0x32, 0x38, 0x35, 0x37, 0x45, 0x2b, 0x31]),
+      ),
+    ).toStrictEqual(1428570);
+    expect(
+      bufferUtils.arrayParseFloat(
+        new Uint8Array([0x31, 0x34, 0x32, 0x38, 0x35, 0x37, 0x45, 0x2b]),
+      ),
+    ).toStrictEqual(142857);
+  });
+});

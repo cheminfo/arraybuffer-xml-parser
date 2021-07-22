@@ -2,6 +2,8 @@ const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
 
+const encoder = new TextEncoder();
+
 const defaultOptions = {
   attributeNamePrefix: '@_',
   attrNodeName: false,
@@ -57,7 +59,7 @@ exports.props = props;
 function processTagValue(tagName, val, options) {
   if (val) {
     if (options.trimValues) {
-      val = val.trim();
+      val = val.arrayTrim();
     }
     val = options.tagValueProcessor(val, tagName);
     val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
@@ -68,13 +70,14 @@ function processTagValue(tagName, val, options) {
 
 function resolveNameSpace(tagname, options) {
   if (options.ignoreNameSpace) {
-    const tags = tagname.split(':');
-    const prefix = tagname[0] === 0x2f ? '/' : '';
-    if (tags[0] === 'xmlns') {
+    const tags = tagname.arraySplit(0x3a);
+    const prefix = tagname[0] === 0x2f ? '/' : ''; //
+    if (tags[0] === [0x78, 0x6d, 0x6c, 0x6e, 0x73]) {
+      //xmlns
       return '';
     }
     if (tags.length === 2) {
-      tagname = prefix + tags[1];
+      tagname = prefix + encoder.decode(tags[1]);
     }
   }
   return tagname;
@@ -87,9 +90,9 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
     if (val.trim() === '' || isNaN(val)) {
       parsed = val === 'true' ? true : val === 'false' ? false : val;
     } else {
-      if (val.indexOf('0x') !== -1) {
+      if (val.indexOf([0x30, 0x78]) !== -1) {
         //support hexa decimal
-        parsed = Number.parseInt(val, 16);
+        parsed = Number.arrayParseInt(val, 16);
       } else if (val.indexOf('.') !== -1) {
         parsed = Number.parseFloat(val);
         val = val.replace(/\.?0+$/, '');
