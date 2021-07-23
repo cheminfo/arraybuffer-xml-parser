@@ -1,4 +1,5 @@
 const nodeToJson = require('./node2json');
+const xmlbuffer2node = require('./xmlbuffer2xmlnode');
 const xmlToNodeobj = require('./xmlstr2xmlnode');
 const x2xmlnode = require('./xmlstr2xmlnode');
 const buildOptions = require('./util').buildOptions;
@@ -23,6 +24,7 @@ exports.getTraversalObj = xmlToNodeobj.getTraversalObj;
 exports.convertToJson = nodeToJson.convertToJson;
 exports.convertToJsonString = require('./node2json_str').convertToJsonString;
 
+exports.xml2node = xmlbuffer2node.exports;
 exports.validate = validator.validate;
 exports.j2xParser = require('./json2xml');
 

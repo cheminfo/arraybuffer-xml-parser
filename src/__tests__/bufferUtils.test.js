@@ -26,9 +26,13 @@ describe('arrayIndexOf', function () {
     ]);
     const notIn = new Uint8Array([0x61, 0x6d, 0x6f, 0x67]);
     const testString = new Uint8Array([0x61, 0x6d, 0x6f, 0x67, 0x75, 0x73]);
+    const singleTest = new Uint8Array([0x2e]);
     expect(bufferUtils.arrayIndexOf(whole, testString)).toStrictEqual(0);
     expect(bufferUtils.arrayIndexOf(sandwiched, testString)).toStrictEqual(1);
     expect(bufferUtils.arrayIndexOf(notIn, testString)).toStrictEqual(-1);
+    expect(
+      bufferUtils.arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest),
+    ).toStrictEqual(1);
   });
 });
 describe('arraySplit', function () {
@@ -55,6 +59,9 @@ describe('arraySplit', function () {
     expect(
       bufferUtils.arraySplit(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 12]), 12),
     ).toStrictEqual([new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8])]);
+    expect(
+      bufferUtils.arraySplit(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), 12),
+    ).toStrictEqual([new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9])]);
   });
 });
 describe('arrayParseInt', function () {

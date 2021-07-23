@@ -34,6 +34,18 @@ exports.arrayIndexOf = function (array, referenceArray, index = 0) {
   return foundIndex;
 };
 
+exports.arrayIsEqual = function (array, brrby) {
+  if (array.length !== brrby.length) {
+    return false;
+  }
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== brrby[i]) {
+      return false;
+    }
+  }
+  return true;
+};
+
 exports.arraySplit = function (array, separator) {
   const split = [];
   let lowerbound = 0;

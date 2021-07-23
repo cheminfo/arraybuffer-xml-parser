@@ -3,7 +3,7 @@ const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
 
-const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
@@ -50,7 +50,12 @@ const props = [
   'stopNodes',
 ];
 exports.props = props;
-
+this.exports = {
+  parseValue,
+  getTraversalObj,
+  processTagValue,
+  resolveNameSpace,
+};
 /**
  * Trim -> valueProcessor -> parse value
  * @param {string} tagName
@@ -63,7 +68,7 @@ function processTagValue(tagName, val, options) {
       val = val.arrayTrim();
     }
     val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
+    val = parseValue(val, options.parseNodeValue);
   }
 
   return val;
@@ -71,35 +76,35 @@ function processTagValue(tagName, val, options) {
 
 function resolveNameSpace(tagname, options) {
   if (options.ignoreNameSpace) {
-    const tags = tagname.arraySplit(0x3a);
+    const tags = bufferUtils.arraySplit(tagname, 0x3a);
     const prefix = tagname[0] === 0x2f ? '/' : ''; //
-    if (tags[0] === [0x78, 0x6d, 0x6c, 0x6e, 0x73]) {
+    if (bufferUtils.arrayIsEqual(tags[0], [0x78, 0x6d, 0x6c, 0x6e, 0x73])) {
       //xmlns
       return '';
     }
     if (tags.length === 2) {
-      tagname = prefix + encoder.decode(tags[1]);
+      tagname = prefix + decoder.decode(tags[1]);
+    } else {
+      tagname = decoder.decode(tagname);
     }
   }
   return tagname;
 }
-
 function parseValue(val, shouldParse) {
   if (shouldParse && typeof val === 'object') {
     let parsed;
-    if (bufferUtils.arrayTrim(val) === [] || isNaN(val)) {
-      parsed =
-        val === new Uint8Array([0x74, 0x72, 0x75, 0x65]) //true
-          ? true
-          : val === new Uint8Array([0x66, 0x61, 0x6c, 0x73, 0x65]) //false
-          ? false
-          : val;
+    if (bufferUtils.arrayTrim(val) === [] || val[0] > 0x39 || val[0] < 0x30) {
+      parsed = bufferUtils.arrayIsEqual(val, [116, 114, 117, 101]) //true
+        ? true
+        : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
+        ? false
+        : val;
     } else {
-      if (val.indexOf([0x30, 0x78]) !== -1) {
+      if (bufferUtils.arrayIndexOf(val, [0x30, 0x78]) !== -1) {
         //0x
         //support hexa decimal
         parsed = bufferUtils.arrayParseInt(val, 16);
-      } else if (val.indexOf([0x2e]) !== -1) {
+      } else if (bufferUtils.arrayIndexOf(val, [0x2e]) !== -1) {
         //.
         parsed = bufferUtils.arrayParseFloat(val);
       } else {
@@ -120,7 +125,7 @@ const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 //TODO: change regex to capture NS
 //const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
 const attrsRegx = new RegExp(newLocal, 'g');
-
+//Attributes are strings so no point in using arrayBuffers here
 function buildAttributesMap(attrStr, options) {
   if (!options.ignoreAttributes && typeof attrStr === 'string') {
     attrStr = attrStr.replace(/\r?\n/g, ' ');
@@ -379,7 +384,7 @@ function closingIndexForOpeningTag(data, i) {
 }
 
 function findClosingIndex(xmlData, str, i, errMsg) {
-  const closingIndex = util.arrayIndexOf(xmlData, str, i);
+  const closingIndex = bufferUtils.arrayIndexOf(xmlData, str, i);
   if (closingIndex === -1) {
     throw new Error(errMsg);
   } else {
