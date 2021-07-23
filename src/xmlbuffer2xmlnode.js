@@ -1,3 +1,4 @@
+const bufferUtils = require('./bufferUtils');
 const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
@@ -83,24 +84,26 @@ function resolveNameSpace(tagname, options) {
   return tagname;
 }
 
-//No need to change this unless it's too slow
-function parseValue(val, shouldParse, parseTrueNumberOnly) {
-  if (shouldParse && typeof val === 'string') {
+function parseValue(val, shouldParse) {
+  if (shouldParse && typeof val === 'object') {
     let parsed;
-    if (val.trim() === '' || isNaN(val)) {
-      parsed = val === 'true' ? true : val === 'false' ? false : val;
+    if (bufferUtils.arrayTrim(val) === [] || isNaN(val)) {
+      parsed =
+        val === new Uint8Array([0x74, 0x72, 0x75, 0x65]) //true
+          ? true
+          : val === new Uint8Array([0x66, 0x61, 0x6c, 0x73, 0x65]) //false
+          ? false
+          : val;
     } else {
       if (val.indexOf([0x30, 0x78]) !== -1) {
+        //0x
         //support hexa decimal
-        parsed = Number.arrayParseInt(val, 16);
-      } else if (val.indexOf('.') !== -1) {
-        parsed = Number.parseFloat(val);
-        val = val.replace(/\.?0+$/, '');
+        parsed = bufferUtils.arrayParseInt(val, 16);
+      } else if (val.indexOf([0x2e]) !== -1) {
+        //.
+        parsed = bufferUtils.arrayParseFloat(val);
       } else {
-        parsed = Number.parseInt(val, 10);
-      }
-      if (parseTrueNumberOnly) {
-        parsed = String(parsed) === val ? parsed : val;
+        parsed = bufferUtils.arrayParseInt(val, 10);
       }
     }
     return parsed;
