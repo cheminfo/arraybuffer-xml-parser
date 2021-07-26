@@ -71,6 +71,17 @@ function processTagValue(tagName, val, options) {
 
   return val;
 }
+function stringProcessTagValue(tagName, val, options) {
+  if (val) {
+    if (options.trimValues) {
+      val = val.trim();
+    }
+    val = options.tagValueProcessor(val, tagName);
+    val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
+  }
+
+  return val;
+}
 
 function resolveNameSpace(tagname, options) {
   if (options.ignoreNameSpace) {
@@ -267,11 +278,9 @@ const getTraversalObj = function (xmlData, options) {
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if (textData) {
-          currentNode.val = `${util.getValue(currentNode.val)}${processTagValue(
-            currentNode.tagname,
-            textData,
-            options,
-          )}`;
+          currentNode.val = `${util.getValue(
+            currentNode.val,
+          )}${stringProcessTagValue(currentNode.tagname, textData, options)}`;
           textData = '';
         }
 
@@ -322,7 +331,7 @@ const getTraversalObj = function (xmlData, options) {
           if (currentNode.tagname !== '!xml') {
             currentNode.val = `${util.getValue(
               currentNode.val,
-            )}${processTagValue(currentNode.tagname, textData, options)}`;
+            )}${stringProcessTagValue(currentNode.tagname, textData, options)}`;
           }
         }
 
