@@ -3,8 +3,6 @@ const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
 
-const decoder = new TextDecoder();
-
 const defaultOptions = {
   attributeNamePrefix: '@_',
   attrNodeName: false,
@@ -65,7 +63,7 @@ this.exports = {
 function processTagValue(tagName, val, options) {
   if (val) {
     if (options.trimValues) {
-      val = val.arrayTrim();
+      val = bufferUtils.arrayTrim(val);
     }
     val = options.tagValueProcessor(val, tagName);
     val = parseValue(val, options.parseNodeValue);
@@ -83,9 +81,9 @@ function resolveNameSpace(tagname, options) {
       return '';
     }
     if (tags.length === 2) {
-      tagname = prefix + decoder.decode(tags[1]);
+      tagname = prefix + bufferUtils.arrayDecode(tags[1]);
     } else {
-      tagname = decoder.decode(tagname);
+      tagname = bufferUtils.arrayDecode(tagname);
     }
   }
   return tagname;
@@ -164,7 +162,6 @@ function buildAttributesMap(attrStr, options) {
   }
 }
 
-//CALLED BY MAIN
 const getTraversalObj = function (xmlData, options) {
   xmlData = xmlData.replace(/\r\n?/g, '\n');
   options = buildOptions(options, defaultOptions, props);
@@ -175,26 +172,23 @@ const getTraversalObj = function (xmlData, options) {
   //function match(xmlData){
   for (let i = 0; i < xmlData.length; i++) {
     const ch = xmlData[i];
-    if (ch === '<') {
-      // ch === 60 if UTF-8
-      if (xmlData[i + 1] === '/') {
-        // === 47 if UTF-8
+    if (ch === 0x3c) {
+      if (xmlData[i + 1] === 0x2f) {
         //Closing Tag
         const closeIndex = findClosingIndex(
-          //TODid Adapt to arraybuffer
           xmlData,
-          '>',
+          [0x3e], //>
           i,
           'Closing Tag is not closed.',
         );
-        let tagName = util.trimArray(
+        let tagName = bufferUtils.trimArray(
           new Uint8Array(xmlData.buffer, i + 2, closeIndex - i - 2),
-        ); //new arraybuffer
+        );
 
         if (options.ignoreNameSpace) {
-          const colonIndex = util.arrayIndexOf(tagName, ':');
+          const colonIndex = bufferUtils.arrayIndexOf(tagName, [0x3a]);
           if (colonIndex !== -1) {
-            tagName = tagName.substr(colonIndex + 1);
+            tagName = new Uint8Array(tagName.buffer, colonIndex + 1);
           }
         }
 
@@ -219,40 +213,55 @@ const getTraversalObj = function (xmlData, options) {
           if (currentNode.attrsMap === undefined) {
             currentNode.attrsMap = {};
           }
-          currentNode.val = xmlData.substr(
-            currentNode.startIndex + 1,
-            i - currentNode.startIndex - 1,
+          currentNode.val = bufferUtils.arrayDecode(
+            new Uint8Array(
+              xmlData.buffer,
+              currentNode.startIndex + 1,
+              i - currentNode.startIndex - 1,
+            ),
           );
         }
         currentNode = currentNode.parent;
         textData = '';
         i = closeIndex;
-      } else if (xmlData[i + 1] === '?') {
-        //63
-        i = findClosingIndex(xmlData, '?>', i, 'Pi Tag is not closed.');
-      } else if (xmlData.substr(i + 1, 3) === '!--') {
-        //todo three AND or new arraybuffer
-        i = findClosingIndex(xmlData, '-->', i, 'Comment is not closed.');
-      } else if (xmlData.substr(i + 1, 2) === '!D') {
-        //two AND
-        const closeIndex = findClosingIndex(
-          //yup implement this
+      } else if (xmlData[i + 1] === 0x3f) {
+        i = findClosingIndex(xmlData, [0x3f, 0x3e], i, 'Pi Tag is not closed.');
+      } else if (
+        xmlData[i + 1] === 0x21 &&
+        (xmlData[i + 2] === xmlData[i + 3]) === 0x2d
+      ) {
+        i = findClosingIndex(
           xmlData,
-          '>',
+          [0x2d, 0x2d, 0x3e], //-->
+          i,
+          'Comment is not closed.',
+        );
+      } else if (xmlData[i + 1] === 0x21 && xmlData[i + 2] === 0x44) {
+        const closeIndex = findClosingIndex(
+          xmlData,
+          [0x3e], //>
           i,
           'DOCTYPE is not closed.',
         );
-        const tagExp = xmlData.substring(i, closeIndex);
-        if (tagExp.indexOf('[') >= 0) {
-          i = xmlData.indexOf(']>', i) + 1;
+        const tagExp = new Uint8Array(xmlData.buffer, i, closeIndex - i);
+        if (bufferUtils.arrayIndexOf(tagExp, [0x5b]) >= 0) {
+          i = bufferUtils.arrayIndexOf(xmlData, [0x5d, 0x3e], i) + 1;
         } else {
           i = closeIndex;
         }
-      } else if (xmlData.substr(i + 1, 2) === '![') {
-        //Two AND
+      } else if (xmlData[i + 1] === 0x21 && xmlData[i + 2] === 0x5b) {
         const closeIndex =
-          findClosingIndex(xmlData, ']]>', i, 'CDATA is not closed.') - 2;
-        const tagExp = xmlData.substring(i + 9, closeIndex); // new arraybuffer
+          findClosingIndex(
+            xmlData,
+            [0x5d, 0x5d, 0x3e], //]]>
+            i,
+            'CDATA is not closed.',
+          ) - 2;
+        const tagExp = new Uint8Array(
+          xmlData.buffer,
+          i + 9,
+          closeIndex - i - 9,
+        );
 
         //considerations
         //1. CDATA will always have parent node
@@ -391,5 +400,4 @@ function findClosingIndex(xmlData, str, i, errMsg) {
     return closingIndex + str.length - 1;
   }
 }
-
 exports.getTraversalObj = getTraversalObj;

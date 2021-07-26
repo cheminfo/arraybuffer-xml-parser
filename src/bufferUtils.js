@@ -1,3 +1,5 @@
+const decoder = new TextDecoder();
+
 exports.arrayTrim = function (array) {
   let i = 0;
   for (; i < array.length; i++) {
@@ -124,4 +126,37 @@ exports.arrayParseFloat = function (array) {
     number *= 10 ** (sign * exponent);
   }
   return number;
+};
+
+exports.arrayDecode = function (array) {
+  let output = '';
+  for (let i = 0; i < array.length; i++) {
+    const value = array[i];
+    if (value <= 0x7f) {
+      output += String.fromCharCode(array[i]);
+    } else {
+      if (value >= 0b11110000) {
+        output += String.fromCharCode(
+          value,
+          array[i + 1],
+          array[i + 2],
+          array[i + 3],
+        );
+        i += 3;
+      } else if (value >= 0b11100000) {
+        output += String.fromCharCode(
+          ((value & 0x0f) << 12) |
+            ((array[i + 1] & 0x3f) << 6) |
+            (array[i + 2] & 0x3f),
+        );
+        i += 2;
+      } else {
+        output += String.fromCharCode(
+          ((value & 0x1f) << 6) | (array[i + 1] & 0x3f),
+        );
+        i++;
+      }
+    }
+  }
+  return output;
 };

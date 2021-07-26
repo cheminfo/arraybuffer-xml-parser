@@ -108,3 +108,14 @@ describe('arrayParseFloat', function () {
     ).toStrictEqual(142857);
   });
 });
+
+describe('arrayDecode', function () {
+  it('should decode an arrayBuffer', function () {
+    const array = new Uint8Array([
+      0x31, 0x34, 0x32, 0x38, 0x35, 0x37, 0x45, 0x2d, 0x35,
+    ]);
+    const euro = new Uint8Array([0xe2, 0x82, 0xac]);
+    expect(bufferUtils.arrayDecode(array)).toStrictEqual('142857E-5');
+    expect(bufferUtils.arrayDecode(euro)).toStrictEqual('€');
+  });
+});
