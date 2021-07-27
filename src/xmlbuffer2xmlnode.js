@@ -102,17 +102,20 @@ function resolveNameSpace(tagname, options) {
 function parseValue(val, shouldParse) {
   if (shouldParse && typeof val === 'object') {
     let parsed;
-    if (bufferUtils.arrayTrim(val) === [] || val[0] > 0x39 || val[0] < 0x30) {
+    if (val[0] > 0x39 || val[0] < 0x30) {
       parsed = bufferUtils.arrayIsEqual(val, [116, 114, 117, 101]) //true
         ? true
         : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
         ? false
-        : val;
+        : bufferUtils.arrayDecode(val);
     } else {
       if (bufferUtils.arrayIndexOf(val, [0x30, 0x78]) !== -1) {
         //0x
         //support hexa decimal
-        parsed = bufferUtils.arrayParseInt(val, 16);
+        parsed = bufferUtils.arrayHexToInt(
+          val,
+          bufferUtils.arrayIndexOf(val, [0x30, 0x78]) + 2,
+        );
       } else if (bufferUtils.arrayIndexOf(val, [0x2e]) !== -1) {
         //.
         parsed = bufferUtils.arrayParseFloat(val);
@@ -123,7 +126,7 @@ function parseValue(val, shouldParse) {
     return parsed;
   } else {
     if (util.isExist(val)) {
-      return val;
+      return bufferUtils.arrayDecode(val);
     } else {
       return '';
     }
@@ -174,11 +177,11 @@ function buildAttributesMap(attrStr, options) {
 }
 
 const getTraversalObj = function (xmlData, options) {
-  xmlData = xmlData.replace(/\r\n?/g, '\n');
+  //xmlData = xmlData.replace(/\r\n?/g, '\n');
   options = buildOptions(options, defaultOptions, props);
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
-  let textData = '';
+  let textData = [];
 
   //function match(xmlData){
   for (let i = 0; i < xmlData.length; i++) {
@@ -192,7 +195,7 @@ const getTraversalObj = function (xmlData, options) {
           i,
           'Closing Tag is not closed.',
         );
-        let tagName = bufferUtils.trimArray(
+        let tagName = bufferUtils.arrayTrim(
           new Uint8Array(xmlData.buffer, i + 2, closeIndex - i - 2),
         );
 
@@ -210,12 +213,15 @@ const getTraversalObj = function (xmlData, options) {
           if (currentNode.val) {
             currentNode.val = `${util.getValue(
               currentNode.val,
-            )}${processTagValue(tagName, textData, options)}`;
+            )}${processTagValue(tagName, new Uint8Array(textData), options)}`;
           } else {
-            currentNode.val = processTagValue(tagName, textData, options);
+            currentNode.val = processTagValue(
+              tagName,
+              new Uint8Array(textData),
+              options,
+            );
           }
         }
-
         if (
           options.stopNodes.length &&
           options.stopNodes.includes(currentNode.tagname)
@@ -233,11 +239,12 @@ const getTraversalObj = function (xmlData, options) {
           );
         }
         currentNode = currentNode.parent;
-        textData = '';
+        textData = [];
         i = closeIndex;
       } else if (xmlData[i + 1] === 0x3f) {
         i = findClosingIndex(xmlData, [0x3f, 0x3e], i, 'Pi Tag is not closed.');
       } else if (
+        //!--
         xmlData[i + 1] === 0x21 &&
         (xmlData[i + 2] === xmlData[i + 3]) === 0x2d
       ) {
@@ -246,7 +253,7 @@ const getTraversalObj = function (xmlData, options) {
           [0x2d, 0x2d, 0x3e], //-->
           i,
           'Comment is not closed.',
-        );
+        ); //!D
       } else if (xmlData[i + 1] === 0x21 && xmlData[i + 2] === 0x44) {
         const closeIndex = findClosingIndex(
           xmlData,
@@ -259,7 +266,7 @@ const getTraversalObj = function (xmlData, options) {
           i = bufferUtils.arrayIndexOf(xmlData, [0x5d, 0x3e], i) + 1;
         } else {
           i = closeIndex;
-        }
+        } //![
       } else if (xmlData[i + 1] === 0x21 && xmlData[i + 2] === 0x5b) {
         const closeIndex =
           findClosingIndex(
@@ -280,8 +287,12 @@ const getTraversalObj = function (xmlData, options) {
         if (textData) {
           currentNode.val = `${util.getValue(
             currentNode.val,
-          )}${stringProcessTagValue(currentNode.tagname, textData, options)}`;
-          textData = '';
+          )}${stringProcessTagValue(
+            currentNode.tagname,
+            new Uint8Array(textData),
+            options,
+          )}`;
+          textData = [];
         }
 
         if (options.cdataTagName) {
@@ -331,7 +342,11 @@ const getTraversalObj = function (xmlData, options) {
           if (currentNode.tagname !== '!xml') {
             currentNode.val = `${util.getValue(
               currentNode.val,
-            )}${stringProcessTagValue(currentNode.tagname, textData, options)}`;
+            )}${processTagValue(
+              currentNode.tagname,
+              new Uint8Array(textData),
+              options,
+            )}`;
           }
         }
 
@@ -370,11 +385,11 @@ const getTraversalObj = function (xmlData, options) {
           currentNode.addChild(childNode);
           currentNode = childNode;
         }
-        textData = '';
+        textData = [];
         i = closeIndex;
       }
     } else {
-      textData += xmlData[i];
+      textData.push(xmlData[i]);
     }
   }
   return xmlObj;
@@ -389,7 +404,7 @@ function closingIndexForOpeningTag(data, i) {
       if (ch === attrBoundary) attrBoundary = 0; //reset
     } else if (ch === 0x22 || ch === 0x27) {
       attrBoundary = ch;
-    } else if (ch === 0x3c) {
+    } else if (ch === 0x3e) {
       return {
         data: tagExp,
         index: index,

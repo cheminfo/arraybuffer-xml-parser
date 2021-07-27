@@ -1,5 +1,5 @@
 const nodeToJson = require('./node2json');
-const xmlbuffer2node = require('./xmlbuffer2xmlnode');
+const xmlbuffer2xmlnode = require('./xmlbuffer2xmlnode');
 const xmlToNodeobj = require('./xmlstr2xmlnode');
 const x2xmlnode = require('./xmlstr2xmlnode');
 const buildOptions = require('./util').buildOptions;
@@ -14,17 +14,21 @@ exports.parse = function (xmlData, options, validationOption) {
       throw Error(result.err.msg);
     }
   }
-  options = buildOptions(options, x2xmlnode.defaultOptions, x2xmlnode.props);
-  const traversableObj = xmlToNodeobj.getTraversalObj(xmlData, options);
+  options = buildOptions(
+    options,
+    xmlbuffer2xmlnode.defaultOptions,
+    xmlbuffer2xmlnode.props,
+  );
+  const traversableObj = xmlbuffer2xmlnode.getTraversalObj(xmlData, options);
   //print(traversableObj, "  ");
   return nodeToJson.convertToJson(traversableObj, options);
 };
 
-exports.getTraversalObj = xmlToNodeobj.getTraversalObj;
+exports.buffer2node = xmlbuffer2xmlnode.exports;
+exports.getTraversalObj = xmlbuffer2xmlnode.getTraversalObj;
 exports.convertToJson = nodeToJson.convertToJson;
 exports.convertToJsonString = require('./node2json_str').convertToJsonString;
 
-exports.xml2node = xmlbuffer2node.exports;
 exports.validate = validator.validate;
 exports.j2xParser = require('./json2xml');
 

@@ -1,15 +1,17 @@
 const parser = require('../parser');
 const validator = require('../validator');
 
+const encoder = new TextEncoder();
+
 describe('XMLParser', function () {
   it('should parse all values as string, int, boolean, float, hexadecimal', function () {
-    const xmlData = `<rootNode>
+    const xmlData = encoder.encode(`<rootNode>
         <tag>value</tag>
         <boolean>true</boolean>
         <intTag>045</intTag>
         <floatTag>65.34</floatTag>
         <hexadecimal>0x15</hexadecimal>
-        </rootNode>`;
+        </rootNode>`);
     const expected = {
       rootNode: {
         tag: 'value',
@@ -19,20 +21,19 @@ describe('XMLParser', function () {
         hexadecimal: 21,
       },
     };
-
     const result = parser.parse(xmlData);
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
 
   it('should parse only true numbers', function () {
-    const xmlData = `<rootNode>
+    const xmlData = encoder.encode(`<rootNode>
         <tag>value</tag>
         <boolean>true</boolean>
         <intTag>045</intTag>
         <floatTag>65.340</floatTag>
         <long>420926189200190257681175017717</long>
-        </rootNode>`;
+        </rootNode>`);
     const expected = {
       rootNode: {
         tag: 'value',
@@ -51,12 +52,12 @@ describe('XMLParser', function () {
   });
 
   it('should parse number ending in .0 for parseTrueNumberOnly:false', function () {
-    const xmlData = `<rootNode>
+    const xmlData = encoder.encode(`<rootNode>
         <floatTag0>0.0</floatTag0>
         <floatTag1>1.0</floatTag1>
         <floatTag2>2.0000</floatTag2>
         <floatTag3 float="3.00"/>
-        </rootNode>`;
+        </rootNode>`);
     const expected = {
       rootNode: {
         floatTag0: 0,
@@ -78,12 +79,12 @@ describe('XMLParser', function () {
   });
 
   it('should parse number ending in .0 for parseTrueNumberOnly:true', function () {
-    const xmlData = `<rootNode>
+    const xmlData = encoder.encode(`<rootNode>
         <floatTag0>0.0</floatTag0>
         <floatTag1>1.0</floatTag1>
         <floatTag2>2.0000</floatTag2>
         <floatTag3 float="3.00"/>
-        </rootNode>`;
+        </rootNode>`);
     const expected = {
       rootNode: {
         floatTag0: 0,
@@ -105,7 +106,9 @@ describe('XMLParser', function () {
   });
 
   it('should not parse values to primitive type', function () {
-    const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;
+    const xmlData = encoder.encode(
+      `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`,
+    );
     const expected = {
       rootNode: {
         tag: 'value',
@@ -122,7 +125,9 @@ describe('XMLParser', function () {
   });
 
   it('should parse number values of attributes as number', function () {
-    const xmlData = `<rootNode><tag int='045' intNegative='-045' float='65.34' floatNegative='-65.34'>value</tag></rootNode>`;
+    const xmlData = encoder.encode(
+      `<rootNode><tag int='045' intNegative='-045' float='65.34' floatNegative='-65.34'>value</tag></rootNode>`,
+    );
     const expected = {
       rootNode: {
         tag: {
@@ -144,7 +149,9 @@ describe('XMLParser', function () {
   });
 
   it('should parse number values as number if flag is set', function () {
-    const xmlData = `<rootNode><tag>value</tag><intTag>045</intTag><intTag>0</intTag><floatTag>65.34</floatTag></rootNode>`;
+    const xmlData = encoder.encode(
+      `<rootNode><tag>value</tag><intTag>045</intTag><intTag>0</intTag><floatTag>65.34</floatTag></rootNode>`,
+    );
     const expected = {
       rootNode: {
         tag: 'value',
@@ -160,7 +167,9 @@ describe('XMLParser', function () {
   });
 
   it('should skip tag arguments', function () {
-    const xmlData = `<rootNode><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></rootNode>`;
+    const xmlData = encoder.encode(
+      `<rootNode><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></rootNode>`,
+    );
     const expected = {
       rootNode: {
         tag: 'value',
@@ -499,6 +508,7 @@ describe('XMLParser', function () {
     const xmlData = fs.readFileSync(fileNamePath).toString();
 
     const expected = {
+      // eslint-disable-next-line camelcase
       any_name: {
         '@attr': 'https://example.com/somepath',
         person: [
@@ -574,80 +584,6 @@ describe('XMLParser', function () {
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
-
-  /* it("should parse nodes as arrays", function () {
-      const fs = require("fs");
-      const path = require("path");
-      const fileNamePath = path.join(__dirname, "assets/sample.xml");
-      const xmlData = fs.readFileSync(fileNamePath).toString();
-
-      const expected = {
-        "any_name": [{
-          "@attr": ["https://example.com/somepath"],
-          "person": [{
-            "@id": ["101"],
-            "phone": [122233344550, 122233344551],
-            "name": ["Jack"],
-            "age": [33],
-            "emptyNode": [""],
-            "booleanNode": [false, true],
-            "selfclosing": [
-              "",
-              {
-                "@with": "value"
-              }
-            ],
-            "married": [{
-              "@firstTime": "No",
-              "@attr": "val 2",
-              "#_text": "Yes"
-            }],
-            "birthday": ["Wed, 28 Mar 1979 12:13:14 +0300"],
-            "address": [{
-              "city": ["New York"],
-              "street": ["Park Ave"],
-              "buildingNo": [1],
-              "flatNo": [1]
-            }, {
-              "city": ["Boston"],
-              "street": ["Centre St"],
-              "buildingNo": [33],
-              "flatNo": [24]
-            }]
-          }, {
-            "@id": ["102"],
-            "phone": [122233344553, 122233344554],
-            "name": ["Boris"],
-            "age": [34],
-            "married": [{
-                "@firstTime": "Yes",
-                "#_text": "Yes"
-            }],
-            "birthday": ["Mon, 31 Aug 1970 02:03:04 +0300"],
-            "address": [{
-                "city": ["Moscow"],
-                "street": ["Kahovka"],
-                "buildingNo": [1],
-                "flatNo": [2]
-            }, {
-                "city": ["Tula"],
-                "street": ["Lenina"],
-                "buildingNo": [3],
-                "flatNo": [78]
-            }]
-          }]
-        }]
-      };
-
-      const result = parser.parse(xmlData, {
-        ignoreAttributes: false,
-        ignoreNonTextNodeAttr: false,
-        attributeNamePrefix: "@",
-        textNodeName: "#_text",
-        arrayMode: true
-      });
-      expect(result).toEqual(expected);
-    }); */
 
   it('should skip namespace', function () {
     const xmlData = `\

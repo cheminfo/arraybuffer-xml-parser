@@ -63,6 +63,41 @@ exports.arraySplit = function (array, separator) {
   return split;
 };
 
+exports.arrayHexToInt = function (array, index = 0) {
+  const reducedArray = new Uint8Array(array.buffer, index);
+  for (let i = 0; i < reducedArray.length; i++) {
+    switch (reducedArray[i]) {
+      case 0x61:
+      case 0x41:
+        reducedArray[i] = 0x3a;
+        break;
+      case 0x62:
+      case 0x42:
+        reducedArray[i] = 0x3b;
+        break;
+      case 0x63:
+      case 0x43:
+        reducedArray[i] = 0x3c;
+        break;
+      case 0x64:
+      case 0x44:
+        reducedArray[i] = 0x3d;
+        break;
+      case 0x65:
+      case 0x45:
+        reducedArray[i] = 0x3e;
+        break;
+      case 0x66:
+      case 0x46:
+        reducedArray[i] = 0x3f;
+        break;
+      default:
+        break;
+    }
+  }
+  return exports.arrayParseInt(reducedArray, 16);
+};
+
 exports.arrayParseInt = function (array, base = 10) {
   if (base === 0) {
     base = 10;
@@ -70,7 +105,7 @@ exports.arrayParseInt = function (array, base = 10) {
   let number = 0;
   for (
     let i = 0;
-    i < array.length && array[i] >= 0x30 && array[i] <= 0x39;
+    i < array.length && array[i] >= 0x30 && array[i] - 0x30 < base;
     i++
   ) {
     number = base * number + (array[i] - 0x30);

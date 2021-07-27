@@ -64,6 +64,13 @@ describe('arraySplit', function () {
     ).toStrictEqual([new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9])]);
   });
 });
+describe('arrayHexToInt', function () {
+  it('should parse an arrayBuffer containing a hex string', function () {
+    expect(
+      bufferUtils.arrayHexToInt(new Uint8Array([0x30, 0x78, 0x61, 0x32]), 2),
+    ).toStrictEqual(0xa2);
+  });
+});
 describe('arrayParseInt', function () {
   it('should parse an arrayBuffer into an int', function () {
     expect(
