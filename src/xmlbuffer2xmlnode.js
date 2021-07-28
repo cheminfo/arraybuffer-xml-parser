@@ -66,7 +66,7 @@ function processTagValue(tagName, val, options) {
       val = bufferUtils.arrayTrim(val);
     }
     val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options.parseNodeValue);
+    val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
   }
 
   return val;
@@ -99,10 +99,11 @@ function resolveNameSpace(tagname, options) {
   }
   return tagname;
 }
-function parseValue(val, shouldParse) {
+function parseValue(val, shouldParse, parseTrueNumberOnly) {
   if (shouldParse && typeof val === 'object') {
     let parsed;
-    if (val.length === 0 || val[0] > 0x39 || val[0] < 0x30) {
+    const val0 = val[0];
+    if (val.length === 0 || val0 > 0x39 || val0 < 0x30) {
       parsed = bufferUtils.arrayIsEqual(val, [116, 114, 117, 101]) //true
         ? true
         : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
@@ -119,8 +120,12 @@ function parseValue(val, shouldParse) {
       } else if (bufferUtils.arrayIndexOf(val, [0x2e]) !== -1) {
         //.
         parsed = bufferUtils.arrayParseFloat(val);
+        val = bufferUtils.arrayFloatTrim(val);
       } else {
         parsed = bufferUtils.arrayParseInt(val, 10);
+        if (parseTrueNumberOnly && !bufferUtils.compareToInt(val, parsed)) {
+          parsed = bufferUtils.arrayDecode(val);
+        }
       }
     }
     return parsed;

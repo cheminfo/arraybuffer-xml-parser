@@ -6,6 +6,12 @@ exports.arrayTrim = function (array) {
   return new Uint8Array(array.buffer, i, j - i + 1);
 };
 
+exports.arrayFloatTrim = function (array) {
+  let j = array.length - 1;
+  for (; j >= 0 && array[j] === 0x30; j--);
+  return new Uint8Array(array.buffer, 0, j + 1);
+};
+
 exports.arrayIndexOf = function (array, referenceArray, index = 0) {
   let found = 0;
   let foundIndex = -1;
@@ -185,4 +191,14 @@ exports.arrayDecode = function (array) {
   }
 
   return output;
+};
+
+exports.compareToInt = function (array, int) {
+  for (let i = array.length - 1; i >= 0; i--) {
+    if (array[i] !== (int % 10) + 0x30 || int === 0) {
+      return false;
+    }
+    int = (int / 10) >> 0;
+  }
+  return true;
 };

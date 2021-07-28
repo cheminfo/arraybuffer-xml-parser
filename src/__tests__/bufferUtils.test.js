@@ -118,6 +118,11 @@ describe('arrayParseFloat', function () {
         new Uint8Array([0x31, 0x34, 0x32, 0x38, 0x35, 0x37, 0x45, 0x2b]),
       ),
     ).toStrictEqual(142857);
+    expect(
+      bufferUtils.arrayParseFloat(
+        new Uint8Array([0x31, 0x2e, 0x34, 0x32, 0x38, 0x35, 0x37, 0x30]),
+      ),
+    ).toStrictEqual(1.42857);
   });
 });
 
@@ -133,5 +138,22 @@ describe('arrayDecode', function () {
     expect(bufferUtils.arrayDecode(array)).toStrictEqual('142857E-5');
     expect(bufferUtils.arrayDecode(threeBytes)).toStrictEqual('€');
     expect(bufferUtils.arrayDecode(fourBytesMix)).toStrictEqual('ඞ🗡ඞ');
+  });
+});
+
+describe('compareToInt', function () {
+  it('should compare an arrayBuffer to an int', function () {
+    const rightOne = new Uint8Array([0x34, 0x35]);
+    expect(bufferUtils.compareToInt(rightOne, 45)).toStrictEqual(true);
+    const zeroBefore = new Uint8Array([0x30, 0x34, 0x35]);
+    expect(bufferUtils.compareToInt(zeroBefore, 45)).toStrictEqual(false);
+    const tooBig = new Uint8Array([
+      0x4, 0x2, 0x0, 0x9, 0x2, 0x6, 0x1, 0x8, 0x9, 0x2, 0x0, 0x0, 0x1, 0x9, 0x0,
+      0x2, 0x5, 0x7, 0x6, 0x8, 0x1, 0x1, 0x7, 0x5, 0x0, 0x1, 0x7, 0x7, 0x1, 0x7,
+    ]);
+    expect(
+      // eslint-disable-next-line no-loss-of-precision
+      bufferUtils.compareToInt(tooBig, 420926189200190257681175017717),
+    ).toStrictEqual(false);
   });
 });
