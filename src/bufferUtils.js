@@ -1,17 +1,9 @@
 exports.arrayTrim = function (array) {
   let i = 0;
-  for (; i < array.length; i++) {
-    if (array[i] !== 0x20) {
-      break;
-    }
-  }
-  for (let j = array.length - 1; j >= i; j--) {
-    if (array[j] !== 0x20) {
-      array = new Uint8Array(array.buffer, i, j - i + 1);
-      j = 0;
-    }
-  }
-  return array;
+  let j = array.length - 1;
+  for (; i < array.length && (array[i] === 0x20 || array[i] === 0x0a); i++);
+  for (; j >= i && (array[j] === 0x20 || array[j] === 0x0a); j--);
+  return new Uint8Array(array.buffer, i, j - i + 1);
 };
 
 exports.arrayIndexOf = function (array, referenceArray, index = 0) {

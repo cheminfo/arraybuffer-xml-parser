@@ -16,8 +16,13 @@ describe('arrayTrim', function () {
     expect(bufferUtils.arrayTrim(both)).toStrictEqual(
       new Uint8Array([33, 33, 97]),
     );
+    const emptiness = new Uint8Array([
+      0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x0a,
+    ]);
+    expect(bufferUtils.arrayTrim(emptiness)).toStrictEqual(new Uint8Array([]));
   });
 });
+
 describe('arrayIndexOf', function () {
   it('should find the index pointing to the begining of the found string in array', function () {
     const whole = new Uint8Array([0x61, 0x6d, 0x6f, 0x67, 0x75, 0x73]);

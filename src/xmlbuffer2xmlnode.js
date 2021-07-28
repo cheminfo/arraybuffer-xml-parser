@@ -102,7 +102,7 @@ function resolveNameSpace(tagname, options) {
 function parseValue(val, shouldParse) {
   if (shouldParse && typeof val === 'object') {
     let parsed;
-    if (val[0] > 0x39 || val[0] < 0x30) {
+    if (val.length === 0 || val[0] > 0x39 || val[0] < 0x30) {
       parsed = bufferUtils.arrayIsEqual(val, [116, 114, 117, 101]) //true
         ? true
         : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
