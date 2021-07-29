@@ -103,7 +103,13 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
   if (shouldParse && typeof val === 'object') {
     let parsed;
     const val0 = val[0];
-    if (val.length === 0 || val0 > 0x39 || val0 < 0x30) {
+    if (
+      val.length === 0 ||
+      ((val0 > 0x39 || val0 < 0x30) &&
+        val0 !== 0x20 &&
+        val0 !== 0x2b &&
+        val0 !== 0x2d)
+    ) {
       parsed = bufferUtils.arrayIsEqual(val, [116, 114, 117, 101]) //true
         ? true
         : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
@@ -138,6 +144,35 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
   }
 }
 
+function stringParseValue(val, shouldParse, parseTrueNumberOnly) {
+  if (shouldParse && typeof val === 'string') {
+    let parsed;
+    if (val.trim() === '' || isNaN(val)) {
+      parsed = val === 'true' ? true : val === 'false' ? false : val;
+    } else {
+      if (val.indexOf('0x') !== -1) {
+        //support hexa decimal
+        parsed = Number.parseInt(val, 16);
+      } else if (val.indexOf('.') !== -1) {
+        parsed = Number.parseFloat(val);
+        val = val.replace(/\.?0+$/, '');
+      } else {
+        parsed = Number.parseInt(val, 10);
+      }
+      if (parseTrueNumberOnly) {
+        parsed = String(parsed) === val ? parsed : val;
+      }
+    }
+    return parsed;
+  } else {
+    if (util.isExist(val)) {
+      return val;
+    } else {
+      return '';
+    }
+  }
+}
+
 const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 //TODO: change regex to capture NS
 //const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
@@ -159,7 +194,7 @@ function buildAttributesMap(attrStr, options) {
             matches[i][4] = matches[i][4].trim();
           }
           matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
-          attrs[options.attributeNamePrefix + attrName] = parseValue(
+          attrs[options.attributeNamePrefix + attrName] = stringParseValue(
             matches[i][4],
             options.parseAttributeValue,
             options.parseTrueNumberOnly,
@@ -251,7 +286,8 @@ const getTraversalObj = function (xmlData, options) {
       } else if (
         //!--
         xmlData[i + 1] === 0x21 &&
-        (xmlData[i + 2] === xmlData[i + 3]) === 0x2d
+        xmlData[i + 2] === 0x2d &&
+        xmlData[i + 3] === 0x2d
       ) {
         i = findClosingIndex(
           xmlData,

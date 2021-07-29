@@ -88,6 +88,39 @@ describe('arrayParseInt', function () {
         new Uint8Array([0x31, 0x34, 0x32, 0x20, 0x35, 0x37]),
       ),
     ).toStrictEqual(142);
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([0x30, 0x34, 0x32, 0x20, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(42);
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([0x2b, 0x34, 0x32, 0x20, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(42); //+
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([0x2d, 0x34, 0x32, 0x20, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(-42); //-
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([0x20, 0x20, 0x2d, 0x34, 0x32, 0x20, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(-42);
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([0x2d, 0x20, 0x32, 0x20, 0x35, 0x37]),
+      ),
+    ).toStrictEqual(0);
+    expect(
+      bufferUtils.arrayParseInt(
+        new Uint8Array([
+          0x2b, 0x31, 0x32, 0x32, 0x32, 0x33, 0x33, 0x33, 0x34, 0x34, 0x35,
+          0x35, 0x30,
+        ]),
+      ),
+    ).toStrictEqual(122233344550); //Phone number
   });
 });
 

@@ -101,12 +101,31 @@ exports.arrayParseInt = function (array, base = 10) {
     base = 10;
   }
   let number = 0;
-  for (
-    let i = 0;
-    i < array.length && array[i] >= 0x30 && array[i] - 0x30 < base;
-    i++
-  ) {
-    number = base * number + (array[i] - 0x30);
+  let negative;
+  for (let i = 0; i < array.length; i++) {
+    const character = array[i];
+    if (character >= 0x30 && character - 0x30 < base) {
+      number = base * number + (array[i] - 0x30);
+    } else if (negative === undefined && number === 0) {
+      switch (character) {
+        case 0x2d:
+          negative = true;
+          break;
+        case 0x2b:
+          negative = false;
+          break;
+        case 0x20:
+          break;
+        default:
+          i = array.length;
+          break;
+      }
+    } else {
+      break;
+    }
+  }
+  if (negative) {
+    return (-1 * number) >> 0;
   }
   return number;
 };
