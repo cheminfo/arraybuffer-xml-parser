@@ -19,22 +19,12 @@ describe('parseValue', function () {
     expect(
       xml.parseValue(new Uint8Array([0x30, 0x78, 0x61, 0x32]), true),
     ).toStrictEqual(0xa2);
-  });
-});
-
-describe('resolveNameSpace', function () {
-  it('should process a namespace', function () {
     expect(
-      xml.resolveNameSpace(
-        new Uint8Array([0x61, 0x6d, 0x6f, 0x2f, 0x67, 0x75, 0x73]), //amo:gus
-        { ignoreNameSpace: true },
+      xml.parseValue(
+        new Uint8Array([
+          0x20, 0x73, 0x6f, 0x6d, 0x65, 0x20, 0x76, 0x61, 0x6c, 0x20,
+        ]),
       ),
-    ).toStrictEqual('amo/gus');
-    expect(
-      xml.resolveNameSpace(
-        new Uint8Array([0x78, 0x6d, 0x6c, 0x6e, 0x73]), //xmlns
-        { ignoreNameSpace: true },
-      ),
-    ).toStrictEqual('');
+    ).toStrictEqual(' some val ');
   });
 });

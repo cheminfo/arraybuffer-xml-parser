@@ -85,16 +85,13 @@ function stringProcessTagValue(tagName, val, options) {
 
 function resolveNameSpace(tagname, options) {
   if (options.ignoreNameSpace) {
-    const tags = bufferUtils.arraySplit(tagname, 0x3a);
-    const prefix = tagname[0] === 0x2f ? '/' : ''; //
-    if (bufferUtils.arrayIsEqual(tags[0], [0x78, 0x6d, 0x6c, 0x6e, 0x73])) {
-      //xmlns
+    const tags = tagname.split(':');
+    const prefix = tagname.charAt(0) === '/' ? '/' : '';
+    if (tags[0] === 'xmlns') {
       return '';
     }
     if (tags.length === 2) {
-      tagname = prefix + bufferUtils.arrayDecode(tags[1]);
-    } else {
-      tagname = bufferUtils.arrayDecode(tagname);
+      tagname = prefix + tags[1];
     }
   }
   return tagname;

@@ -41,7 +41,7 @@ describe('arrayIndexOf', function () {
   });
 });
 describe('arraySplit', function () {
-  it('should split the array using a separator', function () {
+  it('should split the array with a separator', function () {
     expect(
       bufferUtils.arraySplit(
         new Uint8Array([1, 2, 3, 4, 5, 12, 6, 7, 8, 9]),
