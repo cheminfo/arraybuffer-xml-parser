@@ -1,8 +1,10 @@
 const parser = require('../parser');
 
+const encoder = new TextEncoder();
+
 describe('XMLParser with arrayMode enabled', function () {
   it('should parse all the tags as an array no matter how many occurrences excluding primitive values when arrayMode is set to true', function () {
-    const xmlData = `<report>
+    const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
             <inventory>
@@ -25,7 +27,7 @@ describe('XMLParser with arrayMode enabled', function () {
                 </item>
             </inventory>
         </store>
-    </report>`;
+    </report>`);
 
     const expected = {
       report: [
@@ -77,7 +79,7 @@ describe('XMLParser with arrayMode enabled', function () {
   });
 
   it('should parse all the tags as an array no matter how many occurrences when arrayMode is set to strict', function () {
-    const xmlData = `<report>
+    const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
             <inventory>
@@ -100,7 +102,7 @@ describe('XMLParser with arrayMode enabled', function () {
                 </item>
             </inventory>
         </store>
-    </report>`;
+    </report>`);
 
     const expected = {
       report: [
@@ -152,7 +154,7 @@ describe('XMLParser with arrayMode enabled', function () {
   });
 
   it('should parse all the tags as an array that match arrayMode RegEx or return true as callback', function () {
-    const xmlData = `<report>
+    const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
             <inventory>
@@ -175,7 +177,7 @@ describe('XMLParser with arrayMode enabled', function () {
                 </item>
             </inventory>
         </store>
-    </report>`;
+    </report>`);
 
     const expected = {
       report: {
@@ -232,7 +234,7 @@ describe('XMLParser with arrayMode enabled', function () {
   });
 
   it('should parse all the tags as an array that match arrayMode callback with parent tag', function () {
-    const xmlData = `<report>
+    const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
             <inventory>
@@ -255,7 +257,7 @@ describe('XMLParser with arrayMode enabled', function () {
                 </item>
             </inventory>
         </store>
-    </report>`;
+    </report>`);
 
     const expected = {
       report: {

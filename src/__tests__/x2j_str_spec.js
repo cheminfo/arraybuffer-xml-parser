@@ -1,8 +1,10 @@
 const parser = require('../parser');
-
+const encoder = new TextEncoder();
 describe('XMLParser', function () {
   it('should parse a XML to JSON string', function () {
-    const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;
+    const xmlData = encoder.encode(
+      `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`,
+    );
     const expected = {
       rootNode: {
         tag: 'value',

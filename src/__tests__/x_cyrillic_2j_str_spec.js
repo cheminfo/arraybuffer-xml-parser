@@ -1,8 +1,11 @@
 const parser = require('../parser');
+const encoder = new TextEncoder();
 
 describe('XMLParser', function () {
   it('should parse XML with cyrillic characters to JSON string', function () {
-    const xmlData = `<КорневаяЗапись><Тэг>ЗначениеValue53456</Тэг></КорневаяЗапись>`;
+    const xmlData = encoder.encode(
+      `<КорневаяЗапись><Тэг>ЗначениеValue53456</Тэг></КорневаяЗапись>`,
+    );
     const expected = {
       КорневаяЗапись: {
         Тэг: 'ЗначениеValue53456',
