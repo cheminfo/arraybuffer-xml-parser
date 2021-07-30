@@ -175,7 +175,6 @@ describe('arrayDecode', function () {
 });
 
 describe('compareToInt', function () {
-  val0 > 0x39 || val0 < 0x30;
   it('should compare an arrayBuffer to an int', function () {
     const rightOne = new Uint8Array([0x34, 0x35]);
     expect(bufferUtils.compareToInt(rightOne, 45)).toStrictEqual(true);

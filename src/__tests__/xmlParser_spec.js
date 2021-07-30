@@ -1,5 +1,6 @@
+/* eslint-disable jest/no-commented-out-tests */
 const parser = require('../parser');
-const validator = require('../validator');
+// const validator = require('../validator');
 
 const encoder = new TextEncoder();
 
@@ -704,6 +705,7 @@ describe('XMLParser', function () {
     );
 
     const expected = {
+      // eslint-disable-next-line camelcase
       any_name: {
         person: {
           name1: 'Jack 1',
