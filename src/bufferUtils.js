@@ -221,3 +221,16 @@ exports.compareToInt = function (array, int) {
   }
   return true;
 };
+
+exports.containsNumber = function (array) {
+  for (let i = 0; i < array.length; i++) {
+    const value = array[i];
+    if (value !== 0x20 && value !== 0x2b && value !== 0x2d) {
+      if (value >= 0x30 && value <= 0x39) {
+        return true;
+      }
+      return false;
+    }
+  }
+  return false;
+};
