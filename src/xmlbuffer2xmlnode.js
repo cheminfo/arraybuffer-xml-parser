@@ -315,12 +315,12 @@ const getTraversalObj = function (xmlData, options) {
         //considerations
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
-        if (textData) {
+        if (textData.length !== 0) {
           currentNode.val = `${util.getValue(
             currentNode.val,
           )}${stringProcessTagValue(
             currentNode.tagname,
-            new Uint8Array(textData),
+            bufferUtils.arrayDecode(textData),
             options,
           )}`;
           textData = [];
@@ -331,7 +331,7 @@ const getTraversalObj = function (xmlData, options) {
           const childNode = new xmlNode(
             options.cdataTagName,
             currentNode,
-            tagExp,
+            bufferUtils.arrayDecode(tagExp),
           );
           currentNode.addChild(childNode);
           //for backtracking
@@ -339,10 +339,11 @@ const getTraversalObj = function (xmlData, options) {
             util.getValue(currentNode.val) + options.cdataPositionChar;
           //add rest value to parent node
           if (tagExp) {
-            childNode.val = tagExp;
+            childNode.val = bufferUtils.arrayDecode(tagExp);
           }
         } else {
-          currentNode.val = (currentNode.val || '') + (tagExp || '');
+          currentNode.val =
+            (currentNode.val || '') + (bufferUtils.arrayDecode(tagExp) || '');
         }
 
         i = closeIndex + 2;
