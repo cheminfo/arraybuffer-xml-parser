@@ -178,40 +178,6 @@ exports.arrayParseFloat = function (array) {
   return number;
 };
 
-exports.arrayDecode = function (array) {
-  let output = '';
-  for (let i = 0; i < array.length; i++) {
-    const value = array[i];
-    if (value <= 0x7f) {
-      output += String.fromCodePoint(array[i]);
-    } else if (value >= 0b11110000) {
-      const thing =
-        ((value & 0x07) << 18) |
-        ((array[i + 1] & 0x3f) << 12) |
-        ((array[i + 2] & 0x3f) << 6) |
-        (array[i + 3] & 0x3f);
-      output += String.fromCodePoint(thing); //String.fromCharCode(thing);
-      i += 3;
-    } else {
-      if (value >= 0b11100000) {
-        output += String.fromCodePoint(
-          ((value & 0x0f) << 12) |
-            ((array[i + 1] & 0x3f) << 6) |
-            (array[i + 2] & 0x3f),
-        );
-        i += 2;
-      } else if (value >= 0b110000) {
-        output += String.fromCodePoint(
-          ((value & 0x1f) << 6) | (array[i + 1] & 0x3f),
-        );
-        i++;
-      }
-    }
-  }
-
-  return output;
-};
-
 exports.compareToInt = function (array, int) {
   for (let i = array.length - 1; i >= 0; i--) {
     if (array[i] !== (int % 10) + 0x30 || int === 0) {
