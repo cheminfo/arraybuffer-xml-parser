@@ -1,12 +1,13 @@
 const parser = require('../parser');
 const validator = require('../validator');
+
 const encoder = new TextEncoder();
 
 describe('XMLParser', function () {
   it('should parse multiline tag value when tags without spaces', function () {
     const xmlData = encoder.encode(`<?xml version='1.0'?><root><person>lastname
-  firstname
-  patronymic</person></root>`);
+firstname
+patronymic</person></root>`);
     let result = parser.parse(xmlData, {
       ignoreAttributes: false,
     });
@@ -16,7 +17,6 @@ describe('XMLParser', function () {
         person: 'lastname\nfirstname\npatronymic',
       },
     };
-
     expect(result).toEqual(expected);
 
     // result = validator.validate(xmlData);
