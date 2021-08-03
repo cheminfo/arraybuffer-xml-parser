@@ -8,16 +8,10 @@
     "perf": "node ./benchmark/perfTest3.js",
     "eslint": "eslint src/*",
     "eslint-fix": "eslint src/* --fix",
-    "bundle": "webpack && webpack --config webpack-prod.config.js",
     "coverage": "istanbul cover -x \"cli.js\" -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90",
     "prettier": "prettier --check src",
-    "prettier-write": "prettier --write src",
-    "publish-please": "publish-please",
-    "prepublishOnly": "publish-please guard"
-  },
-  "bin": {
-    "xml2js": "./cli.js"
+    "prettier-write": "prettier --write src"
   },
   "repository": {
     "type": "git",
@@ -75,22 +69,11 @@
     "@babel/preset-env": "^7.14.7",
     "@babel/register": "^7.14.5",
     "babel-loader": "^8.2.2",
-    "babylon": "^6.18.0",
     "eslint": "^7.30.0",
     "eslint-config-cheminfo": "^5.2.4",
     "he": "^1.2.0",
-    "http-server": "^0.12.3",
-    "istanbul": "^0.4.5",
     "jest": "^27.0.6",
-    "nimnjs": "^2.2.0",
-    "prettier": "^2.3.2",
-    "publish-please": "^5.5.2",
-    "webpack": "^5.44.0",
-    "webpack-cli": "^4.7.2"
+    "prettier": "^2.3.2"
   },
-  "typings": "src/parser.d.ts",
-  "funding": {
-    "type": "paypal",
-    "url": "https://paypal.me/naturalintelligence"
-  }
+  "typings": "src/parser.d.ts"
 }
