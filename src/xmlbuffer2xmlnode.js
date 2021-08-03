@@ -2,6 +2,7 @@ const bufferUtils = require('./bufferUtils');
 const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
+
 const decoder = new TextDecoder();
 
 const defaultOptions = {
@@ -56,10 +57,10 @@ exports.props = props;
  * @param {string} val
  * @param {object} options
  */
-function processTagValue(tagName, val, options) {
+function processTagValue(tagName, val, options, offset = 0) {
   if (val) {
     if (options.trimValues) {
-      val = bufferUtils.arrayTrim(val);
+      val = bufferUtils.arrayTrim(val, offset);
     }
     val = options.tagValueProcessor(val, tagName);
     val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
@@ -123,6 +124,9 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
     return parsed;
   } else {
     if (util.isExist(val)) {
+      if (typeof val === 'string') {
+        return val;
+      }
       return decoder.decode(val);
     } else {
       return '';
@@ -207,12 +211,11 @@ const getTraversalObj = function (xmlData, options) {
   options = buildOptions(options, defaultOptions, props);
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
-  let textData = [];
-
+  let dataSize = 0;
+  let dataIndex = 0;
   //function match(xmlData){
   for (let i = 0; i < xmlData.length; i++) {
-    const ch = xmlData[i];
-    if (ch === 0x3c) {
+    if (xmlData[i] === 0x3c) {
       if (xmlData[i + 1] === 0x2f) {
         //Closing Tag
         const closeIndex = findClosingIndex(
@@ -239,12 +242,18 @@ const getTraversalObj = function (xmlData, options) {
           if (currentNode.val) {
             currentNode.val = `${util.getValue(
               currentNode.val,
-            )}${processTagValue(tagName, new Uint8Array(textData), options)}`;
+            )}${processTagValue(
+              tagName,
+              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
+              options,
+              dataIndex,
+            )}`;
           } else {
             currentNode.val = processTagValue(
               tagName,
-              new Uint8Array(textData),
+              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
               options,
+              dataIndex,
             );
           }
         }
@@ -265,8 +274,9 @@ const getTraversalObj = function (xmlData, options) {
           );
         }
         currentNode = currentNode.parent;
-        textData = [];
         i = closeIndex;
+        dataSize = 0;
+        dataIndex = i + 1;
       } else if (xmlData[i + 1] === 0x3f) {
         i = findClosingIndex(xmlData, [0x3f, 0x3e], i, 'Pi Tag is not closed.');
       } else if (
@@ -311,15 +321,17 @@ const getTraversalObj = function (xmlData, options) {
         //considerations
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
-        if (textData.length !== 0) {
+        if (dataSize !== 0) {
           currentNode.val = `${util.getValue(
             currentNode.val,
           )}${stringProcessTagValue(
             currentNode.tagname,
-            decoder.decode(textData),
+            decoder.decode(new Uint8Array(xmlData.buffer, dataIndex, dataSize)),
             options,
+            dataIndex,
           )}`;
-          textData = [];
+          dataSize = 0;
+          dataIndex = i + 1;
         }
 
         if (options.cdataTagName) {
@@ -366,14 +378,15 @@ const getTraversalObj = function (xmlData, options) {
         }
 
         //save text to parent node
-        if (currentNode && textData) {
+        if (currentNode && dataSize !== 0) {
           if (currentNode.tagname !== '!xml') {
             currentNode.val = `${util.getValue(
               currentNode.val,
             )}${processTagValue(
               currentNode.tagname,
-              new Uint8Array(textData),
+              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
               options,
+              dataIndex,
             )}`;
           }
         }
@@ -413,11 +426,12 @@ const getTraversalObj = function (xmlData, options) {
           currentNode.addChild(childNode);
           currentNode = childNode;
         }
-        textData = [];
         i = closeIndex;
+        dataSize = 0;
+        dataIndex = i + 1;
       }
     } else {
-      textData.push(xmlData[i]);
+      dataSize++;
     }
   }
   return xmlObj;
@@ -425,7 +439,7 @@ const getTraversalObj = function (xmlData, options) {
 
 function closingIndexForOpeningTag(data, i) {
   let attrBoundary;
-  let tagExp = [];
+  let endIndex = 0;
   for (let index = i; index < data.length; index++) {
     let ch = data[index];
     if (attrBoundary) {
@@ -434,13 +448,13 @@ function closingIndexForOpeningTag(data, i) {
       attrBoundary = ch;
     } else if (ch === 0x3e) {
       return {
-        data: decoder.decode(new Uint8Array(tagExp)),
+        data: decoder.decode(new Uint8Array(data.buffer, i, endIndex)),
         index: index,
       };
     } else if (ch === 0x09) {
       ch = 0x20;
     }
-    tagExp.push(ch);
+    endIndex++;
   }
 }
 
@@ -458,4 +472,5 @@ this.exports = {
   getTraversalObj,
   processTagValue,
   resolveNameSpace,
+  closingIndexForOpeningTag,
 };

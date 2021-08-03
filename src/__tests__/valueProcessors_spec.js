@@ -1,7 +1,6 @@
 const he = require('he');
 
 const parser = require('../parser');
-const validator = require('../validator');
 const encoder = new TextEncoder();
 
 describe('XMLParser', function () {

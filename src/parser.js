@@ -1,18 +1,10 @@
 const nodeToJson = require('./node2json');
 const xmlbuffer2xmlnode = require('./xmlbuffer2xmlnode');
-const xmlToNodeobj = require('./xmlstr2xmlnode');
-const x2xmlnode = require('./xmlstr2xmlnode');
 const buildOptions = require('./util').buildOptions;
-const validator = require('./validator');
 
 exports.parse = function (xmlData, options, validationOption) {
   if (validationOption) {
     if (validationOption === true) validationOption = {};
-
-    const result = validator.validate(xmlData, validationOption);
-    if (result !== true) {
-      throw Error(result.err.msg);
-    }
   }
   options = buildOptions(
     options,
@@ -29,7 +21,6 @@ exports.getTraversalObj = xmlbuffer2xmlnode.getTraversalObj;
 exports.convertToJson = nodeToJson.convertToJson;
 exports.convertToJsonString = require('./node2json_str').convertToJsonString;
 
-exports.validate = validator.validate;
 exports.j2xParser = require('./json2xml');
 
 exports.parseToNimn = function (xmlData, schema, options) {

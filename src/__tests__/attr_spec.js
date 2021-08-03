@@ -3,7 +3,6 @@
 
 const encoder = new TextEncoder();
 const parser = require('../parser');
-// const validator = require('../validator');
 
 describe('XMLParser', function () {
   it('should parse attributes with valid names', function () {

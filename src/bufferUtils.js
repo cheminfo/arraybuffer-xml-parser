@@ -1,9 +1,9 @@
-exports.arrayTrim = function (array) {
+exports.arrayTrim = function (array, offset = 0) {
   let i = 0;
   let j = array.length - 1;
   for (; i < array.length && (array[i] === 0x20 || array[i] === 0x0a); i++);
   for (; j >= i && (array[j] === 0x20 || array[j] === 0x0a); j--);
-  return new Uint8Array(array.buffer, i, j - i + 1);
+  return new Uint8Array(array.buffer, offset + i, j - i + 1);
 };
 
 exports.arrayFloatTrim = function (array) {

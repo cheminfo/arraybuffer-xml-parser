@@ -27,4 +27,12 @@ describe('parseValue', function () {
       ),
     ).toStrictEqual(' some val ');
   });
+  it('should find a tag before the greater than sign', function () {
+    expect(
+      xml.closingIndexForOpeningTag(
+        new Uint8Array([0x31, 0x32, 0x33, 0x34, 0x3e]),
+        0,
+      ),
+    ).toStrictEqual({ data: '1234', index: 4 });
+  });
 });

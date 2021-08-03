@@ -1,5 +1,4 @@
 const parser = require('../parser');
-const validator = require('../validator');
 
 const encoder = new TextEncoder();
 
