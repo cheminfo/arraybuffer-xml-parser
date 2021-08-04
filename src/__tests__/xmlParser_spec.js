@@ -3,6 +3,8 @@ const parser = require('../parser');
 // const validator = require('../validator');
 
 const encoder = new TextEncoder();
+const { readFileSync } = require('fs');
+const { join } = require('path');
 
 describe('XMLParser', function () {
   it('should parse all values as string, int, boolean, float, hexadecimal', function () {
@@ -512,10 +514,9 @@ describe('XMLParser', function () {
 
   it('should parse all type of nodes', function () {
     //todo weird one
-    const fs = require('fs');
-    const path = require('path');
-    const fileNamePath = path.join(__dirname, 'assets/sample.xml');
-    const xmlData = fs.readFileSync(fileNamePath);
+
+    const fileNamePath = join(__dirname, 'assets/sample.xml');
+    const xmlData = readFileSync(fileNamePath);
 
     const expected = {
       // eslint-disable-next-line camelcase
