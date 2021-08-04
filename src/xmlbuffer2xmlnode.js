@@ -57,10 +57,10 @@ exports.props = props;
  * @param {string} val
  * @param {object} options
  */
-function processTagValue(tagName, val, options, offset = 0) {
+function processTagValue(tagName, val, options) {
   if (val) {
     if (options.trimValues) {
-      val = bufferUtils.arrayTrim(val, offset);
+      val = bufferUtils.arrayTrim(val);
     }
     val = options.tagValueProcessor(val, tagName);
     val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
@@ -231,7 +231,10 @@ const getTraversalObj = function (xmlData, options) {
         if (options.ignoreNameSpace) {
           const colonIndex = bufferUtils.arrayIndexOf(tagName, [0x3a]);
           if (colonIndex !== -1) {
-            tagName = new Uint8Array(tagName.buffer, colonIndex + 1);
+            tagName = new Uint8Array(
+              tagName.buffer,
+              tagName.byteOffset + colonIndex + 1,
+            );
           }
         }
 
@@ -448,7 +451,9 @@ function closingIndexForOpeningTag(data, i) {
       attrBoundary = ch;
     } else if (ch === 0x3e) {
       return {
-        data: decoder.decode(new Uint8Array(data.buffer, i, endIndex)),
+        data: decoder.decode(
+          new Uint8Array(data.buffer, data.byteOffset + i, endIndex),
+        ),
         index: index,
       };
     } else if (ch === 0x09) {

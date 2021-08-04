@@ -511,6 +511,7 @@ describe('XMLParser', function () {
   });
 
   it('should parse all type of nodes', function () {
+    //todo weird one
     const fs = require('fs');
     const path = require('path');
     const fileNamePath = path.join(__dirname, 'assets/sample.xml');

@@ -1,15 +1,15 @@
-exports.arrayTrim = function (array, offset = 0) {
+exports.arrayTrim = function (array) {
   let i = 0;
   let j = array.length - 1;
   for (; i < array.length && (array[i] === 0x20 || array[i] === 0x0a); i++);
   for (; j >= i && (array[j] === 0x20 || array[j] === 0x0a); j--);
-  return new Uint8Array(array.buffer, offset + i, j - i + 1);
+  return new Uint8Array(array.buffer, array.byteOffset + i, j - i + 1);
 };
 
 exports.arrayFloatTrim = function (array) {
   let j = array.length - 1;
   for (; j >= 0 && array[j] === 0x30; j--);
-  return new Uint8Array(array.buffer, 0, j + 1);
+  return new Uint8Array(array.buffer, array.byteOffset, j + 1);
 };
 
 exports.arrayIndexOf = function (array, referenceArray, index = 0) {
@@ -49,51 +49,67 @@ exports.arraySplit = function (array, separator) {
   let lowerbound = 0;
   for (let i = 0; i < array.length; i++) {
     if (array[i] === separator) {
-      split.push(new Uint8Array(array.buffer, lowerbound, i - lowerbound));
+      split.push(
+        new Uint8Array(
+          array.buffer,
+          array.byteOffset + lowerbound,
+          i - lowerbound,
+        ),
+      );
       lowerbound = i + 1;
     }
   }
   if (lowerbound !== array.length) {
     split.push(
-      new Uint8Array(array.buffer, lowerbound, array.length - lowerbound),
+      new Uint8Array(
+        array.buffer,
+        array.byteOffset + lowerbound,
+        array.length - lowerbound,
+      ),
     );
   }
   return split;
 };
 
 exports.arrayHexToInt = function (array, index = 0) {
-  const reducedArray = new Uint8Array(array.buffer, index);
+  const reducedArray = new Uint8Array(
+    array.buffer,
+    index + array.byteOffset,
+    array.length - index,
+  );
+  let number = 0;
   for (let i = 0; i < reducedArray.length; i++) {
     switch (reducedArray[i]) {
       case 0x61:
       case 0x41:
-        reducedArray[i] = 0x3a;
+        number = number * 16 + 0xa;
         break;
       case 0x62:
       case 0x42:
-        reducedArray[i] = 0x3b;
+        number = number * 16 + 0xb;
         break;
       case 0x63:
       case 0x43:
-        reducedArray[i] = 0x3c;
+        number = number * 16 + 0xc;
         break;
       case 0x64:
       case 0x44:
-        reducedArray[i] = 0x3d;
+        number = number * 16 + 0xd;
         break;
       case 0x65:
       case 0x45:
-        reducedArray[i] = 0x3e;
+        number = number * 16 + 0xe;
         break;
       case 0x66:
       case 0x46:
-        reducedArray[i] = 0x3f;
+        number = number * 16 + 0xf;
         break;
       default:
+        number = number * 16 + reducedArray[i] - 0x30;
         break;
     }
   }
-  return exports.arrayParseInt(reducedArray, 16);
+  return number;
 };
 
 exports.arrayParseInt = function (array, base = 10) {
