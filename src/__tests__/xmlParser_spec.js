@@ -7,6 +7,89 @@ const { readFileSync } = require('fs');
 const { join } = require('path');
 
 describe('XMLParser', function () {
+  it('should parse all type of nodes', function () {
+    //todo weird one
+
+    const fileNamePath = join(__dirname, 'assets/sample.xml');
+    const xmlData = readFileSync(fileNamePath);
+
+    const expected = {
+      // eslint-disable-next-line camelcase
+      any_name: {
+        '@attr': 'https://example.com/somepath',
+        person: [
+          {
+            '@id': '101',
+            phone: [122233344550, 122233344551],
+            name: 'Jack',
+            age: 33,
+            emptyNode: '',
+            booleanNode: [false, true],
+            selfclosing: [
+              '',
+              {
+                '@with': 'value',
+              },
+            ],
+            married: {
+              '@firstTime': 'No',
+              '@attr': 'val 2',
+              '#_text': 'Yes',
+            },
+            birthday: 'Wed, 28 Mar 1979 12:13:14 +0300',
+            address: [
+              {
+                city: 'New York',
+                street: 'Park Ave',
+                buildingNo: 1,
+                flatNo: 1,
+              },
+              {
+                city: 'Boston',
+                street: 'Centre St',
+                buildingNo: 33,
+                flatNo: 24,
+              },
+            ],
+          },
+          {
+            '@id': '102',
+            phone: [122233344553, 122233344554],
+            name: 'Boris',
+            age: 34,
+            married: {
+              '@firstTime': 'Yes',
+              '#_text': 'Yes',
+            },
+            birthday: 'Mon, 31 Aug 1970 02:03:04 +0300',
+            address: [
+              {
+                city: 'Moscow',
+                street: 'Kahovka',
+                buildingNo: 1,
+                flatNo: 2,
+              },
+              {
+                city: 'Tula',
+                street: 'Lenina',
+                buildingNo: 3,
+                flatNo: 78,
+              },
+            ],
+          },
+        ],
+      },
+    };
+
+    const result = parser.parse(xmlData, {
+      ignoreAttributes: false,
+      ignoreNonTextNodeAttr: false,
+      attributeNamePrefix: '@',
+      textNodeName: '#_text',
+    });
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+  });
   it('should parse all values as string, int, boolean, float, hexadecimal', function () {
     const xmlData = encoder.encode(`<rootNode>
         <tag>value</tag>
@@ -508,90 +591,6 @@ describe('XMLParser', function () {
       ignoreAttributes: false,
     });
 
-    //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
-  });
-
-  it('should parse all type of nodes', function () {
-    //todo weird one
-
-    const fileNamePath = join(__dirname, 'assets/sample.xml');
-    const xmlData = readFileSync(fileNamePath);
-
-    const expected = {
-      // eslint-disable-next-line camelcase
-      any_name: {
-        '@attr': 'https://example.com/somepath',
-        person: [
-          {
-            '@id': '101',
-            phone: [122233344550, 122233344551],
-            name: 'Jack',
-            age: 33,
-            emptyNode: '',
-            booleanNode: [false, true],
-            selfclosing: [
-              '',
-              {
-                '@with': 'value',
-              },
-            ],
-            married: {
-              '@firstTime': 'No',
-              '@attr': 'val 2',
-              '#_text': 'Yes',
-            },
-            birthday: 'Wed, 28 Mar 1979 12:13:14 +0300',
-            address: [
-              {
-                city: 'New York',
-                street: 'Park Ave',
-                buildingNo: 1,
-                flatNo: 1,
-              },
-              {
-                city: 'Boston',
-                street: 'Centre St',
-                buildingNo: 33,
-                flatNo: 24,
-              },
-            ],
-          },
-          {
-            '@id': '102',
-            phone: [122233344553, 122233344554],
-            name: 'Boris',
-            age: 34,
-            married: {
-              '@firstTime': 'Yes',
-              '#_text': 'Yes',
-            },
-            birthday: 'Mon, 31 Aug 1970 02:03:04 +0300',
-            address: [
-              {
-                city: 'Moscow',
-                street: 'Kahovka',
-                buildingNo: 1,
-                flatNo: 2,
-              },
-              {
-                city: 'Tula',
-                street: 'Lenina',
-                buildingNo: 3,
-                flatNo: 78,
-              },
-            ],
-          },
-        ],
-      },
-    };
-
-    const result = parser.parse(xmlData, {
-      ignoreAttributes: false,
-      ignoreNonTextNodeAttr: false,
-      attributeNamePrefix: '@',
-      textNodeName: '#_text',
-    });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });

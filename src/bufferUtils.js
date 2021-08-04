@@ -1,8 +1,8 @@
 exports.arrayTrim = function (array) {
   let i = 0;
   let j = array.length - 1;
-  for (; i < array.length && (array[i] === 0x20 || array[i] === 0x0a); i++);
-  for (; j >= i && (array[j] === 0x20 || array[j] === 0x0a); j--);
+  for (; i < array.length && array[i] <= 0x20; i++);
+  for (; j >= i && array[j] <= 0x20; j--);
   return new Uint8Array(array.buffer, array.byteOffset + i, j - i + 1);
 };
 

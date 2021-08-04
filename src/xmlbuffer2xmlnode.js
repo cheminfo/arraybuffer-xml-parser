@@ -125,9 +125,9 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
   } else {
     if (util.isExist(val)) {
       if (typeof val === 'string') {
-        return val;
+        return val.replace(/\r\n?/g, '\n');
       }
-      return decoder.decode(val);
+      return decoder.decode(val).replace(/\r\n?/g, '\n');
     } else {
       return '';
     }

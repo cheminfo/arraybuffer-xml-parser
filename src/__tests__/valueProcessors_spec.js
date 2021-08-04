@@ -1,8 +1,12 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
+/* eslint-disable jest/no-if */
 const he = require('he');
 
 const parser = require('../parser');
-const encoder = new TextEncoder();
 
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 describe('XMLParser', function () {
   it('should decode HTML entities if allowed', function () {
     const xmlData = encoder.encode(
@@ -14,9 +18,8 @@ describe('XMLParser', function () {
     const result = parser.parse(xmlData, {
       parseNodeValue: false,
       decodeHTMLchar: true,
-      tagValueProcessor: (a) => he.decode(a),
-    });
-    //console.log(JSON.stringify(result,null,4));
+      tagValueProcessor: (a) => he.decode(decoder.decode(a)),
+    }); //if you really need to work with a string convert it yourself
     expect(result).toEqual(expected);
   });
 
@@ -72,6 +75,9 @@ describe('XMLParser', function () {
     const resultMap = {};
     const result = parser.parse(xmlData, {
       tagValueProcessor: (val, tagName) => {
+        if (typeof tagName === 'object') {
+          tagName = decoder.decode(tagName);
+        }
         if (resultMap[tagName]) {
           resultMap[tagName].push(val);
         } else {
@@ -84,10 +90,14 @@ describe('XMLParser', function () {
     //console.log(JSON.stringify(resultMap,null,4));
     expect(result).toEqual(expected);
     expect(resultMap).toEqual({
-      any_name: ['', ''],
-      person: ['start', 'middle', 'end'],
-      name1: ['Jack 1'],
-      name2: ['35'],
+      any_name: [new Uint8Array(), new Uint8Array()],
+      person: [
+        encoder.encode('start'),
+        encoder.encode('middle'),
+        encoder.encode('end'),
+      ],
+      name1: [encoder.encode('Jack 1')],
+      name2: [encoder.encode('35')],
     });
   });
 
