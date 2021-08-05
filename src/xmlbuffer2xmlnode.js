@@ -333,8 +333,6 @@ const getTraversalObj = function (xmlData, options) {
             options,
             dataIndex,
           )}`;
-          dataSize = 0;
-          dataIndex = i + 1;
         }
 
         if (options.cdataTagName) {
@@ -358,6 +356,8 @@ const getTraversalObj = function (xmlData, options) {
         }
 
         i = closeIndex + 2;
+        dataSize = 0;
+        dataIndex = i + 1;
       } else {
         //Opening tag
         const result = closingIndexForOpeningTag(xmlData, i + 1);

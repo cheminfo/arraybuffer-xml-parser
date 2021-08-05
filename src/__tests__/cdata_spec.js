@@ -285,7 +285,7 @@ patronymic</person></root>`);
     const fs = require('fs');
     const path = require('path');
     const fileNamePath = path.join(__dirname, 'assets/mixed.xml');
-    const xmlData = fs.readFileSync(fileNamePath).toString();
+    const xmlData = fs.readFileSync(fileNamePath);
 
     const expected = {
       'ns:root': {
