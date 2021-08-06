@@ -11,6 +11,7 @@ exports.parse = function (xmlData, options, validationOption) {
     xmlbuffer2xmlnode.defaultOptions,
     xmlbuffer2xmlnode.props,
   );
+  xmlData = new Uint8Array(xmlData); //ensures that the data is valid in case of fs file reading
   const traversableObj = xmlbuffer2xmlnode.getTraversalObj(xmlData, options);
   //print(traversableObj, "  ");
   return nodeToJson.convertToJson(traversableObj, options);

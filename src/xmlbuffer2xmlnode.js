@@ -293,7 +293,22 @@ const getTraversalObj = function (xmlData, options) {
           [0x2d, 0x2d, 0x3e], //-->
           i,
           'Comment is not closed.',
-        ); //!D
+        );
+        if (currentNode && dataSize !== 0) {
+          if (currentNode.tagname !== '!xml') {
+            currentNode.val = `${util.getValue(
+              currentNode.val,
+            )}${processTagValue(
+              currentNode.tagname,
+              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
+              options,
+              dataIndex,
+            )}`;
+          }
+        }
+        dataSize = 0;
+        dataIndex = i + 1;
+        //!D
       } else if (xmlData[i + 1] === 0x21 && xmlData[i + 2] === 0x44) {
         const closeIndex = findClosingIndex(
           xmlData,

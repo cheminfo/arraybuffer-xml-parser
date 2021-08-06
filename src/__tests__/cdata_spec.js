@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const parser = require('../parser');
 
 const encoder = new TextEncoder();
@@ -282,11 +285,8 @@ patronymic</person></root>`);
   });
 
   it('should validate XML with repeated multiline CDATA and comments', function () {
-    const fs = require('fs');
-    const path = require('path');
     const fileNamePath = path.join(__dirname, 'assets/mixed.xml');
     const xmlData = fs.readFileSync(fileNamePath);
-
     const expected = {
       'ns:root': {
         ptag: [
