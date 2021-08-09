@@ -378,6 +378,7 @@ const getTraversalObj = function (xmlData, options) {
         const result = closingIndexForOpeningTag(xmlData, i + 1);
         let tagExp = result.data;
         const closeIndex = result.index;
+        tagExp = tagExp.replace(/\r\n?|\t/g, ' ');
         const separatorIndex = tagExp.indexOf(' ');
         let tagName = tagExp;
         let shouldBuildAttributesMap = true;

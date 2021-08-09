@@ -1,7 +1,6 @@
 /* eslint-disable jest/no-identical-title */
-const he = require('he');
-
 const parser = require('../parser');
+
 const encoder = new TextEncoder();
 describe('XMLParser', function () {
   it("should parse attributes having '>' in value", function () {
