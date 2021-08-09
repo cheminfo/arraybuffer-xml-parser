@@ -3,7 +3,6 @@ const he = require('he');
 
 const parser = require('../parser');
 const encoder = new TextEncoder();
-
 describe('XMLParser', function () {
   it("should parse attributes having '>' in value", function () {
     const xmlData =
@@ -225,7 +224,7 @@ describe('XMLParser', function () {
     expect(result).toEqual(expected);
   });
 
-  it('should trim \t or \n chars', function () {
+  it('should trim \\t or \\n chars', function () {
     const xmlData = encoder.encode(
       '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<MPD\n' +

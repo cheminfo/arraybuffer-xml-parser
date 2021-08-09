@@ -32,14 +32,18 @@ describe('arrayIndexOf', function () {
     const notIn = new Uint8Array([0x61, 0x6d, 0x6f, 0x67]);
     const testString = new Uint8Array([0x61, 0x6d, 0x6f, 0x67, 0x75, 0x73]);
     const singleTest = new Uint8Array([0x2e]);
+    const repeaTest = new Uint8Array([0x5d, 0x5d, 0x3e]);
+    const repeats = new Uint8Array([0x5d, 0x5d, 0x5d, 0x5d, 0x3e, 0x5d]);
     expect(bufferUtils.arrayIndexOf(whole, testString)).toStrictEqual(0);
     expect(bufferUtils.arrayIndexOf(sandwiched, testString)).toStrictEqual(1);
     expect(bufferUtils.arrayIndexOf(notIn, testString)).toStrictEqual(-1);
     expect(
       bufferUtils.arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest),
     ).toStrictEqual(1);
+    expect(bufferUtils.arrayIndexOf(repeats, repeaTest)).toStrictEqual(2);
   });
 });
+
 describe('arraySplit', function () {
   it('should split the array with a separator', function () {
     expect(

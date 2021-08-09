@@ -38,6 +38,7 @@ patronymic</person></root>`);
 </any_name>`);
 
     const expected = {
+      // eslint-disable-next-line camelcase
       any_name: {
         person: {
           phone: [122233344550, 122233344551],

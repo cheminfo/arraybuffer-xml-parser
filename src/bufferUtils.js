@@ -22,8 +22,23 @@ exports.arrayIndexOf = function (array, referenceArray, index = 0) {
       }
       found++;
     } else {
-      found = 0;
-      foundIndex = -1;
+      if (found > 0) {
+        let j = 0;
+        for (
+          ;
+          j <= found && array[foundIndex + j] === array[foundIndex + found];
+          j++
+        );
+        if (j < found + 1) {
+          foundIndex = -1;
+          found = 0;
+        } else {
+          foundIndex++;
+        }
+      } else {
+        found = 0;
+        foundIndex = -1;
+      }
     }
   }
   if (found !== referenceArray.length) {
