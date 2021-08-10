@@ -209,6 +209,36 @@ exports.arrayParseFloat = function (array) {
   return number;
 };
 
+exports.getBase64 = function (charCode) {
+  return charCode > 64 && charCode < 91
+    ? charCode - 65
+    : charCode > 96 && charCode < 123
+    ? charCode - 71
+    : charCode > 47 && charCode < 58
+    ? charCode + 4
+    : charCode === 43
+    ? 62
+    : charCode === 47
+    ? 63
+    : 0;
+};
+
+exports.arrayParseBase64 = function (array) {
+  let offset = 0;
+  let previous = 0;
+  let converted = '';
+  for (let i = 0; i < array.length; i++, offset = (offset + 2) % 8) {
+    const char = exports.getBase64(array[i]);
+    previous = (previous << offset) + (char >> (6 - offset));
+    if (previous !== 0) {
+      converted += String.fromCharCode(previous);
+      previous = 0;
+    }
+    previous = char % 2 ** (6 - offset);
+  }
+  return converted;
+};
+
 exports.compareToInt = function (array, int) {
   for (let i = array.length - 1; i >= 0; i--) {
     if (array[i] !== (int % 10) + 0x30 || int === 0) {

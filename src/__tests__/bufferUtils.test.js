@@ -163,6 +163,17 @@ describe('arrayParseFloat', function () {
   });
 });
 
+describe('arrayParseBase64', function () {
+  it('should convert a base 64 Uint8Array to an ASCII string', function () {
+    expect(
+      bufferUtils.arrayParseBase64(
+        new TextEncoder().encode(
+          'TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCAuLi4',
+        ),
+      ),
+    ).toStrictEqual('Man is distinguished, not only by his reason, but ...');
+  });
+});
 describe('compareToInt', function () {
   it('should compare an arrayBuffer to an int', function () {
     const rightOne = new Uint8Array([0x34, 0x35]);
