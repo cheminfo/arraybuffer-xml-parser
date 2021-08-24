@@ -225,16 +225,13 @@ const getTraversalObj = function (xmlData, options) {
           'Closing Tag is not closed.',
         );
         let tagName = bufferUtils.arrayTrim(
-          new Uint8Array(xmlData.buffer, i + 2, closeIndex - i - 2),
+          xmlData.subarray(i + 2, closeIndex),
         );
 
         if (options.ignoreNameSpace) {
           const colonIndex = bufferUtils.arrayIndexOf(tagName, [0x3a]);
           if (colonIndex !== -1) {
-            tagName = new Uint8Array(
-              tagName.buffer,
-              tagName.byteOffset + colonIndex + 1,
-            );
+            tarName = xmlData.subarray(tagName.byteOffset + colonIndex + 1);
           }
         }
 
@@ -247,14 +244,14 @@ const getTraversalObj = function (xmlData, options) {
               currentNode.val,
             )}${processTagValue(
               tagName,
-              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
+              xmlData.subarray(dataIndex, dataIndex + dataSize),
               options,
               dataIndex,
             )}`;
           } else {
             currentNode.val = processTagValue(
               tagName,
-              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
+              xmlData.subarray(dataIndex, dataIndex + dataSize),
               options,
               dataIndex,
             );
@@ -403,7 +400,7 @@ const getTraversalObj = function (xmlData, options) {
               currentNode.val,
             )}${processTagValue(
               currentNode.tagname,
-              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
+              xmlData.subarray(dataIndex, dataIndex + dataSize),
               options,
               dataIndex,
             )}`;
