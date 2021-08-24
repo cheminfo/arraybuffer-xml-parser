@@ -231,7 +231,7 @@ const getTraversalObj = function (xmlData, options) {
         if (options.ignoreNameSpace) {
           const colonIndex = bufferUtils.arrayIndexOf(tagName, [0x3a]);
           if (colonIndex !== -1) {
-            tarName = xmlData.subarray(tagName.byteOffset + colonIndex + 1);
+            tagName = xmlData.subarray(tagName.byteOffset + colonIndex + 1);
           }
         }
 
