@@ -1,6 +1,6 @@
 const util = require('./util');
 const buildOptions = require('./util').buildOptions;
-const x2j = require('./xmlstr2xmlnode');
+const x2j = require('./xmlbuffer2xmlnode');
 
 //TODO: do it later
 const convertToJsonString = function (node, options) {
