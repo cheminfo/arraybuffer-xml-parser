@@ -25,10 +25,6 @@ const isName = function (string) {
   return !(match === null || typeof match === 'undefined');
 };
 
-exports.isExist = function (v) {
-  return typeof v !== 'undefined';
-};
-
 exports.isEmptyObject = function (obj) {
   return Object.keys(obj).length === 0;
 };
@@ -56,11 +52,7 @@ exports.merge = function (target, a, arrayMode) {
 } */
 
 exports.getValue = function (v) {
-  if (exports.isExist(v)) {
-    return v;
-  } else {
-    return '';
-  }
+  return v === undefined ? '' : v;
 };
 
 // const fakeCall = function(a) {return a;};

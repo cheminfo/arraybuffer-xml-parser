@@ -123,7 +123,7 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
     }
     return parsed;
   } else {
-    if (util.isExist(val)) {
+    if (val !== undefined) {
       if (typeof val === 'string') {
         return val.replace(/\r\n?/g, '\n');
       }
@@ -155,11 +155,7 @@ function stringParseValue(val, shouldParse, parseTrueNumberOnly) {
     }
     return parsed;
   } else {
-    if (util.isExist(val)) {
-      return val;
-    } else {
-      return '';
-    }
+    return val === undefined ? '' : val;
   }
 }
 
@@ -235,9 +231,6 @@ function getTraversalObj(xmlData, options) {
           }
         }
 
-        /* if (currentNode.parent) {
-          currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue2(tagName, textData , options);
-        } */
         if (currentNode) {
           if (currentNode.val) {
             currentNode.val = `${util.getValue(

@@ -8,12 +8,12 @@ const convertToJson = function (node, options, parentTagName) {
     (!node.child || util.isEmptyObject(node.child)) &&
     (!node.attrsMap || util.isEmptyObject(node.attrsMap))
   ) {
-    return util.isExist(node.val) ? node.val : '';
+    return node.val === undefined ? '' : node.val;
   }
 
   // otherwise create a textnode if node has some text
   if (
-    util.isExist(node.val) &&
+    node.val !== undefined &&
     !(
       typeof node.val === 'string' &&
       (node.val === '' || node.val === options.cdataPositionChar)

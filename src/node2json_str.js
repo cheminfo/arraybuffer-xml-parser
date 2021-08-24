@@ -34,9 +34,9 @@ const _cToJsonStr = function (node, options) {
   util.merge(jObj, node.attrsMap);
   //add attrsMap as new children
   if (util.isEmptyObject(jObj)) {
-    return util.isExist(node.val) ? node.val : '';
+    return node.val === undefined ? '' : node.val;
   } else {
-    if (util.isExist(node.val)) {
+    if (node.val !== undefined) {
       if (
         !(
           typeof node.val === 'string' &&
