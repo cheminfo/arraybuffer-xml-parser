@@ -206,7 +206,7 @@ function buildAttributesMap(attrStr, options) {
   }
 }
 
-const getTraversalObj = function (xmlData, options) {
+function getTraversalObj(xmlData, options) {
   //xmlData = xmlData.replace(/\r\n?/g, '\n');
   options = buildOptions(options, defaultOptions, props);
   const xmlObj = new xmlNode('!xml');
@@ -443,7 +443,7 @@ const getTraversalObj = function (xmlData, options) {
     }
   }
   return xmlObj;
-};
+}
 
 function closingIndexForOpeningTag(data, i) {
   let attrBoundary;
