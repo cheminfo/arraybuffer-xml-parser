@@ -1,4 +1,4 @@
-exports.arrayTrim = function (array) {
+exports.arrayTrim = function arrayTrim(array) {
   let i = 0;
   let j = array.length - 1;
   for (; i < array.length && array[i] <= 0x20; i++);
@@ -6,13 +6,13 @@ exports.arrayTrim = function (array) {
   return array.subarray(i, j + 1);
 };
 
-exports.arrayFloatTrim = function (array) {
+exports.arrayFloatTrim = function arrayFloatTrim(array) {
   let j = array.length - 1;
   for (; j >= 0 && array[j] === 0x30; j--);
   return array.subarray(0, j + 1);
 };
 
-exports.arrayIndexOf = function (array, referenceArray, index = 0) {
+exports.arrayIndexOf = function arrayIndexOf(array, referenceArray, index = 0) {
   let found = 0;
   let foundIndex = -1;
   for (let i = index; i < array.length && found < referenceArray.length; i++) {
@@ -47,7 +47,7 @@ exports.arrayIndexOf = function (array, referenceArray, index = 0) {
   return foundIndex;
 };
 
-exports.arrayIsEqual = function (array, brrby) {
+exports.arrayIsEqual = function arrayIsEqual(array, brrby) {
   if (array.length !== brrby.length) {
     return false;
   }
@@ -59,7 +59,7 @@ exports.arrayIsEqual = function (array, brrby) {
   return true;
 };
 
-exports.arraySplit = function (array, separator) {
+exports.arraySplit = function arraySplit(array, separator) {
   const split = [];
   let lowerbound = 0;
   for (let i = 0; i < array.length; i++) {
@@ -74,7 +74,7 @@ exports.arraySplit = function (array, separator) {
   return split;
 };
 
-exports.arrayHexToInt = function (array, index = 0) {
+exports.arrayHexToInt = function arrayHexToInt(array, index = 0) {
   const reducedArray = array.subarray(index);
   let number = 0;
   for (let i = 0; i < reducedArray.length; i++) {
@@ -111,7 +111,7 @@ exports.arrayHexToInt = function (array, index = 0) {
   return number;
 };
 
-exports.arrayParseInt = function (array, base = 10) {
+exports.arrayParseInt = function arrayParseInt(array, base = 10) {
   if (base === 0) {
     base = 10;
   }
@@ -145,7 +145,7 @@ exports.arrayParseInt = function (array, base = 10) {
   return number;
 };
 
-exports.arrayParseFloat = function (array) {
+exports.arrayParseFloat = function arrayParseFloat(array) {
   let hasExponent = false;
   let decimals = 0;
   let number = 0;
@@ -193,7 +193,7 @@ exports.arrayParseFloat = function (array) {
   return number;
 };
 
-exports.getBase64 = function (charCode) {
+exports.getBase64 = function getBase64(charCode) {
   return charCode > 64 && charCode < 91
     ? charCode - 65
     : charCode > 96 && charCode < 123
@@ -207,7 +207,7 @@ exports.getBase64 = function (charCode) {
     : 0;
 };
 
-exports.arrayParseBase64 = function (array) {
+exports.arrayParseBase64 = function arrayParseBase64(array) {
   let offset = 0;
   let previous = 0;
   let converted = '';
@@ -223,7 +223,7 @@ exports.arrayParseBase64 = function (array) {
   return converted;
 };
 
-exports.compareToInt = function (array, int) {
+exports.compareToInt = function compareToInt(array, int) {
   for (let i = array.length - 1; i >= 0; i--) {
     if (array[i] !== (int % 10) + 0x30 || int === 0) {
       return false;
@@ -233,7 +233,7 @@ exports.compareToInt = function (array, int) {
   return true;
 };
 
-exports.containsNumber = function (array) {
+exports.containsNumber = function containsNumber(array) {
   for (let i = 0; i < array.length; i++) {
     const value = array[i];
     if (value !== 0x20 && value !== 0x2b && value !== 0x2d) {
