@@ -6,18 +6,7 @@ const nameRegexp = `[${nameStartChar}][${nameChar}]*`;
 const regexName = new RegExp(`^${nameRegexp}$`);
 
 const getAllMatches = function (string, regex) {
-  const matches = [];
-  let match = regex.exec(string);
-  while (match) {
-    const allmatches = [];
-    const len = match.length;
-    for (let index = 0; index < len; index++) {
-      allmatches.push(match[index]);
-    }
-    matches.push(allmatches);
-    match = regex.exec(string);
-  }
-  return matches;
+  return Array.from(string.matchAll(regex));
 };
 
 const isName = function (string) {
