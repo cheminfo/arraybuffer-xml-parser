@@ -266,11 +266,7 @@ const getTraversalObj = function (xmlData, options) {
             currentNode.attrsMap = {};
           }
           currentNode.val = decoder.decode(
-            new Uint8Array(
-              xmlData.buffer,
-              currentNode.startIndex + 1,
-              i - currentNode.startIndex - 1,
-            ),
+            xmlData.subarray(currentNode.startIndex + 1, i),
           );
         }
         currentNode = currentNode.parent;
@@ -297,7 +293,7 @@ const getTraversalObj = function (xmlData, options) {
               currentNode.val,
             )}${processTagValue(
               currentNode.tagname,
-              new Uint8Array(xmlData.buffer, dataIndex, dataSize),
+              xmlData.subarray(dataIndex, dataSize + dataIndex),
               options,
               dataIndex,
             )}`;
@@ -313,7 +309,7 @@ const getTraversalObj = function (xmlData, options) {
           i,
           'DOCTYPE is not closed.',
         );
-        const tagExp = new Uint8Array(xmlData.buffer, i, closeIndex - i);
+        const tagExp = xmlData.subarray(i, closeIndex);
         if (bufferUtils.arrayIndexOf(tagExp, [0x5b]) >= 0) {
           i = bufferUtils.arrayIndexOf(xmlData, [0x5d, 0x3e], i) + 1;
         } else {
@@ -327,11 +323,7 @@ const getTraversalObj = function (xmlData, options) {
             i,
             'CDATA is not closed.',
           ) - 2;
-        const tagExp = new Uint8Array(
-          xmlData.buffer,
-          i + 9,
-          closeIndex - i - 9,
-        );
+        const tagExp = xmlData.subarray(i + 9, closeIndex);
 
         //considerations
         //1. CDATA will always have parent node
@@ -341,7 +333,7 @@ const getTraversalObj = function (xmlData, options) {
             currentNode.val,
           )}${stringProcessTagValue(
             currentNode.tagname,
-            decoder.decode(new Uint8Array(xmlData.buffer, dataIndex, dataSize)),
+            decoder.decode(xmlData.subarray(dataIndex, dataIndex + dataSize)),
             options,
             dataIndex,
           )}`;
@@ -464,9 +456,7 @@ function closingIndexForOpeningTag(data, i) {
       attrBoundary = ch;
     } else if (ch === 0x3e) {
       return {
-        data: decoder.decode(
-          new Uint8Array(data.buffer, data.byteOffset + i, endIndex),
-        ),
+        data: decoder.decode(data.subarray(i, i + endIndex)),
         index: index,
       };
     } else if (ch === 0x09) {

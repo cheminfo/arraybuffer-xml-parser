@@ -3,13 +3,13 @@ exports.arrayTrim = function (array) {
   let j = array.length - 1;
   for (; i < array.length && array[i] <= 0x20; i++);
   for (; j >= i && array[j] <= 0x20; j--);
-  return new Uint8Array(array.buffer, array.byteOffset + i, j - i + 1);
+  return array.subarray(i, j + 1);
 };
 
 exports.arrayFloatTrim = function (array) {
   let j = array.length - 1;
   for (; j >= 0 && array[j] === 0x30; j--);
-  return new Uint8Array(array.buffer, array.byteOffset, j + 1);
+  return array.subarray(0, j + 1);
 };
 
 exports.arrayIndexOf = function (array, referenceArray, index = 0) {
@@ -64,34 +64,18 @@ exports.arraySplit = function (array, separator) {
   let lowerbound = 0;
   for (let i = 0; i < array.length; i++) {
     if (array[i] === separator) {
-      split.push(
-        new Uint8Array(
-          array.buffer,
-          array.byteOffset + lowerbound,
-          i - lowerbound,
-        ),
-      );
+      split.push(array.subarray(lowerbound, i));
       lowerbound = i + 1;
     }
   }
   if (lowerbound !== array.length) {
-    split.push(
-      new Uint8Array(
-        array.buffer,
-        array.byteOffset + lowerbound,
-        array.length - lowerbound,
-      ),
-    );
+    split.push(array.subarray(lowerbound));
   }
   return split;
 };
 
 exports.arrayHexToInt = function (array, index = 0) {
-  const reducedArray = new Uint8Array(
-    array.buffer,
-    index + array.byteOffset,
-    array.length - index,
-  );
+  const reducedArray = array.subarray(index);
   let number = 0;
   for (let i = 0; i < reducedArray.length; i++) {
     switch (reducedArray[i]) {
