@@ -98,9 +98,7 @@ Parser.prototype.j2x = function (jObj, level) {
       //premitive type
       const attr = this.isAttribute(key);
       if (attr) {
-        attrStr += ` ${attr}="${this.options.attrValueProcessor(
-          `${jObj[key]}`,
-        )}"`;
+        attrStr += ` ${attr}="${this.options.attrValueProcessor(jObj[key])}"`;
       } else if (this.isCDATA(key)) {
         if (jObj[this.options.textNodeName]) {
           val += this.replaceCDATAstr(
@@ -158,7 +156,7 @@ Parser.prototype.j2x = function (jObj, level) {
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
           attrStr += ` ${Ks[j]}="${this.options.attrValueProcessor(
-            `${jObj[key][Ks[j]]}`,
+            jObj[key][Ks[j]],
           )}"`;
         }
       } else {
@@ -171,7 +169,7 @@ Parser.prototype.j2x = function (jObj, level) {
 };
 
 function replaceCDATAstr(str, cdata) {
-  str = this.options.tagValueProcessor(`${str}`);
+  str = this.options.tagValueProcessor(str);
   if (this.options.cdataPositionChar === '' || str === '') {
     return `${str}<![CDATA[${cdata}]]${this.tagEndChar}`;
   } else {
@@ -183,7 +181,7 @@ function replaceCDATAstr(str, cdata) {
 }
 
 function replaceCDATAarr(str, cdata) {
-  str = this.options.tagValueProcessor(`${str}`);
+  str = this.options.tagValueProcessor(str);
   if (this.options.cdataPositionChar === '' || str === '') {
     return `${str}<![CDATA[${cdata.join(']]><![CDATA[')}]]${this.tagEndChar}`;
   } else {

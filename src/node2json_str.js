@@ -51,14 +51,14 @@ const _cToJsonStr = function (node, options) {
   if (jObj[jObj.length - 1] === ',') {
     jObj = jObj.substr(0, jObj.length - 2);
   }
-  return `${jObj}}`;
+  return jObj;
 };
 
 function stringval(v) {
   if (v === true || v === false || !isNaN(v)) {
     return v;
   } else {
-    return `"${v}"`;
+    return String(v);
   }
 }
 
