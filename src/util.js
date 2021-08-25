@@ -37,6 +37,13 @@ function getValue(v) {
   return v === undefined ? '' : v;
 }
 
+/**
+ * This method check that only allowed props are in the options object and append the default options
+ * @param {object} options
+ * @param {object} defaultOptions
+ * @param {array} props
+ * @returns
+ */
 function buildOptions(options, defaultOptions, props) {
   let newOptions = {};
   if (!options) {

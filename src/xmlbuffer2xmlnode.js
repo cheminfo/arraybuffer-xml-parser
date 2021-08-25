@@ -1,6 +1,6 @@
 const bufferUtils = require('./bufferUtils');
-const util = require('./util');
-const { buildOptions } = require('./util');
+const { getAllMatches } = require('./util');
+const { buildOptions, getValue } = require('./util');
 const xmlNode = require('./xmlNode');
 
 const decoder = new TextDecoder();
@@ -169,7 +169,7 @@ function buildAttributesMap(attrStr, options) {
     attrStr = attrStr.replace(/\r?\n/g, ' ');
     //attrStr = attrStr || attrStr.trim();
 
-    const matches = util.getAllMatches(attrStr, attrsRegx);
+    const matches = getAllMatches(attrStr, attrsRegx);
     const len = matches.length; //don't make it inline
     const attrs = {};
     for (let i = 0; i < len; i++) {
@@ -233,9 +233,7 @@ function getTraversalObj(xmlData, options) {
 
         if (currentNode) {
           if (currentNode.val) {
-            currentNode.val = `${util.getValue(
-              currentNode.val,
-            )}${processTagValue(
+            currentNode.val = `${getValue(currentNode.val)}${processTagValue(
               tagName,
               xmlData.subarray(dataIndex, dataIndex + dataSize),
               options,
@@ -282,9 +280,7 @@ function getTraversalObj(xmlData, options) {
         );
         if (currentNode && dataSize !== 0) {
           if (currentNode.tagname !== '!xml') {
-            currentNode.val = `${util.getValue(
-              currentNode.val,
-            )}${processTagValue(
+            currentNode.val = `${getValue(currentNode.val)}${processTagValue(
               currentNode.tagname,
               xmlData.subarray(dataIndex, dataSize + dataIndex),
               options,
@@ -322,7 +318,7 @@ function getTraversalObj(xmlData, options) {
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if (dataSize !== 0) {
-          currentNode.val = `${util.getValue(
+          currentNode.val = `${getValue(
             currentNode.val,
           )}${stringProcessTagValue(
             currentNode.tagname,
@@ -342,7 +338,7 @@ function getTraversalObj(xmlData, options) {
           currentNode.addChild(childNode);
           //for backtracking
           currentNode.val =
-            util.getValue(currentNode.val) + options.cdataPositionChar;
+            getValue(currentNode.val) + options.cdataPositionChar;
           //add rest value to parent node
           if (tagExp) {
             childNode.val = decoder.decode(tagExp);
@@ -381,9 +377,7 @@ function getTraversalObj(xmlData, options) {
         //save text to parent node
         if (currentNode && dataSize !== 0) {
           if (currentNode.tagname !== '!xml') {
-            currentNode.val = `${util.getValue(
-              currentNode.val,
-            )}${processTagValue(
+            currentNode.val = `${getValue(currentNode.val)}${processTagValue(
               currentNode.tagname,
               xmlData.subarray(dataIndex, dataIndex + dataSize),
               options,

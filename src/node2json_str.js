@@ -1,39 +1,36 @@
-const util = require('./util');
+const { merge, isEmptyObject } = require('./util');
 const { buildOptions } = require('./util');
-const x2j = require('./xmlbuffer2xmlnode');
+const { defaultOptions, props } = require('./xmlbuffer2xmlnode');
 
 //TODO: do it later
-const convertToJsonString = function (node, options) {
-  options = buildOptions(options, x2j.defaultOptions, x2j.props);
+function convertToJsonString(node, options) {
+  options = buildOptions(options, defaultOptions, props);
 
   options.indentBy = options.indentBy || '';
-  return _cToJsonStr(node, options, 0);
-};
+  return recursiveConvert(node, options, 0);
+}
 
-const _cToJsonStr = function (node, options) {
+const recursiveConvert = function (node, options) {
   let jObj = '{';
 
-  //traver through all the children
-  const keys = Object.keys(node.child);
-
-  for (let index = 0; index < keys.length; index++) {
-    let tagname = keys[index];
+  //traverse through all the children
+  for (const tagname in node.child) {
     if (node.child[tagname] && node.child[tagname].length > 1) {
       jObj += `"${tagname}" : [ `;
       for (let tag in node.child[tagname]) {
-        jObj += `${_cToJsonStr(node.child[tagname][tag], options)} , `;
+        jObj += `${recursiveConvert(node.child[tagname][tag], options)} , `;
       }
       jObj = `${jObj.substr(0, jObj.length - 1)} ] `; //remove extra comma in last
     } else {
-      jObj += `"${tagname}" : ${_cToJsonStr(
+      jObj += `"${tagname}" : ${recursiveConvert(
         node.child[tagname][0],
         options,
       )} ,`;
     }
   }
-  util.merge(jObj, node.attrsMap);
+  merge(jObj, node.attrsMap);
   //add attrsMap as new children
-  if (util.isEmptyObject(jObj)) {
+  if (isEmptyObject(jObj)) {
     return node.val === undefined ? '' : node.val;
   } else {
     if (node.val !== undefined) {
@@ -62,4 +59,4 @@ function stringval(v) {
   }
 }
 
-exports.convertToJsonString = convertToJsonString;
+module.exports = { convertToJsonString };

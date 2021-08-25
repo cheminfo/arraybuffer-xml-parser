@@ -1,12 +1,12 @@
-const util = require('./util');
+const { isTagNameInArrayMode, merge, isEmptyObject } = require('./util');
 
 const convertToJson = function (node, options, parentTagName) {
   const jObj = {};
 
   // when no child node or attr is present
   if (
-    (!node.child || util.isEmptyObject(node.child)) &&
-    (!node.attrsMap || util.isEmptyObject(node.attrsMap))
+    (!node.child || isEmptyObject(node.child)) &&
+    (!node.attrsMap || isEmptyObject(node.attrsMap))
   ) {
     return node.val === undefined ? '' : node.val;
   }
@@ -19,7 +19,7 @@ const convertToJson = function (node, options, parentTagName) {
       (node.val === '' || node.val === options.cdataPositionChar)
     )
   ) {
-    const asArray = util.isTagNameInArrayMode(
+    const asArray = isTagNameInArrayMode(
       node.tagname,
       options.arrayMode,
       parentTagName,
@@ -27,7 +27,7 @@ const convertToJson = function (node, options, parentTagName) {
     jObj[options.textNodeName] = asArray ? [node.val] : node.val;
   }
 
-  util.merge(jObj, node.attrsMap, options.arrayMode);
+  merge(jObj, node.attrsMap, options.arrayMode);
 
   const keys = Object.keys(node.child);
   for (let index = 0; index < keys.length; index++) {
@@ -45,7 +45,7 @@ const convertToJson = function (node, options, parentTagName) {
       const result = convertToJson(node.child[tagName][0], options, tagName);
       const asArray =
         (options.arrayMode === true && typeof result === 'object') ||
-        util.isTagNameInArrayMode(tagName, options.arrayMode, parentTagName);
+        isTagNameInArrayMode(tagName, options.arrayMode, parentTagName);
       jObj[tagName] = asArray ? [result] : result;
     }
   }
