@@ -3,6 +3,10 @@ const { buildOptions } = require('./util');
 const xmlbuffer2xmlnode = require('./xmlbuffer2xmlnode');
 
 exports.parse = function (xmlData, options, validationOption) {
+  if (typeof xmlData === 'string') {
+    const encoder = new TextEncoder();
+    xmlData = encoder.encode(xmlData);
+  }
   if (validationOption) {
     if (validationOption === true) validationOption = {};
   }
