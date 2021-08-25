@@ -75,17 +75,6 @@ function processTagValue(tagName, val, options) {
 
   return val;
 }
-function stringProcessTagValue(tagName, val, options) {
-  if (val) {
-    if (options.trimValues) {
-      val = val.trim();
-    }
-    val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
-  }
-
-  return val;
-}
 
 function parseValue(val, shouldParse, parseTrueNumberOnly) {
   if (shouldParse && typeof val === 'object') {
@@ -160,21 +149,14 @@ function getTraversalObj(xmlData, options) {
         }
 
         if (currentNode) {
-          if (currentNode.val) {
-            currentNode.val = `${getValue(currentNode.val)}${processTagValue(
-              tagName,
-              xmlData.subarray(dataIndex, dataIndex + dataSize),
-              options,
-              dataIndex,
-            )}`;
-          } else {
-            currentNode.val = processTagValue(
-              tagName,
-              xmlData.subarray(dataIndex, dataIndex + dataSize),
-              options,
-              dataIndex,
-            );
-          }
+          const value = processTagValue(
+            tagName,
+            xmlData.subarray(dataIndex, dataIndex + dataSize),
+            options,
+            dataIndex,
+          );
+          currentNode.val =
+            currentNode.val === undefined ? value : currentNode.val + value;
         }
         if (
           options.stopNodes.length &&
@@ -235,7 +217,7 @@ function getTraversalObj(xmlData, options) {
           i = closeIndex;
         } //![
       } else if (xmlData1 === 0x21 && xmlData2 === 0x5b) {
-        // <![
+        // <![CDATA[some stuff]]>
         const closeIndex =
           findClosingIndex(
             xmlData,
@@ -249,14 +231,14 @@ function getTraversalObj(xmlData, options) {
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if (dataSize !== 0) {
-          currentNode.val = `${getValue(
-            currentNode.val,
-          )}${stringProcessTagValue(
+          const value = processTagValue(
             currentNode.tagname,
-            decoder.decode(xmlData.subarray(dataIndex, dataIndex + dataSize)),
+            xmlData.subarray(dataIndex, dataIndex + dataSize),
             options,
             dataIndex,
-          )}`;
+          );
+
+          currentNode.val = `${getValue(currentNode.val)}${value}`;
         }
 
         if (options.cdataTagName) {
