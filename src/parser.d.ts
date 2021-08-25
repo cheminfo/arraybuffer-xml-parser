@@ -15,7 +15,6 @@ type X2jOptions = {
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
-  parseTrueNumberOnly: boolean;
   tagValueProcessor: (tagValue: string, tagName: string) => string;
   attrValueProcessor: (attrValue: string, attrName: string) => string;
   stopNodes: string[];

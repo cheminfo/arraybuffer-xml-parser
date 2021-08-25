@@ -1,4 +1,6 @@
-const bufferUtils = require('./bufferUtils');
+const { parseString } = require('dynamic-typing');
+
+const { arrayTrim, arrayIndexOf } = require('./bufferUtils');
 const { parseAttributesString } = require('./parseAttributesString');
 const { buildOptions, getValue } = require('./util');
 const xmlNode = require('./xmlNode');
@@ -53,7 +55,6 @@ const props = [
   'cdataPositionChar',
   'tagValueProcessor',
   'attrValueProcessor',
-  'parseTrueNumberOnly',
   'stopNodes',
 ];
 exports.props = props;
@@ -67,44 +68,23 @@ exports.props = props;
 function processTagValue(tagName, val, options) {
   if (val) {
     if (options.trimValues) {
-      val = bufferUtils.arrayTrim(val);
+      val = arrayTrim(val);
     }
     val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
+    val = parseValue(val, options);
   }
 
   return val;
 }
 
-function parseValue(val, shouldParse, parseTrueNumberOnly) {
-  if (shouldParse && typeof val === 'object') {
-    let parsed;
-    if (val.length === 0 || !bufferUtils.containsNumber(val)) {
-      parsed = bufferUtils.arrayIsEqual(val, [116, 114, 117, 101]) //true
-        ? true
-        : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
-        ? false
-        : decoder.decode(val).replace(/\r/g, '');
-    } else {
-      if (bufferUtils.arrayIndexOf(val, [0x30, 0x78]) !== -1) {
-        //0x
-        //support hexa decimal
-        parsed = bufferUtils.arrayHexToInt(
-          val,
-          bufferUtils.arrayIndexOf(val, [0x30, 0x78]) + 2,
-        );
-      } else if (bufferUtils.arrayIndexOf(val, [0x2e]) !== -1) {
-        //.
-        parsed = bufferUtils.arrayParseFloat(val);
-        val = bufferUtils.arrayFloatTrim(val);
-      } else {
-        parsed = bufferUtils.arrayParseInt(val, 10);
-        if (parseTrueNumberOnly && !bufferUtils.compareToInt(val, parsed)) {
-          parsed = decoder.decode(val);
-        }
-      }
-    }
-    return parsed;
+function parseValue(val, options) {
+  const { parseNodeValue } = options;
+  if (typeof val === 'object') {
+    if (val.length === 0) return '';
+    let parsed = decoder.decode(val).replace(/\r/g, '');
+    if (!parseNodeValue) return parsed;
+
+    return parseString(parsed);
   } else {
     if (val !== undefined) {
       if (typeof val === 'string') {
@@ -137,12 +117,10 @@ function getTraversalObj(xmlData, options) {
           i,
           'Closing Tag is not closed.',
         );
-        let tagName = bufferUtils.arrayTrim(
-          xmlData.subarray(i + 2, closeIndex),
-        );
+        let tagName = arrayTrim(xmlData.subarray(i + 2, closeIndex));
 
         if (options.ignoreNameSpace) {
-          const colonIndex = bufferUtils.arrayIndexOf(tagName, [0x3a]);
+          const colonIndex = arrayIndexOf(tagName, [0x3a]);
           if (colonIndex !== -1) {
             tagName = xmlData.subarray(tagName.byteOffset + colonIndex + 1);
           }
@@ -211,8 +189,8 @@ function getTraversalObj(xmlData, options) {
           'DOCTYPE is not closed.',
         );
         const tagExp = xmlData.subarray(i, closeIndex);
-        if (bufferUtils.arrayIndexOf(tagExp, [0x5b]) >= 0) {
-          i = bufferUtils.arrayIndexOf(xmlData, [0x5d, 0x3e], i) + 1;
+        if (arrayIndexOf(tagExp, [0x5b]) >= 0) {
+          i = arrayIndexOf(xmlData, [0x5d, 0x3e], i) + 1;
         } else {
           i = closeIndex;
         } //![
@@ -345,25 +323,25 @@ function closingIndexForOpeningTag(data, i) {
   let attrBoundary;
   let endIndex = 0;
   for (let index = i; index < data.length; index++) {
-    let ch = data[index];
+    let byte = data[index];
     if (attrBoundary) {
-      if (ch === attrBoundary) attrBoundary = 0; //reset
-    } else if (ch === 0x22 || ch === 0x27) {
-      attrBoundary = ch;
-    } else if (ch === 0x3e) {
+      if (byte === attrBoundary) attrBoundary = 0; //reset
+    } else if (byte === 0x22 || byte === 0x27) {
+      attrBoundary = byte;
+    } else if (byte === 0x3e) {
       return {
         data: decoder.decode(data.subarray(i, i + endIndex)),
-        index: index,
+        index,
       };
-    } else if (ch === 0x09) {
-      ch = 0x20;
+    } else if (byte === 0x09) {
+      byte = 0x20;
     }
     endIndex++;
   }
 }
 
 function findClosingIndex(xmlData, str, i, errMsg) {
-  const closingIndex = bufferUtils.arrayIndexOf(xmlData, str, i);
+  const closingIndex = arrayIndexOf(xmlData, str, i);
   if (closingIndex === -1) {
     throw new Error(errMsg);
   } else {

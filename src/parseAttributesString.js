@@ -23,7 +23,6 @@ function parseAttributesString(string, options) {
         attributes[options.attributeNamePrefix + attrName] = stringParseValue(
           match[4],
           options.parseAttributeValue,
-          options.parseTrueNumberOnly,
         );
       } else if (options.allowBooleanAttributes) {
         attributes[options.attributeNamePrefix + attrName] = true;
@@ -41,7 +40,7 @@ function parseAttributesString(string, options) {
   return attributes;
 }
 
-function stringParseValue(val, shouldParse, parseTrueNumberOnly) {
+function stringParseValue(val, shouldParse) {
   if (shouldParse && typeof val === 'string') {
     let parsed;
     if (val.trim() === '' || isNaN(val)) {
@@ -55,9 +54,6 @@ function stringParseValue(val, shouldParse, parseTrueNumberOnly) {
         val = val.replace(/\.?0+$/, '');
       } else {
         parsed = Number.parseInt(val, 10);
-      }
-      if (parseTrueNumberOnly) {
-        parsed = String(parsed) === val ? parsed : val;
       }
     }
     return parsed;

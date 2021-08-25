@@ -1,14 +1,29 @@
-const parser = require('../parser');
-
-const fs = require('fs');
-const path = require('path');
+const { parse } = require('../parser');
 
 describe('XMLParser', function () {
-  it('should parse a cheminfo-provided file', function () {
-    // const fileNamePath = path.join(__dirname, 'assets/COV01002_MS_AA.mzML');
-    // const xmlData = fs.readFileSync(fileNamePath);
-    //parser.parse(xmlData);
-    let a;
-    expect(a).toBeUndefined();
+  it('Try to parse a very simple example', function () {
+    const xmlData = `
+ 	<AAA>
+	    12345<AB/>678
+        </AAA>`;
+
+    const expected = {
+      AAA: {
+        aaa: '123',
+        ABC: '',
+      },
+    };
+
+    let result = parse(xmlData, {
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      //parseAttributeValue: true
+    });
+
+    //console.log(JSON.stringify(result,null,4));
+    // expect(result).toEqual(expected);
+
+    // result = validator.validate(xmlData);
+    // expect(result).toBe(true);
   });
 });

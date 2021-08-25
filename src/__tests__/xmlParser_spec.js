@@ -122,20 +122,41 @@ describe('XMLParser', function () {
       rootNode: {
         tag: 'value',
         boolean: true,
-        intTag: '045',
+        intTag: 45,
         floatTag: 65.34,
+        long: 4.209261892001902e29,
+      },
+    };
+
+    const result = parse(xmlData);
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+  });
+
+  it('should not convert number and boolean', function () {
+    const xmlData = encoder.encode(`<rootNode>
+	    <tag>value</tag>
+	    <boolean>true</boolean>
+	    <intTag>045</intTag>
+	    <floatTag>65.340</floatTag>
+	    <long>420926189200190257681175017717</long>
+	    </rootNode>`);
+    const expected = {
+      rootNode: {
+        tag: 'value',
+        boolean: 'true',
+        intTag: '045',
+        floatTag: '65.340',
         long: '420926189200190257681175017717',
       },
     };
 
-    const result = parse(xmlData, {
-      parseTrueNumberOnly: true,
-    });
+    const result = parse(xmlData, { parseNodeValue: false });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
 
-  it('should parse number ending in .0 for parseTrueNumberOnly:false', function () {
+  it('should parse number ending in .0', function () {
     const xmlData = encoder.encode(`<rootNode>
         <floatTag0>0.0</floatTag0>
         <floatTag1>1.0</floatTag1>
@@ -156,13 +177,12 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
       parseAttributeValue: true,
-      parseTrueNumberOnly: false,
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
 
-  it('should parse number ending in .0 for parseTrueNumberOnly:true', function () {
+  it('should parse number ending in .0', function () {
     const xmlData = encoder.encode(`<rootNode>
         <floatTag0>0.0</floatTag0>
         <floatTag1>1.0</floatTag1>
@@ -183,7 +203,6 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
       parseAttributeValue: true,
-      parseTrueNumberOnly: true,
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);

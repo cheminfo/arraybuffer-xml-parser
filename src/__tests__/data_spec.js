@@ -89,7 +89,6 @@ describe('XMLParser', function () {
     &#x435;&#x433;&#x43e; &#x430;&#x43a;&#x442;&#x438;&#x432;&#x43e;&#x432;\
     </c:string>
     </a:root>`);
-
     const expected = {
       'a:root': {
         '@_xmlns:a': 'urn:none',
@@ -109,7 +108,6 @@ describe('XMLParser', function () {
         },
       },
     };
-
     let result = parse(xmlData, {
       //attributeNamePrefix: "",
       ignoreAttributes: false,
@@ -117,7 +115,6 @@ describe('XMLParser', function () {
       allowBooleanAttributes: true,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
 

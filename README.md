@@ -49,9 +49,9 @@ const options = {
   parseNodeValue: true,
   parseAttributeValue: false,
   trimValues: true,
+  dynamicTyping: true,
   cdataTagName: '__cdata', //default is 'false'
   cdataPositionChar: '\\c',
-  parseTrueNumberOnly: false,
   arrayMode: false, //"strict"
   attrValueProcessor: (val, attrName) =>
     he.decode(val, { isAttributeValue: true }), //default is a=>a
@@ -76,7 +76,6 @@ const jsonObj = parse(xmlData, options, true);
 - **decodeHTMLchar** : This options has been removed from 3.3.4. Instead, use tagValueProcessor, and attrValueProcessor. See above example.
 - **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 - **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
-- **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
 - **arrayMode** : When `false`, a tag with single occurrence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only. When instance of `RegEx`, only tags will be parsed as array that match the regex. When `function` a tag name is passed to the callback that can be checked.
 - **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 - **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
