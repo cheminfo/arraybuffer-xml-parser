@@ -1,6 +1,6 @@
 const { isTagNameInArrayMode, merge, isEmptyObject } = require('./util');
 
-const convertToJson = function (node, options, parentTagName) {
+function convertToJson(node, options, parentTagName) {
   const jObj = {};
 
   // when no child node or attr is present
@@ -52,6 +52,6 @@ const convertToJson = function (node, options, parentTagName) {
 
   //add value
   return jObj;
-};
+}
 
 exports.convertToJson = convertToJson;

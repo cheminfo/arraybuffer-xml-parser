@@ -1,4 +1,4 @@
-const nodeToJson = require('./node2json');
+const { convertToJson } = require('./node2json');
 const { buildOptions } = require('./util');
 const {
   defaultOptions,
@@ -17,13 +17,8 @@ exports.parse = function (xmlData, options, validationOption) {
   options = buildOptions(options, defaultOptions, props);
   const traversableObj = getTraversalObj(xmlData, options);
   //print(traversableObj, "  ");
-  return nodeToJson.convertToJson(traversableObj, options);
+  return convertToJson(traversableObj, options);
 };
-
-exports.convertToJson = nodeToJson.convertToJson;
-exports.convertToJsonString = require('./node2json_str').convertToJsonString;
-
-exports.j2xParser = require('./json2xml');
 
 exports.parseToNimn = function (xmlData, schema, options) {
   return exports.convertTonimn(
