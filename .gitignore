@@ -3,6 +3,9 @@ logs
 *.log
 npm-debug.log*
 
+# editors
+.idea
+
 # Runtime data
 pids
 *.pid
@@ -36,5 +39,5 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-# iOS folder information
-.DS_Store
+lib
+dist
