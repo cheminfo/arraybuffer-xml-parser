@@ -1,6 +1,6 @@
 const bufferUtils = require('./bufferUtils');
 const util = require('./util');
-const buildOptions = require('./util').buildOptions;
+const { buildOptions } = require('./util');
 const xmlNode = require('./xmlNode');
 
 const decoder = new TextDecoder();

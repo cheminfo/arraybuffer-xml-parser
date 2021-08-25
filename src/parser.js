@@ -1,6 +1,6 @@
 const nodeToJson = require('./node2json');
+const { buildOptions } = require('./util');
 const xmlbuffer2xmlnode = require('./xmlbuffer2xmlnode');
-const buildOptions = require('./util').buildOptions;
 
 exports.parse = function (xmlData, options, validationOption) {
   if (validationOption) {

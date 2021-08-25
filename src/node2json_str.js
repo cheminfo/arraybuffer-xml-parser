@@ -1,5 +1,5 @@
 const util = require('./util');
-const buildOptions = require('./util').buildOptions;
+const { buildOptions } = require('./util');
 const x2j = require('./xmlbuffer2xmlnode');
 
 //TODO: do it later

@@ -10,44 +10,34 @@ const getAllMatches = function (string, regex) {
 };
 
 const isName = function (string) {
-  const match = regexName.exec(string);
-  return !(match === null || typeof match === 'undefined');
+  return regexName.exec(string) !== undefined;
 };
 
-exports.isEmptyObject = function (obj) {
+function isEmptyObject(obj) {
   return Object.keys(obj).length === 0;
-};
+}
 
 /**
  * Copy all the properties of a into b.
- * @param {*} target
- * @param {*} a
+ * @param {object} target
+ * @param {object} a
  */
-exports.merge = function (target, a, arrayMode) {
-  if (a) {
-    const keys = Object.keys(a); // will return an array of own properties
-    const len = keys.length; //don't make it inline
-    for (let i = 0; i < len; i++) {
-      if (arrayMode === 'strict') {
-        target[keys[i]] = [a[keys[i]]];
-      } else {
-        target[keys[i]] = a[keys[i]];
-      }
+function merge(target, a, arrayMode) {
+  if (!a) return;
+  for (const key in a) {
+    if (arrayMode === 'strict') {
+      target[key] = [a[key]];
+    } else {
+      target[key] = a[key];
     }
   }
-};
-/* exports.merge =function (b,a){
-  return Object.assign(b,a);
-} */
+}
 
-exports.getValue = function (v) {
+function getValue(v) {
   return v === undefined ? '' : v;
-};
+}
 
-// const fakeCall = function(a) {return a;};
-// const fakeCallNoReturn = function() {};
-
-exports.buildOptions = function (options, defaultOptions, props) {
+function buildOptions(options, defaultOptions, props) {
   let newOptions = {};
   if (!options) {
     return defaultOptions; //if there are not options
@@ -61,7 +51,7 @@ exports.buildOptions = function (options, defaultOptions, props) {
     }
   }
   return newOptions;
-};
+}
 
 /**
  * Check if a tag name should be treated as array
@@ -71,7 +61,7 @@ exports.buildOptions = function (options, defaultOptions, props) {
  * @param parentTagName the parent tag name
  * @returns {boolean} true if node should be parsed as array
  */
-exports.isTagNameInArrayMode = function (tagName, arrayMode, parentTagName) {
+function isTagNameInArrayMode(tagName, arrayMode, parentTagName) {
   if (arrayMode === false) {
     return false;
   } else if (arrayMode instanceof RegExp) {
@@ -81,8 +71,15 @@ exports.isTagNameInArrayMode = function (tagName, arrayMode, parentTagName) {
   }
 
   return arrayMode === 'strict';
-};
+}
 
-exports.isName = isName;
-exports.getAllMatches = getAllMatches;
-exports.nameRegexp = nameRegexp;
+module.exports = {
+  isName,
+  getAllMatches,
+  nameRegexp,
+  isTagNameInArrayMode,
+  buildOptions,
+  merge,
+  getValue,
+  isEmptyObject,
+};
