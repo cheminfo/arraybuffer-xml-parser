@@ -6,7 +6,7 @@ const {
   getTraversalObj,
 } = require('./xmlbuffer2xmlnode');
 
-exports.parse = function (xmlData, options, validationOption) {
+function parse(xmlData, options, validationOption) {
   if (typeof xmlData === 'string') {
     const encoder = new TextEncoder();
     xmlData = encoder.encode(xmlData);
@@ -18,12 +18,6 @@ exports.parse = function (xmlData, options, validationOption) {
   const traversableObj = getTraversalObj(xmlData, options);
   //print(traversableObj, "  ");
   return convertToJson(traversableObj, options);
-};
+}
 
-exports.parseToNimn = function (xmlData, schema, options) {
-  return exports.convertTonimn(
-    exports.getTraversalObj(xmlData, options),
-    schema,
-    options,
-  );
-};
+module.exports = { parse };

@@ -1,5 +1,5 @@
 const bufferUtils = require('./bufferUtils');
-const { getAllMatches } = require('./util');
+const { parseAttributesString } = require('./parseAttributesString');
 const { buildOptions, getValue } = require('./util');
 const xmlNode = require('./xmlNode');
 
@@ -87,19 +87,6 @@ function stringProcessTagValue(tagName, val, options) {
   return val;
 }
 
-function resolveNameSpace(tagname, options) {
-  if (options.ignoreNameSpace) {
-    const tags = tagname.split(':');
-    const prefix = tagname.charAt(0) === '/' ? '/' : '';
-    if (tags[0] === 'xmlns') {
-      return '';
-    }
-    if (tags.length === 2) {
-      tagname = prefix + tags[1];
-    }
-  }
-  return tagname;
-}
 function parseValue(val, shouldParse, parseTrueNumberOnly) {
   if (shouldParse && typeof val === 'object') {
     let parsed;
@@ -141,74 +128,6 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
   }
 }
 
-function stringParseValue(val, shouldParse, parseTrueNumberOnly) {
-  if (shouldParse && typeof val === 'string') {
-    let parsed;
-    if (val.trim() === '' || isNaN(val)) {
-      parsed = val === 'true' ? true : val === 'false' ? false : val;
-    } else {
-      if (val.indexOf('0x') !== -1) {
-        //support hexa decimal
-        parsed = Number.parseInt(val, 16);
-      } else if (val.indexOf('.') !== -1) {
-        parsed = Number.parseFloat(val);
-        val = val.replace(/\.?0+$/, '');
-      } else {
-        parsed = Number.parseInt(val, 10);
-      }
-      if (parseTrueNumberOnly) {
-        parsed = String(parsed) === val ? parsed : val;
-      }
-    }
-    return parsed;
-  } else {
-    return val === undefined ? '' : val;
-  }
-}
-
-const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
-//TODO: change regex to capture NS
-//const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
-const attrsRegx = new RegExp(newLocal, 'g');
-//Attributes are strings so no point in using arrayBuffers here
-function buildAttributesMap(attrStr, options) {
-  if (!options.ignoreAttributes && typeof attrStr === 'string') {
-    attrStr = attrStr.replace(/\r?\n/g, ' ');
-    //attrStr = attrStr || attrStr.trim();
-
-    const matches = getAllMatches(attrStr, attrsRegx);
-    const len = matches.length; //don't make it inline
-    const attrs = {};
-    for (let i = 0; i < len; i++) {
-      const attrName = resolveNameSpace(matches[i][1], options);
-      if (attrName.length) {
-        if (matches[i][4] !== undefined) {
-          if (options.trimValues) {
-            matches[i][4] = matches[i][4].trim();
-          }
-          matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
-          attrs[options.attributeNamePrefix + attrName] = stringParseValue(
-            matches[i][4],
-            options.parseAttributeValue,
-            options.parseTrueNumberOnly,
-          );
-        } else if (options.allowBooleanAttributes) {
-          attrs[options.attributeNamePrefix + attrName] = true;
-        }
-      }
-    }
-    if (!Object.keys(attrs).length) {
-      return;
-    }
-    if (options.attrNodeName) {
-      const attrCollection = {};
-      attrCollection[options.attrNodeName] = attrs;
-      return attrCollection;
-    }
-    return attrs;
-  }
-}
-
 function getTraversalObj(xmlData, options) {
   //xmlData = xmlData.replace(/\r\n?/g, '\n');
   options = buildOptions(options, defaultOptions, props);
@@ -216,10 +135,12 @@ function getTraversalObj(xmlData, options) {
   let currentNode = xmlObj;
   let dataSize = 0;
   let dataIndex = 0;
-  //function match(xmlData){
+
   for (let i = 0; i < xmlData.length; i++) {
     if (xmlData[i] === 0x3c) {
-      if (xmlData[i + 1] === 0x2f) {
+      const xmlData1 = xmlData[i + 1];
+      const xmlData2 = xmlData[i + 2];
+      if (xmlData1 === 0x2f) {
         //Closing Tag
         const closeIndex = findClosingIndex(
           xmlData,
@@ -271,12 +192,12 @@ function getTraversalObj(xmlData, options) {
         i = closeIndex;
         dataSize = 0;
         dataIndex = i + 1;
-      } else if (xmlData[i + 1] === 0x3f) {
+      } else if (xmlData1 === 0x3f) {
         i = findClosingIndex(xmlData, [0x3f, 0x3e], i, 'Pi Tag is not closed.');
       } else if (
         //!--
-        xmlData[i + 1] === 0x21 &&
-        xmlData[i + 2] === 0x2d &&
+        xmlData1 === 0x21 &&
+        xmlData2 === 0x2d &&
         xmlData[i + 3] === 0x2d
       ) {
         i = findClosingIndex(
@@ -298,7 +219,7 @@ function getTraversalObj(xmlData, options) {
         dataSize = 0;
         dataIndex = i + 1;
         //!D
-      } else if (xmlData[i + 1] === 0x21 && xmlData[i + 2] === 0x44) {
+      } else if (xmlData1 === 0x21 && xmlData2 === 0x44) {
         const closeIndex = findClosingIndex(
           xmlData,
           [0x3e], //>
@@ -311,7 +232,7 @@ function getTraversalObj(xmlData, options) {
         } else {
           i = closeIndex;
         } //![
-      } else if (xmlData[i + 1] === 0x21 && xmlData[i + 2] === 0x5b) {
+      } else if (xmlData1 === 0x21 && xmlData2 === 0x5b) {
         const closeIndex =
           findClosingIndex(
             xmlData,
@@ -409,7 +330,7 @@ function getTraversalObj(xmlData, options) {
 
           const childNode = new xmlNode(tagName, currentNode, '');
           if (tagName !== tagExp) {
-            childNode.attrsMap = buildAttributesMap(tagExp, options);
+            childNode.attrsMap = parseAttributesString(tagExp, options);
           }
           currentNode.addChild(childNode);
         } else {
@@ -423,7 +344,7 @@ function getTraversalObj(xmlData, options) {
             childNode.startIndex = closeIndex;
           }
           if (tagName !== tagExp && shouldBuildAttributesMap) {
-            childNode.attrsMap = buildAttributesMap(tagExp, options);
+            childNode.attrsMap = parseAttributesString(tagExp, options);
           }
           currentNode.addChild(childNode);
           currentNode = childNode;
@@ -473,7 +394,6 @@ module.exports = {
   parseValue,
   getTraversalObj,
   processTagValue,
-  resolveNameSpace,
   closingIndexForOpeningTag,
   defaultOptions,
   props,
