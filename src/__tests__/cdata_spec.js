@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const { readFileSync } = require('fs');
+const { join } = require('path');
 
-const parser = require('../parser');
+const { parse } = require('../parser');
 
 const encoder = new TextEncoder();
 
@@ -10,7 +10,7 @@ describe('XMLParser', function () {
     const xmlData = encoder.encode(`<?xml version='1.0'?><root><person>lastname
 firstname
 patronymic</person></root>`);
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -48,7 +48,7 @@ patronymic</person></root>`);
         },
       },
     };
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -86,7 +86,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -113,7 +113,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -135,7 +135,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -156,7 +156,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -183,7 +183,7 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -208,7 +208,7 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -241,7 +241,7 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       cdataTagName: '__cdata',
     });
@@ -275,7 +275,7 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       cdataTagName: '__cdata',
       cdataPositionChar: '',
@@ -286,8 +286,8 @@ patronymic</person></root>`);
   });
 
   it('should validate XML with repeated multiline CDATA and comments', function () {
-    const fileNamePath = path.join(__dirname, 'assets/mixed.xml');
-    const xmlData = fs.readFileSync(fileNamePath);
+    const fileNamePath = join(__dirname, 'assets/mixed.xml');
+    const xmlData = readFileSync(fileNamePath);
     const expected = {
       'ns:root': {
         ptag: [
@@ -303,7 +303,7 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });

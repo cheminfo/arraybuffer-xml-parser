@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-identical-title */
-const parser = require('../parser');
+const { parse } = require('../parser');
 
 const encoder = new TextEncoder();
 describe('XMLParser', function () {
@@ -21,7 +21,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       //parseAttributeValue: true
@@ -64,7 +64,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       //attributeNamePrefix: "",
       ignoreAttributes: false,
       //parseAttributeValue: true,
@@ -110,7 +110,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       //attributeNamePrefix: "",
       ignoreAttributes: false,
       //parseAttributeValue: true,
@@ -133,7 +133,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(
+    let result = parse(
       xmlData,
       {
         //attributeNamePrefix: "",
@@ -158,7 +158,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
@@ -177,7 +177,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
@@ -197,7 +197,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
       ignoreNameSpace: true,
@@ -216,7 +216,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
@@ -248,7 +248,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
       attrNodeName: '$',
@@ -261,31 +261,31 @@ describe('XMLParser', function () {
   it('should error for when any tag is left to close', function () {
     const xmlData = encoder.encode(`<?xml version="1.0"?><tag></tag`);
     expect(() => {
-      parser.parse(xmlData);
+      parse(xmlData);
     }).toThrow('Closing Tag is not closed.');
   });
   it('should error for when any tag is left to close', function () {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!-- bad `);
     expect(() => {
-      parser.parse(xmlData);
+      parse(xmlData);
     }).toThrow('Comment is not closed.');
   });
   it('should error for when any tag is left to close', function () {
     const xmlData = encoder.encode(`<?xml version="1.0"?><![CDATA ]`);
     expect(() => {
-      parser.parse(xmlData);
+      parse(xmlData);
     }).toThrow('CDATA is not closed.');
   });
   it('should error for when any tag is left to close', function () {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!DOCTYPE `);
     expect(() => {
-      parser.parse(xmlData);
+      parse(xmlData);
     }).toThrow('DOCTYPE is not closed.');
   });
   it('should error for when any tag is left to close', function () {
     const xmlData = encoder.encode(`<?xml version="1.0"?><?pi  `);
     expect(() => {
-      parser.parse(xmlData);
+      parse(xmlData);
     }).toThrow('Pi Tag is not closed.');
   });
 
@@ -300,7 +300,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(
+    const result = parse(
       xmlData,
       {
         ignoreAttributes: false,

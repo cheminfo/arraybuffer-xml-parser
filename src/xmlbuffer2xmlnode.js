@@ -32,17 +32,11 @@ const defaultOptions = {
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,
   cdataPositionChar: '\\c',
-  tagValueProcessor: function (a) {
-    return a;
-  },
-  attrValueProcessor: function (a) {
-    return a;
-  },
+  tagValueProcessor: (a) => a,
+  attrValueProcessor: (a) => a,
   stopNodes: [],
   //decodeStrict: false,
 };
-
-exports.defaultOptions = defaultOptions;
 
 const props = [
   'attributeNamePrefix',
@@ -474,11 +468,13 @@ function findClosingIndex(xmlData, str, i, errMsg) {
     return closingIndex + str.length - 1;
   }
 }
-exports.getTraversalObj = getTraversalObj;
-this.exports = {
+
+module.exports = {
   parseValue,
   getTraversalObj,
   processTagValue,
   resolveNameSpace,
   closingIndexForOpeningTag,
+  defaultOptions,
+  props,
 };

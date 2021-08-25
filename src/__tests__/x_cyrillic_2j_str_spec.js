@@ -1,4 +1,5 @@
-const parser = require('../parser');
+const { parse } = require('../parser');
+
 const encoder = new TextEncoder();
 
 describe('XMLParser', function () {
@@ -15,7 +16,7 @@ describe('XMLParser', function () {
       attributeNamePrefix: '@_',
     };
 
-    const result = parser.parse(xmlData, options);
+    const result = parse(xmlData, options);
     expect(result).toEqual(expected);
     // console.log({ expected})
     // console.log({ result })

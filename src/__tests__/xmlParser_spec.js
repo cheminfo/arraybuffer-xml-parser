@@ -1,6 +1,4 @@
-/* eslint-disable jest/no-commented-out-tests */
-const parser = require('../parser');
-// const validator = require('../validator');
+const { parse } = require('../parser');
 
 const encoder = new TextEncoder();
 const { readFileSync } = require('fs');
@@ -81,7 +79,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       ignoreNonTextNodeAttr: false,
       attributeNamePrefix: '@',
@@ -107,7 +105,7 @@ describe('XMLParser', function () {
         hexadecimal: 21,
       },
     };
-    const result = parser.parse(xmlData);
+    const result = parse(xmlData);
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
@@ -130,7 +128,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       parseTrueNumberOnly: true,
     });
     //console.log(JSON.stringify(result,null,4));
@@ -155,7 +153,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       parseAttributeValue: true,
       parseTrueNumberOnly: false,
@@ -182,7 +180,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       parseAttributeValue: true,
       parseTrueNumberOnly: true,
@@ -204,7 +202,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       parseNodeValue: false,
     });
     expect(result).toEqual(expected);
@@ -226,7 +224,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       parseAttributeValue: true,
     });
@@ -246,7 +244,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       parseNodeValue: true,
     });
     expect(result).toEqual(expected);
@@ -264,7 +262,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData);
+    const result = parse(xmlData);
     expect(result).toEqual(expected);
   });
 
@@ -298,7 +296,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreNameSpace: true,
       ignoreAttributes: false,
     });
@@ -314,7 +312,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData);
+    const result = parse(xmlData);
     expect(result).toEqual(expected);
   });
 
@@ -330,7 +328,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
     expect(result).toEqual(expected);
@@ -344,8 +342,8 @@ describe('XMLParser', function () {
       },
     };
 
-    //console.log(parser.getTraversalObj(xmlData));
-    const result = parser.parse(xmlData, {
+    //console.log(getTraversalObj(xmlData));
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
     expect(result).toEqual(expected);
@@ -364,7 +362,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData);
+    const result = parse(xmlData);
     expect(result).toEqual(expected);
   });
 
@@ -385,7 +383,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData);
+    const result = parse(xmlData);
     expect(result).toEqual(expected);
   });
 
@@ -436,7 +434,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
     expect(result).toEqual(expected);
@@ -454,7 +452,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       trimValues: false,
     });
@@ -473,7 +471,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
     expect(result).toEqual(expected);
@@ -486,7 +484,7 @@ describe('XMLParser', function () {
       'tag.2': 'val2',
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
     expect(result).toEqual(expected);
@@ -505,7 +503,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       textNodeName: '_text',
       ignoreAttributes: false,
     });
@@ -541,7 +539,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
       ignoreNonTextNodeAttr: false,
     });
@@ -584,7 +582,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
       attrNodeName: '$',
       ignoreNameSpace: true,
@@ -626,7 +624,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, { ignoreNameSpace: true });
+    const result = parse(xmlData, { ignoreNameSpace: true });
     expect(result).toEqual(expected);
   });
 
@@ -635,7 +633,7 @@ describe('XMLParser', function () {
     const expected = {
       rootNode: '       123        ',
     };
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       parseNodeValue: false,
       trimValues: false,
     });
@@ -648,7 +646,7 @@ describe('XMLParser', function () {
     const expected = {
       rootNode: '123',
     };
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       parseNodeValue: false,
     });
     //console.log(JSON.stringify(result,null,4));
@@ -662,7 +660,7 @@ describe('XMLParser', function () {
     const expected = {
       rootNode: 'foo&ampbar&apos;',
     };
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       parseNodeValue: false,
     });
     //console.log(JSON.stringify(result,null,4));
@@ -685,7 +683,7 @@ describe('XMLParser', function () {
     const expected = {
       foo: 'Hello World.',
     };
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       //parseNodeValue: false,
       //trimValues: false
     });
@@ -714,74 +712,8 @@ describe('XMLParser', function () {
         },
       },
     };
-    const result = parser.parse(xmlData);
+    const result = parse(xmlData);
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
-
-  // it('should parse node with text before, after and between of subtags', function () {
-  //   const xmlData = encoder.encode(
-  //     "<?xml version='1.0'?>" +
-  //       '<tag>before' +
-  //       '    <subtag>subtag text</subtag>' +
-  //       '    middle' +
-  //       '    <self />' +
-  //       '    after self' +
-  //       '    <subtag2>subtag text</subtag2>' +
-  //       '    after' +
-  //       '</tag>',
-  //   );
-
-  //   const expected = {
-  //     tag: {
-  //       '#text': 'before        middle        after self        after',
-  //       subtag: 'subtag text',
-  //       self: '',
-  //       subtag2: 'subtag text',
-  //     },
-  //   };
-
-  //   let result = validator.validate(xmlData);
-  //   expect(result).toBe(true);
-
-  //   result = parser.parse(xmlData, { trimValues: false });
-  //   //console.log(JSON.stringify(result,null,4));
-  //   expect(result).toEqual(expected);
-  // });
-
-  // it('should validate before parsing', function () {
-  //   const xmlData = encoder.encode(
-  //     "<?xml version='1.0'?>" +
-  //       '<tag>' +
-  //       '    <subtag2>subtag text</subtag2>' +
-  //       '</tag',
-  //   );
-
-  //   expect(() => {
-  //     parser.parse(xmlData, { trimValues: true }, true);
-  //   }).toThrow(`Closing tag 'tag' doesn't have proper closing.`);
-  // });
-
-  //   it('should validate with options before parsing', function () {
-  //     const xmlData = encoder.encode(
-  //       "<?xml version='1.0'?>" +
-  //         '<tag foo>' +
-  //         '    <subtag2>subtag text</subtag2>' +
-  //         '</tag>',
-  //     );
-
-  //     const expected = {
-  //       tag: {
-  //         subtag2: 'subtag text',
-  //       },
-  //     };
-
-  //     let result = parser.parse(
-  //       xmlData,
-  //       { trimValues: true },
-  //       { allowBooleanAttributes: true },
-  //     );
-  //     //console.log(JSON.stringify(result,null,4));
-  //     expect(result).toEqual(expected);
-  //  });
 });

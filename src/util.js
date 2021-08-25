@@ -5,13 +5,13 @@ const nameRegexp = `[${nameStartChar}][${nameChar}]*`;
 // eslint-disable-next-line no-misleading-character-class
 const regexName = new RegExp(`^${nameRegexp}$`);
 
-const getAllMatches = function (string, regex) {
+function getAllMatches(string, regex) {
   return Array.from(string.matchAll(regex));
-};
+}
 
-const isName = function (string) {
+function isName(string) {
   return regexName.exec(string) !== undefined;
-};
+}
 
 function isEmptyObject(obj) {
   return Object.keys(obj).length === 0;
