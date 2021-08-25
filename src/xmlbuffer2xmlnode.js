@@ -95,7 +95,7 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
         ? true
         : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
         ? false
-        : decoder.decode(val).replace(/\r\n?/g, '\n'); // todo: takes quite a lot of time
+        : decoder.decode(val).replace(/\r?\n/g, '\n'); // todo: takes quite a lot of time
     } else {
       if (bufferUtils.arrayIndexOf(val, [0x30, 0x78]) !== -1) {
         //0x
@@ -119,9 +119,9 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
   } else {
     if (val !== undefined) {
       if (typeof val === 'string') {
-        return val.replace(/\r\n?/g, '\n');
+        return val.replace(/\r?\n/g, '\n');
       }
-      return decoder.decode(val).replace(/\r\n?/g, '\n');
+      return decoder.decode(val).replace(/\r?\n/g, '\n');
     } else {
       return '';
     }
@@ -285,7 +285,7 @@ function getTraversalObj(xmlData, options) {
       } else {
         //Opening a normal tag
         const parsedOpeningTag = closingIndexForOpeningTag(xmlData, i + 1);
-        let tagData = parsedOpeningTag.data.replace(/\r\n?|\t/g, ' ');
+        let tagData = parsedOpeningTag.data.replace(/\r?\n|\t/g, ' ');
         const closeIndex = parsedOpeningTag.index;
         const separatorIndex = tagData.indexOf(' ');
         let shouldBuildAttributesMap = true;
@@ -294,7 +294,7 @@ function getTraversalObj(xmlData, options) {
             ? tagData.substr(0, separatorIndex).replace(/\s+$/, '')
             : tagData;
         let tagAttributes =
-          separatorIndex >= 0 ? tagData.substr(separatorIndex + 1) : tagData;
+          separatorIndex >= 0 ? tagData.substr(separatorIndex + 1) : '';
         if (options.ignoreNameSpace) {
           const colonIndex = tagName.indexOf(':');
           if (colonIndex !== -1) {
@@ -316,22 +316,19 @@ function getTraversalObj(xmlData, options) {
           }
         }
 
-        if (
-          tagAttributes.length > 0 &&
-          tagAttributes[tagAttributes.length - 1] === '/'
-        ) {
+        if (tagData.length > 0 && tagData[tagData.length - 1] === '/') {
           //selfClosing tag
 
-          if (tagName[tagName.length - 1] === '/') {
-            //remove trailing '/'
-            tagName = tagName.substr(0, tagName.length - 1);
-            tagAttributes = tagName;
-          } else {
+          if (tagAttributes) {
+            // <abc def="123"/>
             tagAttributes = tagAttributes.substr(0, tagAttributes.length - 1);
+          } else {
+            // <abc/>
+            tagName = tagName.substr(0, tagName.length - 1);
           }
 
           const childNode = new xmlNode(tagName, currentNode, '');
-          if (tagName !== tagAttributes) {
+          if (tagAttributes) {
             childNode.attrsMap = parseAttributesString(tagAttributes, options);
           }
           currentNode.addChild(childNode);
@@ -345,7 +342,7 @@ function getTraversalObj(xmlData, options) {
           ) {
             childNode.startIndex = closeIndex;
           }
-          if (tagName !== tagAttributes && shouldBuildAttributesMap) {
+          if (tagAttributes && shouldBuildAttributesMap) {
             childNode.attrsMap = parseAttributesString(tagAttributes, options);
           }
           currentNode.addChild(childNode);
