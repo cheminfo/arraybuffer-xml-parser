@@ -3,7 +3,18 @@ const { getAllMatches } = require('./util');
 const { buildOptions, getValue } = require('./util');
 const xmlNode = require('./xmlNode');
 
-const decoder = new TextDecoder();
+const utf8Decoder = new TextDecoder();
+
+const decoder = {
+  decode: (array) => {
+    let string = '';
+    for (let value of array) {
+      if (value > 127) return utf8Decoder.decode(array);
+      string += String.fromCharCode(value);
+    }
+    return string;
+  },
+};
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
