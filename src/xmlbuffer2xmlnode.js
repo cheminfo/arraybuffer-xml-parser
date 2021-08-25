@@ -7,6 +7,8 @@ const utf8Decoder = new TextDecoder();
 
 const decoder = {
   decode: (array) => {
+    // if the array is too big and the xml file is huged the garbage collector will work too much
+    if (array.length > 100) return utf8Decoder.decode(array);
     let string = '';
     for (let value of array) {
       if (value > 127) return utf8Decoder.decode(array);
