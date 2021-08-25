@@ -114,7 +114,7 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
         ? true
         : bufferUtils.arrayIsEqual(val, [0x66, 0x61, 0x6c, 0x73, 0x65]) //false
         ? false
-        : decoder.decode(val).replace(/\r\n?/g, '\n'); // todo: takes 25% of the time
+        : decoder.decode(val).replace(/\r\n?/g, '\n'); // todo: takes quite a lot of time
     } else {
       if (bufferUtils.arrayIndexOf(val, [0x30, 0x78]) !== -1) {
         //0x
