@@ -10,7 +10,7 @@ function getAllMatches(string, regex) {
 }
 
 function isName(string) {
-  return regexName.exec(string) !== undefined;
+  return regexName.exec(string) !== null;
 }
 
 function isEmptyObject(obj) {
