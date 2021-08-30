@@ -19,7 +19,7 @@ patronymic</person></root>`);
         person: 'lastname\nfirstname\npatronymic',
       },
     };
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -54,7 +54,7 @@ patronymic</person></root>`);
 
     //console.log(JSON.stringify(result,null,4));
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -90,7 +90,7 @@ patronymic</person></root>`);
       ignoreAttributes: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     //    result = validator.validate(xmlData);
     //    expect(result).toBe(true);
@@ -118,7 +118,7 @@ patronymic</person></root>`);
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     //    result = validator.validate(xmlData);
     //    expect(result).toBe(true);
@@ -139,7 +139,7 @@ patronymic</person></root>`);
       ignoreAttributes: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     //    result = validator.validate(xmlData);
     //    expect(result).toBe(true);
@@ -160,7 +160,7 @@ patronymic</person></root>`);
       ignoreAttributes: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     //    result = validator.validate(xmlData);
     //    expect(result).toBe(true);
@@ -188,7 +188,7 @@ patronymic</person></root>`);
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should not parse tag value if having CDATA', function () {
@@ -213,7 +213,7 @@ patronymic</person></root>`);
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse CDATA as separate tag', function () {
@@ -247,7 +247,7 @@ patronymic</person></root>`);
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse CDATA as separate tag without preserving cdata position', function () {
@@ -282,7 +282,7 @@ patronymic</person></root>`);
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should validate XML with repeated multiline CDATA and comments', function () {
@@ -308,6 +308,6 @@ patronymic</person></root>`);
       allowBooleanAttributes: true,
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 });

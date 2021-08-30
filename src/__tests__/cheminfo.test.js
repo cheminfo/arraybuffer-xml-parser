@@ -1,3 +1,5 @@
+/* eslint-disable no-tabs */
+
 import { parse } from '../parse';
 
 describe('XMLParser', function () {
@@ -7,23 +9,13 @@ describe('XMLParser', function () {
 	    12345<AB/>678
         </AAA>`;
 
-    const expected = {
-      AAA: {
-        aaa: '123',
-        ABC: '',
-      },
-    };
+    const expected = { AAA: { '#text': '12345678', AB: '' } };
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      //parseAttributeValue: true
     });
 
-    //console.log(JSON.stringify(result,null,4));
-    // expect(result).toEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
+    expect(result).toStrictEqual(expected);
   });
 });

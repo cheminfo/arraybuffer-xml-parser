@@ -1,6 +1,6 @@
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 
-function convertToJson(node, options, parentTagName) {
+export function convertToJson(node, options, parentTagName) {
   const jObj = {};
 
   // when no child node or attr is present
@@ -35,7 +35,7 @@ function convertToJson(node, options, parentTagName) {
     if (node.child[tagName] && node.child[tagName].length > 1) {
       jObj[tagName] = [];
       for (let tag in node.child[tagName]) {
-        if (node.child[tagName].hasOwnProperty(tag)) {
+        if (Object.prototype.hasOwnProperty.call(node.child[tagName], tag)) {
           jObj[tagName].push(
             convertToJson(node.child[tagName][tag], options, tagName),
           );
@@ -53,5 +53,3 @@ function convertToJson(node, options, parentTagName) {
   //add value
   return jObj;
 }
-
-exports.convertToJson = convertToJson;

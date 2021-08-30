@@ -1,3 +1,5 @@
+/* eslint-disable no-tabs */
+
 import { parse } from '../parse';
 
 const encoder = new TextEncoder();
@@ -22,7 +24,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -51,7 +53,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -80,7 +82,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -105,7 +107,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -130,7 +132,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -165,7 +167,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
@@ -188,7 +190,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,

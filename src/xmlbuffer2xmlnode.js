@@ -7,7 +7,7 @@ import xmlNode from './xmlNode';
 
 const utf8Decoder = new TextDecoder();
 
-const decoder = {
+export const decoder = {
   decode: (array) => {
     if (typeof window !== 'undefined') return utf8Decoder.decode(array);
     // if the array is too big and the xml file is huged the garbage collector will work too much
@@ -21,7 +21,7 @@ const decoder = {
   },
 };
 
-const defaultOptions = {
+export const defaultOptions = {
   attributeNamePrefix: '@_',
   attrNodeName: false,
   textNodeName: '#text',
@@ -41,7 +41,7 @@ const defaultOptions = {
   //decodeStrict: false,
 };
 
-const props = [
+export const props = [
   'attributeNamePrefix',
   'attrNodeName',
   'textNodeName',
@@ -58,7 +58,6 @@ const props = [
   'attrValueProcessor',
   'stopNodes',
 ];
-exports.props = props;
 
 /**
  * Trim -> valueProcessor -> parse value
@@ -66,7 +65,7 @@ exports.props = props;
  * @param {string} val
  * @param {object} options
  */
-function processTagValue(tagName, val, options) {
+export function processTagValue(tagName, val, options) {
   if (val) {
     if (options.trimValues) {
       val = arrayTrim(val);
@@ -78,7 +77,7 @@ function processTagValue(tagName, val, options) {
   return val;
 }
 
-function parseValue(val, options) {
+export function parseValue(val, options) {
   const { parseNodeValue } = options;
   if (typeof val === 'object') {
     if (val.length === 0) return '';
@@ -98,7 +97,7 @@ function parseValue(val, options) {
   }
 }
 
-function getTraversalObj(xmlData, options) {
+export function getTraversalObj(xmlData, options) {
   options = buildOptions(options, defaultOptions, props);
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
@@ -320,7 +319,7 @@ function getTraversalObj(xmlData, options) {
   return xmlObj;
 }
 
-function closingIndexForOpeningTag(data, i) {
+export function closingIndexForOpeningTag(data, i) {
   let attrBoundary;
   let endIndex = 0;
   for (let index = i; index < data.length; index++) {
@@ -341,7 +340,7 @@ function closingIndexForOpeningTag(data, i) {
   }
 }
 
-function findClosingIndex(xmlData, str, i, errMsg) {
+export function findClosingIndex(xmlData, str, i, errMsg) {
   const closingIndex = arrayIndexOf(xmlData, str, i);
   if (closingIndex === -1) {
     throw new Error(errMsg);
@@ -349,12 +348,3 @@ function findClosingIndex(xmlData, str, i, errMsg) {
     return closingIndex + str.length - 1;
   }
 }
-
-module.exports = {
-  parseValue,
-  getTraversalObj,
-  processTagValue,
-  closingIndexForOpeningTag,
-  defaultOptions,
-  props,
-};

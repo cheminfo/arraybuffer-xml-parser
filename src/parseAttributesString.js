@@ -4,7 +4,7 @@ const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 const attrsRegx = new RegExp(newLocal, 'g');
 
 //Attributes are strings so no point in using arrayBuffers here
-function parseAttributesString(string, options) {
+export function parseAttributesString(string, options) {
   if (options.ignoreAttributes) {
     return;
   }
@@ -75,5 +75,3 @@ function resolveNameSpace(tagname, options) {
   }
   return tagname;
 }
-
-module.exports = { parseAttributesString };

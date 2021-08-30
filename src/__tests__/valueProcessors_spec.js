@@ -20,7 +20,7 @@ describe('XMLParser', function () {
       decodeHTMLchar: true,
       tagValueProcessor: (a) => he.decode(decoder.decode(a)),
     }); //if you really need to work with a string convert it yourself
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should decode HTML entities / char', function () {
@@ -44,7 +44,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -88,8 +88,8 @@ describe('XMLParser', function () {
     });
     //console.log(JSON.stringify(result,null,4));
     //console.log(JSON.stringify(resultMap,null,4));
-    expect(result).toEqual(expected);
-    expect(resultMap).toEqual({
+    expect(result).toStrictEqual(expected);
+    expect(resultMap).toStrictEqual({
       any_name: [new Uint8Array(), new Uint8Array()],
       person: [
         encoder.encode('start'),
@@ -126,7 +126,7 @@ describe('XMLParser', function () {
       tagValueProcessor: (val, tagName) => {},
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('result should have constant value returned by tag processor', function () {
@@ -155,7 +155,7 @@ describe('XMLParser', function () {
       },
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('attribute parser should be called with  atrribute name and value', function () {
@@ -188,9 +188,9 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(resultMap,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
-    expect(resultMap).toEqual({
+    expect(resultMap).toStrictEqual({
       id: ['7'],
       data: ['foo bar'],
       bug: ['foo n bar'],

@@ -22,6 +22,6 @@ describe('XMLParser array with extended prototype props', function () {
       ignoreAttributes: false,
     });
     //console.log(JSON.stringify(result, null, 4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 });

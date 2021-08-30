@@ -28,7 +28,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -72,7 +72,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse attributes with correct names', function () {
@@ -115,7 +115,7 @@ describe('XMLParser', function () {
       allowBooleanAttributes: true,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse tagName without whitespace chars', function () {
@@ -142,7 +142,7 @@ describe('XMLParser', function () {
     );
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse XML with DOCTYPE without internal DTD', function () {
@@ -159,7 +159,7 @@ describe('XMLParser', function () {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse XML with DOCTYPE without internal DTD', function () {
@@ -178,7 +178,7 @@ describe('XMLParser', function () {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse XML when namespaced ignored', function () {
@@ -199,7 +199,7 @@ describe('XMLParser', function () {
       allowBooleanAttributes: true,
       ignoreNameSpace: true,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse XML with undefined as text', function () {
@@ -217,7 +217,7 @@ describe('XMLParser', function () {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should trim \\t or \\n chars', function () {
@@ -252,7 +252,7 @@ describe('XMLParser', function () {
       attributeNamePrefix: '', //TODO attr node prefix should not set when they're grouped
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should error for when any tag is left to close', function () {
@@ -305,6 +305,6 @@ describe('XMLParser', function () {
       },
       true,
     );
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 });

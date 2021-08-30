@@ -13,7 +13,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, options);
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
     // console.log({ expected})
     // console.log({ result })
   });

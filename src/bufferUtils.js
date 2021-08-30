@@ -1,4 +1,4 @@
-function arrayTrim(array) {
+export function arrayTrim(array) {
   let i = 0;
   let j = array.length - 1;
   for (; i < array.length && array[i] <= 0x20; i++);
@@ -6,7 +6,7 @@ function arrayTrim(array) {
   return array.subarray(i, j + 1);
 }
 
-function arrayIndexOf(array, referenceArray, index = 0) {
+export function arrayIndexOf(array, referenceArray, index = 0) {
   let found = 0;
   let foundIndex = -1;
   for (let i = index; i < array.length && found < referenceArray.length; i++) {
@@ -41,7 +41,7 @@ function arrayIndexOf(array, referenceArray, index = 0) {
   return foundIndex;
 }
 
-function arraySplit(array, separator) {
+export function arraySplit(array, separator) {
   const split = [];
   let lowerbound = 0;
   for (let i = 0; i < array.length; i++) {
@@ -56,7 +56,7 @@ function arraySplit(array, separator) {
   return split;
 }
 
-function containsNumber(array) {
+export function containsNumber(array) {
   for (let i = 0; i < array.length; i++) {
     const value = array[i];
     if (value !== 0x20 && value !== 0x2b && value !== 0x2d) {
@@ -68,10 +68,3 @@ function containsNumber(array) {
   }
   return false;
 }
-
-module.exports = {
-  arrayTrim,
-  arrayIndexOf,
-  arraySplit,
-  containsNumber,
-};

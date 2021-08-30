@@ -5,15 +5,15 @@ const nameRegexp = `[${nameStartChar}][${nameChar}]*`;
 // eslint-disable-next-line no-misleading-character-class
 const regexName = new RegExp(`^${nameRegexp}$`);
 
-function getAllMatches(string, regex) {
+export function getAllMatches(string, regex) {
   return Array.from(string.matchAll(regex));
 }
 
-function isName(string) {
+export function isName(string) {
   return regexName.exec(string) !== null;
 }
 
-function isEmptyObject(obj) {
+export function isEmptyObject(obj) {
   return Object.keys(obj).length === 0;
 }
 
@@ -22,7 +22,7 @@ function isEmptyObject(obj) {
  * @param {object} target
  * @param {object} a
  */
-function merge(target, a, arrayMode) {
+export function merge(target, a, arrayMode) {
   if (!a) return;
   for (const key in a) {
     if (arrayMode === 'strict') {
@@ -33,7 +33,7 @@ function merge(target, a, arrayMode) {
   }
 }
 
-function getValue(v) {
+export function getValue(v) {
   return v === undefined ? '' : v;
 }
 
@@ -44,7 +44,7 @@ function getValue(v) {
  * @param {array} props
  * @returns
  */
-function buildOptions(options, defaultOptions, props) {
+export function buildOptions(options, defaultOptions, props) {
   let newOptions = {};
   if (!options) {
     return defaultOptions; //if there are not options
@@ -68,7 +68,7 @@ function buildOptions(options, defaultOptions, props) {
  * @param parentTagName the parent tag name
  * @returns {boolean} true if node should be parsed as array
  */
-function isTagNameInArrayMode(tagName, arrayMode, parentTagName) {
+export function isTagNameInArrayMode(tagName, arrayMode, parentTagName) {
   if (arrayMode === false) {
     return false;
   } else if (arrayMode instanceof RegExp) {
@@ -79,14 +79,3 @@ function isTagNameInArrayMode(tagName, arrayMode, parentTagName) {
 
   return arrayMode === 'strict';
 }
-
-module.exports = {
-  isName,
-  getAllMatches,
-  nameRegexp,
-  isTagNameInArrayMode,
-  buildOptions,
-  merge,
-  getValue,
-  isEmptyObject,
-};

@@ -75,7 +75,7 @@ describe('XMLParser with arrayMode enabled', function () {
       ignoreAttributes: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse all the tags as an array no matter how many occurrences when arrayMode is set to strict', function () {
@@ -150,7 +150,7 @@ describe('XMLParser with arrayMode enabled', function () {
       ignoreAttributes: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse all the tags as an array that match arrayMode RegEx or return true as callback', function () {
@@ -222,7 +222,7 @@ describe('XMLParser with arrayMode enabled', function () {
       arrayMode: /inventory|item/,
       ignoreAttributes: false,
     });
-    expect(regExResult).toEqual(expected);
+    expect(regExResult).toStrictEqual(expected);
 
     const cbExResult = parse(xmlData, {
       arrayMode: function (tagName) {
@@ -230,7 +230,7 @@ describe('XMLParser with arrayMode enabled', function () {
       },
       ignoreAttributes: false,
     });
-    expect(cbExResult).toEqual(expected);
+    expect(cbExResult).toStrictEqual(expected);
   });
 
   it('should parse all the tags as an array that match arrayMode callback with parent tag', function () {
@@ -301,6 +301,6 @@ describe('XMLParser with arrayMode enabled', function () {
       ignoreAttributes: false,
     });
 
-    expect(cbExResult).toEqual(expected);
+    expect(cbExResult).toStrictEqual(expected);
   });
 });

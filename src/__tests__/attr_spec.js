@@ -25,7 +25,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     //result = validator.validate(xmlData);
     //expect(result).toBe(true);
@@ -50,7 +50,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     //result = validator.validate(xmlData);
     //expect(result).toBe(true);
@@ -75,7 +75,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
@@ -105,7 +105,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
@@ -132,7 +132,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
@@ -160,7 +160,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
@@ -182,7 +182,7 @@ describe('XMLParser', function () {
   //   };
   //   const result = validator.validate(xmlData);
 
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should not parse attributes with invalid char', function () {
@@ -199,7 +199,7 @@ describe('XMLParser', function () {
 
   //   const result = validator.validate(xmlData);
 
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should not parse attributes in closing tag', function () {
@@ -213,7 +213,7 @@ describe('XMLParser', function () {
   //   };
   //   const result = validator.validate(xmlData);
 
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should err for invalid atributes', function () {
@@ -226,7 +226,7 @@ describe('XMLParser', function () {
   //     },
   //   };
   //   const result = validator.validate(xmlData);
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should validate xml with atributes', function () {
@@ -259,7 +259,7 @@ describe('XMLParser', function () {
   //     },
   //   };
   //   const result = validator.validate(xmlData);
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should not validate xml with invalid attributes when duplicate attributes present', function () {
@@ -273,7 +273,7 @@ describe('XMLParser', function () {
   //   };
   //   const result = validator.validate(xmlData);
   //   //console.log(JSON.stringify(result,null,4));
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should not validate xml with invalid attributes when no space between 2 attributes', function () {
@@ -286,7 +286,7 @@ describe('XMLParser', function () {
   //     },
   //   };
   //   const result = validator.validate(xmlData);
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should not validate a tag with attribute presents without value', function () {
@@ -299,7 +299,7 @@ describe('XMLParser', function () {
   //     },
   //   };
   //   const result = validator.validate(xmlData);
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should not validate xml with invalid attributes presents without value', function () {
@@ -314,7 +314,7 @@ describe('XMLParser', function () {
   //   };
   //   const result = validator.validate(xmlData);
   //   //console.log(JSON.stringify(result,null,4));
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   // });
 
   // it('should validate xml with attributeshaving openquote in value', function () {
@@ -329,6 +329,6 @@ describe('XMLParser', function () {
   //   };
   //   const result = validator.validate(xmlData);
   //   //console.log(JSON.stringify(result,null,4));
-  //   expect(result).toEqual(expected);
+  //   expect(result).toStrictEqual(expected);
   //});
 });

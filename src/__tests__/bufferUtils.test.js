@@ -1,25 +1,19 @@
-import bufferUtils from '../bufferUtils';
+import { arrayTrim, arrayIndexOf, arraySplit } from '../bufferUtils';
 
 describe('arrayTrim', function () {
   it('should remove all spaces at beginning and end', function () {
     const beginning = new Uint8Array([32, 32, 32, 32, 32, 32, 32, 33, 33, 97]);
-    expect(bufferUtils.arrayTrim(beginning)).toStrictEqual(
-      new Uint8Array([33, 33, 97]),
-    );
+    expect(arrayTrim(beginning)).toStrictEqual(new Uint8Array([33, 33, 97]));
     const end = new Uint8Array([33, 33, 97, 32, 32, 32, 32, 32, 32]);
-    expect(bufferUtils.arrayTrim(end)).toStrictEqual(
-      new Uint8Array([33, 33, 97]),
-    );
+    expect(arrayTrim(end)).toStrictEqual(new Uint8Array([33, 33, 97]));
     const both = new Uint8Array([
       32, 32, 32, 32, 32, 32, 32, 33, 33, 97, 32, 32, 32, 32, 32, 32,
     ]);
-    expect(bufferUtils.arrayTrim(both)).toStrictEqual(
-      new Uint8Array([33, 33, 97]),
-    );
+    expect(arrayTrim(both)).toStrictEqual(new Uint8Array([33, 33, 97]));
     const emptiness = new Uint8Array([
       0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x0a,
     ]);
-    expect(bufferUtils.arrayTrim(emptiness)).toStrictEqual(new Uint8Array([]));
+    expect(arrayTrim(emptiness)).toStrictEqual(new Uint8Array([]));
   });
 });
 
@@ -34,42 +28,36 @@ describe('arrayIndexOf', function () {
     const singleTest = new Uint8Array([0x2e]);
     const repeaTest = new Uint8Array([0x5d, 0x5d, 0x3e]);
     const repeats = new Uint8Array([0x5d, 0x5d, 0x5d, 0x5d, 0x3e, 0x5d]);
-    expect(bufferUtils.arrayIndexOf(whole, testString)).toStrictEqual(0);
-    expect(bufferUtils.arrayIndexOf(sandwiched, testString)).toStrictEqual(1);
-    expect(bufferUtils.arrayIndexOf(notIn, testString)).toStrictEqual(-1);
+    expect(arrayIndexOf(whole, testString)).toStrictEqual(0);
+    expect(arrayIndexOf(sandwiched, testString)).toStrictEqual(1);
+    expect(arrayIndexOf(notIn, testString)).toStrictEqual(-1);
     expect(
-      bufferUtils.arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest),
+      arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest),
     ).toStrictEqual(1);
-    expect(bufferUtils.arrayIndexOf(repeats, repeaTest)).toStrictEqual(2);
+    expect(arrayIndexOf(repeats, repeaTest)).toStrictEqual(2);
   });
 });
 
 describe('arraySplit', function () {
   it('should split the array with a separator', function () {
     expect(
-      bufferUtils.arraySplit(
-        new Uint8Array([1, 2, 3, 4, 5, 12, 6, 7, 8, 9]),
-        12,
-      ),
+      arraySplit(new Uint8Array([1, 2, 3, 4, 5, 12, 6, 7, 8, 9]), 12),
     ).toStrictEqual([
       new Uint8Array([1, 2, 3, 4, 5]),
       new Uint8Array([6, 7, 8, 9]),
     ]);
     expect(
-      bufferUtils.arraySplit(
-        new Uint8Array([1, 2, 12, 4, 5, 12, 6, 7, 8, 9]),
-        12,
-      ),
+      arraySplit(new Uint8Array([1, 2, 12, 4, 5, 12, 6, 7, 8, 9]), 12),
     ).toStrictEqual([
       new Uint8Array([1, 2]),
       new Uint8Array([4, 5]),
       new Uint8Array([6, 7, 8, 9]),
     ]);
     expect(
-      bufferUtils.arraySplit(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 12]), 12),
+      arraySplit(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 12]), 12),
     ).toStrictEqual([new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8])]);
     expect(
-      bufferUtils.arraySplit(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), 12),
+      arraySplit(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), 12),
     ).toStrictEqual([new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9])]);
   });
 });

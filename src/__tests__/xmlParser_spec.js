@@ -1,3 +1,5 @@
+/* eslint-disable no-tabs */
+
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -87,7 +89,7 @@ describe('XMLParser', function () {
       textNodeName: '#_text',
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
   it('should parse all values as string, int, boolean, float, hexadecimal', function () {
     const xmlData = encoder.encode(`<rootNode>
@@ -108,7 +110,7 @@ describe('XMLParser', function () {
     };
     const result = parse(xmlData);
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse only true numbers', function () {
@@ -131,7 +133,7 @@ describe('XMLParser', function () {
 
     const result = parse(xmlData);
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should not convert number and boolean', function () {
@@ -154,7 +156,7 @@ describe('XMLParser', function () {
 
     const result = parse(xmlData, { parseNodeValue: false });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse number ending in .0', function () {
@@ -180,33 +182,7 @@ describe('XMLParser', function () {
       parseAttributeValue: true,
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
-  });
-
-  it('should parse number ending in .0', function () {
-    const xmlData = encoder.encode(`<rootNode>
-        <floatTag0>0.0</floatTag0>
-        <floatTag1>1.0</floatTag1>
-        <floatTag2>2.0000</floatTag2>
-        <floatTag3 float="3.00"/>
-        </rootNode>`);
-    const expected = {
-      rootNode: {
-        floatTag0: 0,
-        floatTag1: 1,
-        floatTag2: 2,
-        floatTag3: {
-          '@_float': 3,
-        },
-      },
-    };
-
-    const result = parse(xmlData, {
-      ignoreAttributes: false,
-      parseAttributeValue: true,
-    });
-    //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should not parse values to primitive type', function () {
@@ -225,7 +201,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       parseNodeValue: false,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse number values of attributes as number', function () {
@@ -249,7 +225,7 @@ describe('XMLParser', function () {
       parseAttributeValue: true,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse number values as number if flag is set', function () {
@@ -267,7 +243,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       parseNodeValue: true,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should skip tag arguments', function () {
@@ -283,7 +259,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData);
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should ignore namespace and text node attributes', function () {
@@ -321,7 +297,7 @@ describe('XMLParser', function () {
       ignoreAttributes: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse empty text Node', function () {
@@ -333,7 +309,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData);
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse self closing tags', function () {
@@ -351,7 +327,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse single self closing tag', function () {
@@ -366,7 +342,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse repeated nodes in array', function () {
@@ -383,7 +359,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData);
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse nested nodes in nested properties', function () {
@@ -404,7 +380,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData);
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse non-text nodes with value for repeated nodes', function () {
@@ -457,7 +433,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should preserve node value', function () {
@@ -476,7 +452,7 @@ describe('XMLParser', function () {
       ignoreAttributes: false,
       trimValues: false,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse with attributes and value when there is single node', function () {
@@ -494,7 +470,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse different tags', function () {
@@ -507,7 +483,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
     });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should not parse text value with tag', function () {
@@ -528,7 +504,7 @@ describe('XMLParser', function () {
       ignoreAttributes: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse nested elements with attributes', function () {
@@ -564,7 +540,7 @@ describe('XMLParser', function () {
       ignoreNonTextNodeAttr: false,
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse nested elements with attributes wrapped in object', function () {
@@ -610,7 +586,7 @@ describe('XMLParser', function () {
     });
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should skip namespace', function () {
@@ -645,7 +621,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, { ignoreNameSpace: true });
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should not trim tag value if not allowed', function () {
@@ -658,7 +634,7 @@ describe('XMLParser', function () {
       trimValues: false,
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should not trim tag value but not parse if not allowed', function () {
@@ -670,7 +646,7 @@ describe('XMLParser', function () {
       parseNodeValue: false,
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should not decode HTML entities by default', function () {
@@ -684,7 +660,7 @@ describe('XMLParser', function () {
       parseNodeValue: false,
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it('should parse XML with DOCTYPE', function () {
@@ -708,7 +684,7 @@ describe('XMLParser', function () {
       //trimValues: false
     });
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   //Issue #77
@@ -734,6 +710,6 @@ describe('XMLParser', function () {
     };
     const result = parse(xmlData);
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).toStrictEqual(expected);
   });
 });
