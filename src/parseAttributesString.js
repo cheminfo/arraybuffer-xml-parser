@@ -1,4 +1,4 @@
-const { getAllMatches } = require('./util');
+import { getAllMatches } from './util';
 
 const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 const attrsRegx = new RegExp(newLocal, 'g');

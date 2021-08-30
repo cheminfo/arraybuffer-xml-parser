@@ -1,4 +1,4 @@
-const { isTagNameInArrayMode, merge, isEmptyObject } = require('./util');
+import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 
 function convertToJson(node, options, parentTagName) {
   const jObj = {};

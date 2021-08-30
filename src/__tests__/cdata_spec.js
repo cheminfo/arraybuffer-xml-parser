@@ -1,7 +1,7 @@
-const { readFileSync } = require('fs');
-const { join } = require('path');
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
-const { parse } = require('../parser');
+import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 

@@ -1,4 +1,4 @@
-const parser = require('../parser');
+import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
@@ -70,7 +70,7 @@ describe('XMLParser with arrayMode enabled', function () {
       ],
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       arrayMode: true,
       ignoreAttributes: false,
     });
@@ -145,7 +145,7 @@ describe('XMLParser with arrayMode enabled', function () {
       ],
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       arrayMode: 'strict',
       ignoreAttributes: false,
     });
@@ -218,13 +218,13 @@ describe('XMLParser with arrayMode enabled', function () {
       },
     };
 
-    const regExResult = parser.parse(xmlData, {
+    const regExResult = parse(xmlData, {
       arrayMode: /inventory|item/,
       ignoreAttributes: false,
     });
     expect(regExResult).toEqual(expected);
 
-    const cbExResult = parser.parse(xmlData, {
+    const cbExResult = parse(xmlData, {
       arrayMode: function (tagName) {
         return ['inventory', 'item'].includes(tagName);
       },
@@ -294,7 +294,7 @@ describe('XMLParser with arrayMode enabled', function () {
       },
     };
 
-    const cbExResult = parser.parse(xmlData, {
+    const cbExResult = parse(xmlData, {
       arrayMode: function (tagName, parentTagName) {
         return parentTagName === 'inventory';
       },

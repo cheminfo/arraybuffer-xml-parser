@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 /* eslint-disable jest/no-if */
-const he = require('he');
+import he from 'he';
 
-const parser = require('../parser');
+import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -15,7 +15,7 @@ describe('XMLParser', function () {
     const expected = {
       rootNode: "foo&bar'",
     };
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       parseNodeValue: false,
       decodeHTMLchar: true,
       tagValueProcessor: (a) => he.decode(decoder.decode(a)),
@@ -35,7 +35,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -73,7 +73,7 @@ describe('XMLParser', function () {
     };
 
     const resultMap = {};
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       tagValueProcessor: (val, tagName) => {
         if (typeof tagName === 'object') {
           tagName = decoder.decode(tagName);
@@ -122,7 +122,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       tagValueProcessor: (val, tagName) => {},
     });
     //console.log(JSON.stringify(result,null,4));
@@ -149,7 +149,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       tagValueProcessor: (val, tagName) => {
         return 'fxp';
       },
@@ -172,7 +172,7 @@ describe('XMLParser', function () {
 
     const resultMap = {};
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,

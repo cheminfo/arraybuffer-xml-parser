@@ -1,4 +1,4 @@
-const bufferUtils = require('../bufferUtils');
+import bufferUtils from '../bufferUtils';
 
 describe('arrayTrim', function () {
   it('should remove all spaces at beginning and end', function () {

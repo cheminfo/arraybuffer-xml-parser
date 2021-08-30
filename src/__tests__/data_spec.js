@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-identical-title */
-const { parse } = require('../parser');
+import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 describe('XMLParser', function () {

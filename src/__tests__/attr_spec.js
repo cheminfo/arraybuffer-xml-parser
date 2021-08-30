@@ -1,8 +1,9 @@
 /* eslint-disable jest/no-commented-out-tests */
-// const he = require('he');
+// import he from 'he';
+
+import { parse } from '../parse';
 
 const encoder = new TextEncoder();
-const parser = require('../parser');
 
 describe('XMLParser', function () {
   it('should parse attributes with valid names', function () {
@@ -17,7 +18,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -42,7 +43,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -67,7 +68,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -96,7 +97,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -125,7 +126,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
     });
@@ -152,7 +153,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       ignoreNameSpace: true,

@@ -1,4 +1,4 @@
-const { parse } = require('../parser');
+import { parse } from '../parse';
 
 describe('XMLParser', function () {
   it('Try to parse a very simple example', function () {

@@ -1,43 +1,26 @@
-# xml-buffer-parser
+# arraybuffer-xml-parser
 
-This code is based on the fork of [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser).
+[![NPM version][npm-image]][npm-url]
+[![build status][ci-image]][ci-url]
+[![Test coverage][codecov-image]][codecov-url]
+[![npm download][download-image]][download-url]
 
-The reason is that we wanted to parse large XML files (over 1Gb) and therefore in the current implementation of javascript we could not use a String (limited to 512Mb).
+This code is based on the fork of [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser). See the [original license](LICENSE-ORIGINAL).
+
+The reason is that we wanted to parse large XML files (over 1Gb) and therefore in the current implementation of javascript in V8 we can not use a String (limited to 512Mb).
 
 The code was therefore changed in order to use directly an ArrayBuffer.
 
-### Main Features
+## Installation
 
-- Transform XML to JSON or Nimn
-- Works with node packages and in browser
-- It can handle very big files (tested with files over 1Gb).
-- Various options are available to customize the transformation
-  - You can parse CDATA as a separate property.
-  - You can prefix attributes or group them to a separate property. Or they can be ignored from the result completely.
-  - You can parse tag's or attribute's value to primitive type: string, integer, float, hexadecimal, or boolean. And can optionally decode for HTML char.
-  - You can remove namespace from tag or attribute name while parsing
-  - It supports boolean attributes, if configured.
+`$ npm i arraybuffer-xml-parser`
 
-## How to use
-
-To use it in **NPM package** install it first
-
-`$npm install fast-xml-parser` or using [yarn](https://yarnpkg.com/) `$yarn add fast-xml-parser`
-
-To use it from a **CLI** install it globally with the `-g` option.
-
-`$npm install fast-xml-parser -g`
-
-To use it on a **webpage** include it from a [CDN](https://cdnjs.com/libraries/fast-xml-parser)
+## Usage
 
 ### XML to JSON
 
 ```js
-var jsonObj = parser.parse(xmlData [,options] );
-```
-
-```js
-const { parse } = require('xml-buffer-parser');
+import { parse } from 'arraybuffer-xml-parser';
 
 const options = {
   attributeNamePrefix: '@_',
@@ -82,3 +65,18 @@ const jsonObj = parse(xmlData, options, true);
 - **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
 
 </details>
+
+## [API Documentation](https://cheminfo.github.io/arraybuffer-xml-parser/)
+
+## License
+
+[MIT](./LICENSE)
+
+[npm-image]: https://img.shields.io/npm/v/arraybuffer-xml-parser.svg
+[npm-url]: https://www.npmjs.com/package/arraybuffer-xml-parser
+[ci-image]: https://github.com/cheminfo/arraybuffer-xml-parser/workflows/Node.js%20CI/badge.svg?branch=main
+[ci-url]: https://github.com/cheminfo/arraybuffer-xml-parser/actions?query=workflow%3A%22Node.js+CI%22
+[codecov-image]: https://img.shields.io/codecov/c/github/cheminfo/arraybuffer-xml-parser.svg
+[codecov-url]: https://codecov.io/gh/cheminfo/arraybuffer-xml-parser
+[download-image]: https://img.shields.io/npm/dm/arraybuffer-xml-parser.svg
+[download-url]: https://www.npmjs.com/package/arraybuffer-xml-parser

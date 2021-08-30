@@ -1,5 +1,6 @@
-const { convertToJson } = require('./node2json');
-const { buildOptions } = require('./util');
+import { convertToJson } from './node2json';
+import { buildOptions } from './util';
+
 const {
   defaultOptions,
   props,

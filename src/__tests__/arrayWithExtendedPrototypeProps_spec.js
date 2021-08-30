@@ -1,5 +1,6 @@
+import { parse } from '../parse';
+
 const encoder = new TextEncoder();
-const parser = require('../parser');
 
 describe('XMLParser array with extended prototype props', function () {
   it('should parse all the tags as an array no matter how many occurences excluding premitive values when arrayMode is set to true', function () {
@@ -16,7 +17,7 @@ describe('XMLParser array with extended prototype props', function () {
     Array.prototype.someExtentionOfArrayPrototype =
       'someExtentionOfArrayPrototype';
 
-    const result = parser.parse(xmlData, {
+    const result = parse(xmlData, {
       arrayMode: false,
       ignoreAttributes: false,
     });

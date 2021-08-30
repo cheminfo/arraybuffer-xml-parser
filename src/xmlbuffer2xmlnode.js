@@ -1,9 +1,9 @@
-const { parseString } = require('dynamic-typing');
+import { parseString } from 'dynamic-typing';
 
-const { arrayTrim, arrayIndexOf } = require('./bufferUtils');
-const { parseAttributesString } = require('./parseAttributesString');
-const { buildOptions, getValue } = require('./util');
-const xmlNode = require('./xmlNode');
+import { arrayTrim, arrayIndexOf } from './bufferUtils';
+import { parseAttributesString } from './parseAttributesString';
+import { buildOptions, getValue } from './util';
+import xmlNode from './xmlNode';
 
 const utf8Decoder = new TextDecoder();
 

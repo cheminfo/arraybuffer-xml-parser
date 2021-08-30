@@ -1,4 +1,4 @@
-const parser = require('../parser');
+import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
@@ -14,7 +14,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -43,7 +43,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -72,7 +72,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -97,7 +97,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -122,7 +122,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -157,7 +157,7 @@ describe('XMLParser', function () {
       },
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
@@ -181,7 +181,7 @@ describe('XMLParser', function () {
       fix1: '<p>p 1</p><div class="show">div 1</div>',
     };
 
-    let result = parser.parse(xmlData, {
+    let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       stopNodes: ['fix1', 'fix2'],

@@ -1,8 +1,9 @@
-const { parse } = require('../parser');
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+import { parse } from '../parse';
 
 const encoder = new TextEncoder();
-const { readFileSync } = require('fs');
-const { join } = require('path');
 
 describe('XMLParser', function () {
   it('should parse all type of nodes', function () {
