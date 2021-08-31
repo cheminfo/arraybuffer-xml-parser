@@ -1,7 +1,4 @@
-const {
-  parseValue,
-  closingIndexForOpeningTag,
-} = require('../xmlbuffer2xmlnode');
+import { parseValue, closingIndexForOpeningTag } from '../xmlbuffer2xmlnode';
 
 describe('parseValue', function () {
   it('should parse the value of a tag', function () {
