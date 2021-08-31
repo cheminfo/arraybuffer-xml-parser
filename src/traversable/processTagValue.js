@@ -5,17 +5,16 @@ import { parseValue } from './parseValue';
 /**
  * Trim -> valueProcessor -> parse value
  * @param {string} tagName
- * @param {string} val
+ * @param {string} value
  * @param {object} options
  */
 
-export function processTagValue(tagName, val, options) {
-  if (val) {
+export function processTagValue(tagName, value, options) {
+  if (value) {
     if (options.trimValues) {
-      val = arrayTrim(val);
+      value = arrayTrim(value);
     }
-    val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options);
+    value = parseValue(value, options, tagName);
   }
-  return val;
+  return value;
 }
