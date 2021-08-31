@@ -56,7 +56,6 @@ const jsonObj = parse(xmlData, options, true);
 - **parseNodeValue** : Parse the value of text node to float, integer, or boolean.
 - **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
 - **trimValues** : trim string values of an attribute or node
-- **decodeHTMLchar** : This options has been removed from 3.3.4. Instead, use tagValueProcessor, and attrValueProcessor. See above example.
 - **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 - **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
 - **arrayMode** : When `false`, a tag with single occurrence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only. When instance of `RegEx`, only tags will be parsed as array that match the regex. When `function` a tag name is passed to the callback that can be checked.

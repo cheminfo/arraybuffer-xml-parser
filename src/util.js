@@ -14,7 +14,12 @@ export function isName(string) {
 }
 
 export function isEmptyObject(obj) {
-  return Object.keys(obj).length === 0;
+  // fastest implementation: https://jsbench.me/qfkqv692c8/1
+  // eslint-disable-next-line no-unreachable-loop
+  for (const key in obj) {
+    return false;
+  }
+  return true;
 }
 
 /**

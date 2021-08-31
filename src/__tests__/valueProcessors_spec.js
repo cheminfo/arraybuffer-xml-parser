@@ -17,7 +17,6 @@ describe('XMLParser', function () {
     };
     const result = parse(xmlData, {
       parseNodeValue: false,
-      decodeHTMLchar: true,
       tagValueProcessor: (a) => he.decode(decoder.decode(a)),
     }); //if you really need to work with a string convert it yourself
     expect(result).toStrictEqual(expected);
@@ -39,7 +38,6 @@ describe('XMLParser', function () {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
-      decodeHTMLchar: true,
       attrValueProcessor: (a) => he.decode(a, { isAttributeValue: true }),
     });
 
@@ -176,7 +174,6 @@ describe('XMLParser', function () {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
-      decodeHTMLchar: true,
       attrValueProcessor: (val, attrName) => {
         if (resultMap[attrName]) {
           resultMap[attrName].push(val);

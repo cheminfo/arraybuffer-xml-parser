@@ -14,6 +14,6 @@ const result = parse(data, {
   },
 });
 console.timeEnd('start');
-//console.log(
-//  result.indexedmzML.mzML.run.spectrumList.spectrum[1].binaryDataArrayList,
-//);
+console.log(
+  result.indexedmzML.mzML.run.spectrumList.spectrum[1].binaryDataArrayList,
+);
