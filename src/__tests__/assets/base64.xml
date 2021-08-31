@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+            <binaryDataArray encodedLength="3">
+              <cvParam cvRef="MS" accession="MS:1000523" name="64-bit float" value=""/>
+              <cvParam cvRef="MS" accession="MS:1000574" name="test" value=""/>
+              <binary>"AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhA"</binary>
+            </binaryDataArray>
+         
