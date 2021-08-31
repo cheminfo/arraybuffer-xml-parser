@@ -1,7 +1,8 @@
 import { parseString } from 'dynamic-typing';
 
 import { XMLNode } from './XMLNode';
-import { arrayTrim, arrayIndexOf } from './bufferUtils';
+import { arrayIndexOf } from './bufferUtils/arrayIndexOf';
+import { arrayTrim } from './bufferUtils/arrayTrim';
 import { parseAttributesString } from './parseAttributesString';
 import { buildOptions, getValue } from './util';
 
