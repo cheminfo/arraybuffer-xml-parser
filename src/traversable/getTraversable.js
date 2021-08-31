@@ -1,10 +1,12 @@
-import { parseString } from 'dynamic-typing';
+import { XMLNode } from '../XMLNode';
+import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
+import { arrayTrim } from '../bufferUtils/arrayTrim';
+import { parseAttributesString } from '../parseAttributesString';
+import { buildOptions, getValue } from '../util';
 
-import { XMLNode } from './XMLNode';
-import { arrayIndexOf } from './bufferUtils/arrayIndexOf';
-import { arrayTrim } from './bufferUtils/arrayTrim';
-import { parseAttributesString } from './parseAttributesString';
-import { buildOptions, getValue } from './util';
+import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
+import { findClosingIndex } from './findClosingIndex.1';
+import { processTagValue } from './processTagValue';
 
 const utf8Decoder = new TextDecoder();
 
@@ -63,48 +65,10 @@ export const props = [
   'stopNodes',
 ];
 
-/**
- * Trim -> valueProcessor -> parse value
- * @param {string} tagName
- * @param {string} val
- * @param {object} options
- */
-export function processTagValue(tagName, val, options) {
-  if (val) {
-    if (options.trimValues) {
-      val = arrayTrim(val);
-    }
-    val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options);
-  }
-
-  return val;
-}
-
-export function parseValue(val, options) {
-  const { parseNodeValue } = options;
-  if (typeof val === 'object') {
-    if (val.length === 0) return '';
-    let parsed = decoder.decode(val).replace(/\r/g, '');
-    if (!parseNodeValue) return parsed;
-
-    return parseString(parsed);
-  } else {
-    if (val !== undefined) {
-      if (typeof val === 'string') {
-        return val.replace(/\r/g, '');
-      }
-      return decoder.decode(val).replace(/\r/g, '');
-    } else {
-      return '';
-    }
-  }
-}
-
-export function getTraversalObj(xmlData, options) {
-  options = buildOptions(options, defaultOptions, props);
-  const xmlObj = new XMLNode('!xml');
-  let currentNode = xmlObj;
+export function getTraversable(xmlData, options = {}) {
+  options = { ...defaultOptions, ...options };
+  const traversable = new XMLNode('!xml');
+  let currentNode = traversable;
   let dataSize = 0;
   let dataIndex = 0;
 
@@ -320,35 +284,5 @@ export function getTraversalObj(xmlData, options) {
       dataSize++;
     }
   }
-  return xmlObj;
-}
-
-export function closingIndexForOpeningTag(data, i) {
-  let attrBoundary;
-  let endIndex = 0;
-  for (let index = i; index < data.length; index++) {
-    let byte = data[index];
-    if (attrBoundary) {
-      if (byte === attrBoundary) attrBoundary = 0; //reset
-    } else if (byte === 0x22 || byte === 0x27) {
-      attrBoundary = byte;
-    } else if (byte === 0x3e) {
-      return {
-        data: decoder.decode(data.subarray(i, i + endIndex)),
-        index,
-      };
-    } else if (byte === 0x09) {
-      byte = 0x20;
-    }
-    endIndex++;
-  }
-}
-
-export function findClosingIndex(xmlData, str, i, errMsg) {
-  const closingIndex = arrayIndexOf(xmlData, str, i);
-  if (closingIndex === -1) {
-    throw new Error(errMsg);
-  } else {
-    return closingIndex + str.length - 1;
-  }
+  return traversable;
 }

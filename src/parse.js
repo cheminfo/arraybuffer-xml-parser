@@ -1,6 +1,10 @@
 import { convertToJson } from './node2json';
+import {
+  defaultOptions,
+  props,
+  getTraversable,
+} from './traversable/getTraversable';
 import { buildOptions } from './util';
-import { defaultOptions, props, getTraversalObj } from './xmlbuffer2xmlnode';
 
 export function parse(xmlData, options) {
   if (typeof xmlData === 'string') {
@@ -13,7 +17,7 @@ export function parse(xmlData, options) {
   }
 
   options = buildOptions(options, defaultOptions, props);
-  const traversableObj = getTraversalObj(xmlData, options);
+  const traversableObj = getTraversable(xmlData, options);
 
   return convertToJson(traversableObj, options);
 }
