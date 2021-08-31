@@ -3,14 +3,16 @@ import { parseString } from 'dynamic-typing';
 import { arrayTrim, arrayIndexOf } from './bufferUtils';
 import { parseAttributesString } from './parseAttributesString';
 import { buildOptions, getValue } from './util';
-import xmlNode from './xmlNode';
+import { xmlNode } from './xmlNode';
 
 const utf8Decoder = new TextDecoder();
 
 export const decoder = {
   decode: (array) => {
+    // in the browser the decoder is fast ... not in node 16 !!
     if (typeof window !== 'undefined') return utf8Decoder.decode(array);
     // if the array is too big and the xml file is huged the garbage collector will work too much
+    // TODO: check if this is really required
     if (array.length > 100) return utf8Decoder.decode(array);
     let string = '';
     for (let value of array) {
