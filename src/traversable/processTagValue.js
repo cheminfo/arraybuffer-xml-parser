@@ -17,6 +17,5 @@ export function processTagValue(tagName, val, options) {
     val = options.tagValueProcessor(val, tagName);
     val = parseValue(val, options);
   }
-
   return val;
 }

@@ -69,7 +69,6 @@ export function getTraversable(xmlData, options) {
             tagName,
             xmlData.subarray(dataIndex, dataIndex + dataSize),
             options,
-            dataIndex,
           );
           currentNode.val =
             currentNode.val === undefined ? value : currentNode.val + value;
@@ -111,7 +110,6 @@ export function getTraversable(xmlData, options) {
               currentNode.tagname,
               xmlData.subarray(dataIndex, dataSize + dataIndex),
               options,
-              dataIndex,
             )}`;
           }
         }
@@ -151,7 +149,6 @@ export function getTraversable(xmlData, options) {
             currentNode.tagname,
             xmlData.subarray(dataIndex, dataIndex + dataSize),
             options,
-            dataIndex,
           );
 
           currentNode.val = `${getValue(currentNode.val)}${value}`;
@@ -209,7 +206,6 @@ export function getTraversable(xmlData, options) {
               currentNode.tagname,
               xmlData.subarray(dataIndex, dataIndex + dataSize),
               options,
-              dataIndex,
             )}`;
           }
         }
