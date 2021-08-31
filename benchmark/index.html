@@ -1,0 +1,25 @@
+<script src="../dist/arraybuffer-xml-parser.js"></script>
+
+<script>
+  async function doAll() {
+    const response = await fetch('./big.xml');
+    const data = await response.arrayBuffer();
+
+    console.log(data);
+
+    console.time('start');
+    const result = XMLParser.parse(data, {
+      parseAttributeValue: false,
+      ignoreAttributes: false,
+      parseNodeValue: false,
+      tagValueProcessor: (value, name) => {
+        return value;
+      },
+    });
+    console.timeEnd('start');
+
+    console.log(result);
+  }
+
+  doAll();
+</script>
