@@ -1,22 +1,19 @@
 import { convertToJson } from './node2json';
 import { buildOptions } from './util';
+import { defaultOptions, props, getTraversalObj } from './xmlbuffer2xmlnode';
 
-const {
-  defaultOptions,
-  props,
-  getTraversalObj,
-} = require('./xmlbuffer2xmlnode');
-
-export function parse(xmlData, options, validationOption) {
+export function parse(xmlData, options) {
   if (typeof xmlData === 'string') {
     const encoder = new TextEncoder();
     xmlData = encoder.encode(xmlData);
   }
-  if (validationOption) {
-    if (validationOption === true) validationOption = {};
+
+  if (!ArrayBuffer.isView(xmlData)) {
+    xmlData = new Uint8Array(xmlData);
   }
+
   options = buildOptions(options, defaultOptions, props);
   const traversableObj = getTraversalObj(xmlData, options);
-  //print(traversableObj, "  ");
+
   return convertToJson(traversableObj, options);
 }
