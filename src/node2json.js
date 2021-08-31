@@ -50,6 +50,5 @@ export function convertToJson(node, options, parentTagName) {
     }
   }
 
-  //add value
   return jObj;
 }

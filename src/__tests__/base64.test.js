@@ -13,6 +13,4 @@ test('base64 parsing', function () {
   let result = parse(xmlData, {
     ignoreAttributes: false,
   });
-
-  console.log(result);
 });

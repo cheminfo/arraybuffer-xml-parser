@@ -1,9 +1,9 @@
 import { parseString } from 'dynamic-typing';
 
+import { XMLNode } from './XMLNode';
 import { arrayTrim, arrayIndexOf } from './bufferUtils';
 import { parseAttributesString } from './parseAttributesString';
 import { buildOptions, getValue } from './util';
-import { xmlNode } from './xmlNode';
 
 const utf8Decoder = new TextDecoder();
 
@@ -11,6 +11,7 @@ export const decoder = {
   decode: (array) => {
     // in the browser the decoder is fast ... not in node 16 !!
     if (typeof window !== 'undefined') return utf8Decoder.decode(array);
+    return utf8Decoder.decode(array);
     // if the array is too big and the xml file is huged the garbage collector will work too much
     // TODO: check if this is really required
     if (array.length > 100) return utf8Decoder.decode(array);
@@ -101,7 +102,7 @@ export function parseValue(val, options) {
 
 export function getTraversalObj(xmlData, options) {
   options = buildOptions(options, defaultOptions, props);
-  const xmlObj = new xmlNode('!xml');
+  const xmlObj = new XMLNode('!xml');
   let currentNode = xmlObj;
   let dataSize = 0;
   let dataIndex = 0;
@@ -223,7 +224,7 @@ export function getTraversalObj(xmlData, options) {
 
         if (options.cdataTagName) {
           //add cdata node
-          const childNode = new xmlNode(
+          const childNode = new XMLNode(
             options.cdataTagName,
             currentNode,
             decoder.decode(tagExp),
@@ -289,7 +290,7 @@ export function getTraversalObj(xmlData, options) {
             tagName = tagName.substr(0, tagName.length - 1);
           }
 
-          const childNode = new xmlNode(tagName, currentNode, '');
+          const childNode = new XMLNode(tagName, currentNode, '');
           if (tagAttributes) {
             childNode.attrsMap = parseAttributesString(tagAttributes, options);
           }
@@ -297,7 +298,7 @@ export function getTraversalObj(xmlData, options) {
         } else {
           //opening tag
 
-          const childNode = new xmlNode(tagName, currentNode);
+          const childNode = new XMLNode(tagName, currentNode);
           if (
             options.stopNodes.length &&
             options.stopNodes.includes(childNode.tagname)
