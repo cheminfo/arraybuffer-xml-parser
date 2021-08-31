@@ -21,7 +21,7 @@ export function parseAttributesString(string, options) {
         if (options.trimValues) {
           match[4] = match[4].trim();
         }
-        match[4] = options.attrValueProcessor(match[4], attrName);
+        match[4] = options.attributeValueProcessor(match[4], attrName);
         attributes[options.attributeNamePrefix + attrName] = stringParseValue(
           match[4],
           options.parseAttributeValue,

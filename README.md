@@ -36,7 +36,7 @@ const options = {
   cdataTagName: '__cdata', //default is 'false'
   cdataPositionChar: '\\c',
   arrayMode: false, //"strict"
-  attrValueProcessor: (val, attrName) =>
+  attributeValueProcessor: (val, attrName) =>
     he.decode(val, { isAttributeValue: true }), //default is a=>a
   tagValueProcessor: (val, tagName) => he.decode(val), //default is a=>a
   stopNodes: ['parse-me-as-string'],
@@ -60,7 +60,7 @@ const jsonObj = parse(xmlData, options, true);
 - **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
 - **arrayMode** : When `false`, a tag with single occurrence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only. When instance of `RegEx`, only tags will be parsed as array that match the regex. When `function` a tag name is passed to the callback that can be checked.
 - **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
-- **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
+- **attributeValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 - **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
 
 </details>

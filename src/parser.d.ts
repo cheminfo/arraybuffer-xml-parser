@@ -16,7 +16,7 @@ type X2jOptions = {
   cdataTagName: false | string;
   cdataPositionChar: string;
   tagValueProcessor: (tagValue: string, tagName: string) => string;
-  attrValueProcessor: (attrValue: string, attrName: string) => string;
+  attributeValueProcessor: (attrValue: string, attrName: string) => string;
   stopNodes: string[];
 };
 type X2jOptionsOptional = Partial<X2jOptions>;

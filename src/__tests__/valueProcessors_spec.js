@@ -38,7 +38,7 @@ describe('XMLParser', function () {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
-      attrValueProcessor: (a) => he.decode(a, { isAttributeValue: true }),
+      attributeValueProcessor: (a) => he.decode(a, { isAttributeValue: true }),
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -174,7 +174,7 @@ describe('XMLParser', function () {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       parseAttributeValue: true,
-      attrValueProcessor: (val, attrName) => {
+      attributeValueProcessor: (val, attrName) => {
         if (resultMap[attrName]) {
           resultMap[attrName].push(val);
         } else {

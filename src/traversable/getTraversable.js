@@ -31,7 +31,7 @@ export const defaultOptions = {
   cdataTagName: false,
   cdataPositionChar: '\\c',
   tagValueProcessor: (a) => a,
-  attrValueProcessor: (a) => a,
+  attributeValueProcessor: (a) => a,
   stopNodes: [],
   //decodeStrict: false,
 };
