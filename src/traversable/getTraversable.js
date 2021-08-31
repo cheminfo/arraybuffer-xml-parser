@@ -1,35 +1,24 @@
 import { XMLNode } from '../XMLNode';
 import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
 import { arrayTrim } from '../bufferUtils/arrayTrim';
-import { parseAttributesString } from '../parseAttributesString';
-import { buildOptions, getValue } from '../util';
+import { getValue } from '../util';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
 import { findClosingIndex } from './findClosingIndex.1';
+import { parseAttributesString } from './parseAttributesString';
 import { processTagValue } from './processTagValue';
 
 const utf8Decoder = new TextDecoder();
 
 export const decoder = {
   decode: (array) => {
-    // in the browser the decoder is fast ... not in node 16 !!
-    if (typeof window !== 'undefined') return utf8Decoder.decode(array);
     return utf8Decoder.decode(array);
-    // if the array is too big and the xml file is huged the garbage collector will work too much
-    // TODO: check if this is really required
-    if (array.length > 100) return utf8Decoder.decode(array);
-    let string = '';
-    for (let value of array) {
-      if (value > 127) return utf8Decoder.decode(array);
-      string += String.fromCharCode(value);
-    }
-    return string;
   },
 };
 
 export const defaultOptions = {
-  attributeNamePrefix: '@_',
-  attrNodeName: false,
+  attributeNamePrefix: '@_', // all the attributes will be prefixed by `@_`
+  attributesNodeName: false, // we don't group all the attributed
   textNodeName: '#text',
   ignoreAttributes: true,
   ignoreNameSpace: false,
@@ -47,26 +36,7 @@ export const defaultOptions = {
   //decodeStrict: false,
 };
 
-export const props = [
-  'attributeNamePrefix',
-  'attrNodeName',
-  'textNodeName',
-  'ignoreAttributes',
-  'ignoreNameSpace',
-  'allowBooleanAttributes',
-  'parseNodeValue',
-  'parseAttributeValue',
-  'arrayMode',
-  'trimValues',
-  'cdataTagName',
-  'cdataPositionChar',
-  'tagValueProcessor',
-  'attrValueProcessor',
-  'stopNodes',
-];
-
-export function getTraversable(xmlData, options = {}) {
-  options = { ...defaultOptions, ...options };
+export function getTraversable(xmlData, options) {
   const traversable = new XMLNode('!xml');
   let currentNode = traversable;
   let dataSize = 0;

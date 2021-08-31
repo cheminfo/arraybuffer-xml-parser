@@ -1,12 +1,7 @@
-import { convertToJson } from './node2json';
-import {
-  defaultOptions,
-  props,
-  getTraversable,
-} from './traversable/getTraversable';
-import { buildOptions } from './util';
+import { defaultOptions, getTraversable } from './traversable/getTraversable';
+import { traversableToJSON } from './traversableToJSON';
 
-export function parse(xmlData, options) {
+export function parse(xmlData, options = {}) {
   if (typeof xmlData === 'string') {
     const encoder = new TextEncoder();
     xmlData = encoder.encode(xmlData);
@@ -16,8 +11,9 @@ export function parse(xmlData, options) {
     xmlData = new Uint8Array(xmlData);
   }
 
-  options = buildOptions(options, defaultOptions, props);
-  const traversableObj = getTraversable(xmlData, options);
+  options = { ...defaultOptions, ...options };
 
-  return convertToJson(traversableObj, options);
+  const traversable = getTraversable(xmlData, options);
+
+  return traversableToJSON(traversable, options);
 }

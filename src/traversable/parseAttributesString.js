@@ -1,4 +1,6 @@
-import { getAllMatches } from './util';
+import { parseString } from 'dynamic-typing';
+
+import { getAllMatches } from '../util';
 
 const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 const attrsRegx = new RegExp(newLocal, 'g');
@@ -32,9 +34,9 @@ export function parseAttributesString(string, options) {
   if (!Object.keys(attributes).length) {
     return;
   }
-  if (options.attrNodeName) {
+  if (options.attributesNodeName) {
     const attrCollection = {};
-    attrCollection[options.attrNodeName] = attributes;
+    attrCollection[options.attributesNodeName] = attributes;
     return attrCollection;
   }
   return attributes;
@@ -42,21 +44,7 @@ export function parseAttributesString(string, options) {
 
 function stringParseValue(val, shouldParse) {
   if (shouldParse && typeof val === 'string') {
-    let parsed;
-    if (val.trim() === '' || isNaN(val)) {
-      parsed = val === 'true' ? true : val === 'false' ? false : val;
-    } else {
-      if (val.indexOf('0x') !== -1) {
-        //support hexa decimal
-        parsed = Number.parseInt(val, 16);
-      } else if (val.indexOf('.') !== -1) {
-        parsed = Number.parseFloat(val);
-        val = val.replace(/\.?0+$/, '');
-      } else {
-        parsed = Number.parseInt(val, 10);
-      }
-    }
-    return parsed;
+    return parseString(val);
   } else {
     return val === undefined ? '' : val;
   }

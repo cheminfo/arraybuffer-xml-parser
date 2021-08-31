@@ -580,7 +580,7 @@ describe('XMLParser', function () {
 
     const result = parse(xmlData, {
       attributeNamePrefix: '',
-      attrNodeName: '$',
+      attributesNodeName: '$',
       ignoreNameSpace: true,
       ignoreAttributes: false,
     });

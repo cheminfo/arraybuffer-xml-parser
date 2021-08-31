@@ -24,7 +24,7 @@ import { parse } from 'arraybuffer-xml-parser';
 
 const options = {
   attributeNamePrefix: '@_',
-  attrNodeName: 'attr', //default is 'false'
+  attributesNodeName: 'attr', //default is 'false'
   textNodeName: '#text',
   ignoreAttributes: true,
   ignoreNameSpace: false,
@@ -49,7 +49,7 @@ const jsonObj = parse(xmlData, options, true);
 	<summary>OPTIONS :</summary>
 
 - **attributeNamePrefix** : prepend given string to attribute name for identification
-- **attrNodeName**: (Valid name) Group all the attributes as properties of given name.
+- **attributesNodeName**: (Valid name) Group all the attributes as properties of given name.
 - **ignoreAttributes** : Ignore attributes to be parsed.
 - **ignoreNameSpace** : Remove namespace string from tag and attribute names.
 - **allowBooleanAttributes** : a tag can have attributes without any value

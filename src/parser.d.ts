@@ -1,6 +1,6 @@
 type X2jOptions = {
   attributeNamePrefix: string;
-  attrNodeName: false | string;
+  attributesNodeName: false | string;
   textNodeName: string;
   ignoreAttributes: boolean;
   ignoreNameSpace: boolean;

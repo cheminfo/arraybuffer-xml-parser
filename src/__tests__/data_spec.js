@@ -248,8 +248,8 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
-      attrNodeName: '$',
-      attributeNamePrefix: '', //TODO attr node prefix should not set when they're grouped
+      attributesNodeName: '$',
+      attributeNamePrefix: '', //TODO attr node prefix should not  when they're grouped
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
