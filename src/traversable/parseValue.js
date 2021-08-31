@@ -1,4 +1,5 @@
 import { parseString } from 'dynamic-typing';
+
 import { decoder } from './getTraversable';
 
 export function parseValue(val, options) {
@@ -10,13 +11,7 @@ export function parseValue(val, options) {
 
     return parseString(parsed);
   } else {
-    if (val !== undefined) {
-      if (typeof val === 'string') {
-        return val.replace(/\r/g, '');
-      }
-      return decoder.decode(val).replace(/\r/g, '');
-    } else {
-      return '';
-    }
+    if (val === undefined) return '';
+    return val.replace(/\r/g, '');
   }
 }
