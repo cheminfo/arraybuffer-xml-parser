@@ -9,9 +9,9 @@
 
     console.time('start');
     const result = XMLParser.parse(data, {
-      parseAttributeValue: false,
+      dynamicTypingAttributeValue: false,
       ignoreAttributes: false,
-      parseNodeValue: false,
+      dynamicTypingNodeValue: false,
       tagValueProcessor: (value, name) => {
         return value;
       },

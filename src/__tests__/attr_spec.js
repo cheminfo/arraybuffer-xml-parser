@@ -21,7 +21,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -46,7 +46,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -71,7 +71,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -100,7 +100,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       allowBooleanAttributes: true,
     });
 

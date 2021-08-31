@@ -154,7 +154,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parse(xmlData, { parseNodeValue: false });
+    const result = parse(xmlData, { dynamicTypingNodeValue: false });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
   });
@@ -179,7 +179,7 @@ describe('XMLParser', function () {
 
     const result = parse(xmlData, {
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
@@ -199,7 +199,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      parseNodeValue: false,
+      dynamicTypingNodeValue: false,
     });
     expect(result).toStrictEqual(expected);
   });
@@ -222,7 +222,7 @@ describe('XMLParser', function () {
 
     const result = parse(xmlData, {
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
     });
 
     expect(result).toStrictEqual(expected);
@@ -241,7 +241,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      parseNodeValue: true,
+      dynamicTypingNodeValue: true,
     });
     expect(result).toStrictEqual(expected);
   });
@@ -630,7 +630,7 @@ describe('XMLParser', function () {
       rootNode: '       123        ',
     };
     const result = parse(xmlData, {
-      parseNodeValue: false,
+      dynamicTypingNodeValue: false,
       trimValues: false,
     });
     //console.log(JSON.stringify(result,null,4));
@@ -643,7 +643,7 @@ describe('XMLParser', function () {
       rootNode: '123',
     };
     const result = parse(xmlData, {
-      parseNodeValue: false,
+      dynamicTypingNodeValue: false,
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
@@ -657,7 +657,7 @@ describe('XMLParser', function () {
       rootNode: 'foo&ampbar&apos;',
     };
     const result = parse(xmlData, {
-      parseNodeValue: false,
+      dynamicTypingNodeValue: false,
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
@@ -680,7 +680,7 @@ describe('XMLParser', function () {
       foo: 'Hello World.',
     };
     const result = parse(xmlData, {
-      //parseNodeValue: false,
+      //dynamicTypingNodeValue: false,
       //trimValues: false
     });
     //console.log(JSON.stringify(result,null,4));

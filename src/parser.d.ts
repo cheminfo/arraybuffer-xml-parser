@@ -5,8 +5,8 @@ type X2jOptions = {
   ignoreAttributes: boolean;
   ignoreNameSpace: boolean;
   allowBooleanAttributes: boolean;
-  parseNodeValue: boolean;
-  parseAttributeValue: boolean;
+  dynamicTypingNodeValue: boolean;
+  dynamicTypingAttributeValue: boolean;
   arrayMode:
     | boolean
     | 'strict'

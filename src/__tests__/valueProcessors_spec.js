@@ -16,7 +16,7 @@ describe('XMLParser', function () {
       rootNode: "foo&bar'",
     };
     const result = parse(xmlData, {
-      parseNodeValue: false,
+      dynamicTypingNodeValue: false,
       tagValueProcessor: (a) => he.decode(decoder.decode(a)),
     }); //if you really need to work with a string convert it yourself
     expect(result).toStrictEqual(expected);
@@ -37,7 +37,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       attributeValueProcessor: (a) => he.decode(a, { isAttributeValue: true }),
     });
 
@@ -173,7 +173,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       attributeValueProcessor: (val, attrName) => {
         if (resultMap[attrName]) {
           resultMap[attrName].push(val);

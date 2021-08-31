@@ -1,7 +1,7 @@
 import { parseValue } from '../parseValue';
 
 test('parseValue', function () {
-  const options = { parseNodeValue: true };
+  const options = { dynamicTypingNodeValue: true };
   expect(
     parseValue(new Uint8Array([0x74, 0x72, 0x75, 0x65]), options),
   ).toStrictEqual(true);

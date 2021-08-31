@@ -19,7 +19,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       stopNodes: ['fix1'],
     });
 
@@ -48,7 +48,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -77,7 +77,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -102,7 +102,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -127,7 +127,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -162,7 +162,7 @@ describe('XMLParser', function () {
     let result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
-      parseAttributeValue: true,
+      dynamicTypingAttributeValue: true,
       stopNodes: ['fix1', 'fix2'],
     });
 

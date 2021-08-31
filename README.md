@@ -29,10 +29,9 @@ const options = {
   ignoreAttributes: true,
   ignoreNameSpace: false,
   allowBooleanAttributes: false,
-  parseNodeValue: true,
-  parseAttributeValue: false,
+  dynamicTypingNodeValue: true,
+  dynamicTypingAttributeValue: false,
   trimValues: true,
-  dynamicTyping: true,
   cdataTagName: '__cdata', //default is 'false'
   cdataPositionChar: '\\c',
   arrayMode: false, //"strict"
@@ -53,8 +52,8 @@ const jsonObj = parse(xmlData, options, true);
 - **ignoreAttributes** : Ignore attributes to be parsed.
 - **ignoreNameSpace** : Remove namespace string from tag and attribute names.
 - **allowBooleanAttributes** : a tag can have attributes without any value
-- **parseNodeValue** : Parse the value of text node to float, integer, or boolean.
-- **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
+- **dynamicTypingNodeValue** : Parse the value of text node to float, integer, or boolean.
+- **dynamicTypingAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
 - **trimValues** : trim string values of an attribute or node
 - **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 - **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.

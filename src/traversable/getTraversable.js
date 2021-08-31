@@ -24,8 +24,8 @@ export const defaultOptions = {
   ignoreNameSpace: false,
   allowBooleanAttributes: false, //a tag can have attributes without any value
   //ignoreRootElement : false,
-  parseNodeValue: true,
-  parseAttributeValue: false,
+  dynamicTypingNodeValue: true,
+  dynamicTypingAttributeValue: false,
   arrayMode: false,
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,

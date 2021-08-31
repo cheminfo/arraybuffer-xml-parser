@@ -6,9 +6,9 @@ const { parse } = require('../lib/index.js');
 
 console.time('start');
 const result = parse(data, {
-  parseAttributeValue: false,
+  dynamicTypingAttributeValue: false,
   ignoreAttributes: false,
-  parseNodeValue: false,
+  dynamicTypingNodeValue: false,
   tagValueProcessor: (value, name) => {
     return value;
   },

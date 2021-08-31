@@ -24,7 +24,7 @@ export function parseAttributesString(string, options) {
         match[4] = options.attributeValueProcessor(match[4], attrName);
         attributes[options.attributeNamePrefix + attrName] = stringParseValue(
           match[4],
-          options.parseAttributeValue,
+          options.dynamicTypingAttributeValue,
         );
       } else if (options.allowBooleanAttributes) {
         attributes[options.attributeNamePrefix + attrName] = true;
