@@ -16,26 +16,6 @@ export const decoder = {
   },
 };
 
-export const defaultOptions = {
-  attributeNamePrefix: '@_', // all the attributes will be prefixed by `@_`
-  attributesNodeName: false, // we don't group all the attributed
-  textNodeName: '#text',
-  ignoreAttributes: true,
-  ignoreNameSpace: false,
-  allowBooleanAttributes: false, //a tag can have attributes without any value
-  //ignoreRootElement : false,
-  dynamicTypingNodeValue: true,
-  dynamicTypingAttributeValue: false,
-  arrayMode: false,
-  trimValues: true, //Trim string values of tag and attributes
-  cdataTagName: false,
-  cdataPositionChar: '\\c',
-  tagValueProcessor: (a) => a,
-  attributeValueProcessor: (a) => a,
-  stopNodes: [],
-  //decodeStrict: false,
-};
-
 export function getTraversable(xmlData, options) {
   const traversable = new XMLNode('!xml');
   let currentNode = traversable;
@@ -66,12 +46,16 @@ export function getTraversable(xmlData, options) {
 
         if (currentNode) {
           const value = processTagValue(
-            tagName,
             xmlData.subarray(dataIndex, dataIndex + dataSize),
+            tagName,
+            currentNode,
             options,
           );
-          currentNode.val =
-            currentNode.val === undefined ? value : currentNode.val + value;
+          if (currentNode.val === undefined) {
+            currentNode.val = value;
+          } else {
+            currentNode.val = concat(currentNode.val, value);
+          }
         }
         if (
           options.stopNodes.length &&
@@ -106,11 +90,15 @@ export function getTraversable(xmlData, options) {
         );
         if (currentNode && dataSize !== 0) {
           if (currentNode.tagname !== '!xml') {
-            currentNode.val = `${getValue(currentNode.val)}${processTagValue(
-              currentNode.tagname,
-              xmlData.subarray(dataIndex, dataSize + dataIndex),
-              options,
-            )}`;
+            currentNode.val = concat(
+              currentNode.val,
+              processTagValue(
+                xmlData.subarray(dataIndex, dataSize + dataIndex),
+                currentNode.tagname,
+                currentNode,
+                options,
+              ),
+            );
           }
         }
         dataSize = 0;
@@ -146,12 +134,13 @@ export function getTraversable(xmlData, options) {
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if (dataSize !== 0) {
           const value = processTagValue(
-            currentNode.tagname,
             xmlData.subarray(dataIndex, dataIndex + dataSize),
+            currentNode.tagname,
+            currentNode,
             options,
           );
 
-          currentNode.val = `${getValue(currentNode.val)}${value}`;
+          currentNode.val = concat(currentNode.val, value);
         }
 
         if (options.cdataTagName) {
@@ -202,11 +191,15 @@ export function getTraversable(xmlData, options) {
         //save text to parent node
         if (currentNode && dataSize !== 0) {
           if (currentNode.tagname !== '!xml') {
-            currentNode.val = `${getValue(currentNode.val)}${processTagValue(
-              currentNode.tagname,
-              xmlData.subarray(dataIndex, dataIndex + dataSize),
-              options,
-            )}`;
+            currentNode.val = concat(
+              currentNode.val,
+              processTagValue(
+                xmlData.subarray(dataIndex, dataIndex + dataSize),
+                currentNode.tagname,
+                currentNode,
+                options,
+              ),
+            );
           }
         }
 
@@ -251,4 +244,25 @@ export function getTraversable(xmlData, options) {
     }
   }
   return traversable;
+}
+
+function concat(a, b) {
+  if (a === undefined) {
+    a = typeof b === 'string' ? '' : new Uint8Array(0);
+  }
+  if (b === undefined) {
+    b = typeof a === 'string' ? '' : new Uint8Array(0);
+  }
+  if (typeof a === 'string' && typeof b === 'string') {
+    return a + b;
+  } else if (ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+    const arrayConcat = new Uint8Array(a.length + b.length);
+    arrayConcat.set(a);
+    arrayConcat.set(b, a.length);
+    return arrayConcat;
+  } else {
+    throw new Error(
+      `Unsuported value type for concatenation: ${typeof a} ${typeof b}`,
+    );
+  }
 }

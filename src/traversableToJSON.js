@@ -17,13 +17,15 @@ export function traversableToJSON(traversable, options, parentTagName) {
     !(
       typeof traversable.val === 'string' &&
       (traversable.val === '' || traversable.val === options.cdataPositionChar)
-    )
+    ) &&
+    traversable.val.length !== 0
   ) {
     const asArray = isTagNameInArrayMode(
       traversable.tagname,
       options.arrayMode,
       parentTagName,
     );
+
     jObj[options.textNodeName] = asArray ? [traversable.val] : traversable.val;
   }
 

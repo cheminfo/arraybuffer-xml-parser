@@ -7,6 +7,7 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+
 describe('XMLParser', function () {
   it('should decode HTML entities if allowed', function () {
     const xmlData = encoder.encode(
@@ -48,7 +49,44 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('tag value processor should be called with value and tag name', function () {
+  it('tag value processor should be called with value, tag name and node', function () {
+    const xmlData = encoder.encode(`<?xml version='1.0'?>
+	    <any_name>
+		<person>
+		    start
+		    <name1>Jack 1</name1 >
+		    middle
+		    <name2>35</name2>
+		    end
+		</person>
+	    </any_name>`);
+
+    const expected = {
+      any_name: {
+        person: {
+          '#text': 'startmiddleend',
+        },
+      },
+    };
+
+    const result = parse(xmlData, {
+      tagValueProcessor: (value, tagName) => {
+        return value;
+      },
+    });
+
+    expect(result).toStrictEqual({
+      any_name: {
+        person: {
+          '#text': encoder.encode('startmiddleend'),
+          name1: encoder.encode('Jack 1'),
+          name2: encoder.encode('35'),
+        },
+      },
+    });
+  });
+
+  it.only('tag value processor should be called with value and tag name', function () {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -60,28 +98,18 @@ describe('XMLParser', function () {
             </person>
         </any_name>`);
 
-    const expected = {
-      any_name: {
-        person: {
-          '#text': 'startmiddleend',
-          name1: 'Jack 1',
-          name2: 35,
-        },
-      },
-    };
-
     const resultMap = {};
     const result = parse(xmlData, {
-      tagValueProcessor: (val, tagName) => {
+      tagValueProcessor: (value, tagName) => {
         if (typeof tagName === 'object') {
           tagName = decoder.decode(tagName);
         }
         if (resultMap[tagName]) {
-          resultMap[tagName].push(val);
+          resultMap[tagName].push(value);
         } else {
-          resultMap[tagName] = [val];
+          resultMap[tagName] = [value];
         }
-        return val;
+        return value;
       },
     });
     //console.log(JSON.stringify(result,null,4));
@@ -121,7 +149,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      tagValueProcessor: (val, tagName) => {},
+      tagValueProcessor: () => '',
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);

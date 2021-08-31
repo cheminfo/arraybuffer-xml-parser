@@ -1,4 +1,5 @@
-import { defaultOptions, getTraversable } from './traversable/getTraversable';
+import { getTraversable } from './traversable/getTraversable';
+import { defaultOptions } from './traversable/defaultOptions';
 import { traversableToJSON } from './traversableToJSON';
 
 export function parse(xmlData, options = {}) {
