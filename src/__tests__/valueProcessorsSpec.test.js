@@ -86,7 +86,7 @@ describe('XMLParser', function () {
     });
   });
 
-  it.only('tag value processor should be called with value and tag name', function () {
+  it('tag value processor should be called with value and node', function () {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -99,29 +99,19 @@ describe('XMLParser', function () {
         </any_name>`);
 
     const resultMap = {};
-    const result = parse(xmlData, {
-      tagValueProcessor: (value, tagName) => {
-        console.log(typeof tagName, tagName);
-        if (typeof tagName === 'object') {
-          tagName = decoder.decode(tagName);
-        }
-        if (resultMap[tagName]) {
-          resultMap[tagName].push(value);
+    parse(xmlData, {
+      tagValueProcessor: (value, node) => {
+        if (resultMap[node.tagName]) {
+          resultMap[node.tagName].push(value);
         } else {
-          resultMap[tagName] = [value];
+          resultMap[node.tagName] = [value];
         }
         return value;
       },
     });
-    //console.log(JSON.stringify(result,null,4));
-    //console.log(JSON.stringify(resultMap,null,4));
     expect(resultMap).toStrictEqual({
-      any_name: [new Uint8Array(), new Uint8Array()],
-      person: [
-        encoder.encode('start'),
-        encoder.encode('middle'),
-        encoder.encode('end'),
-      ],
+      any_name: [new Uint8Array()],
+      person: [encoder.encode('startmiddleend')],
       name1: [encoder.encode('Jack 1')],
       name2: [encoder.encode('35')],
     });
@@ -166,9 +156,9 @@ describe('XMLParser', function () {
 
     const expected = {
       any_name: {
-        '#text': 'fxpfxp',
+        '#text': 'fxp',
         person: {
-          '#text': 'fxpfxpfxp',
+          '#text': 'fxp',
           name1: 'fxp',
           name2: 'fxp',
         },

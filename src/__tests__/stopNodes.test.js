@@ -15,11 +15,8 @@ describe('XMLParser', function () {
         fix1: '<p>p 1</p><div class="show">div 1</div>',
       },
     };
-
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
       stopNodes: ['fix1'],
     });
 
@@ -47,8 +44,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
+
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -76,8 +72,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
+
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -101,8 +96,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
+
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -126,8 +120,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
+
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -161,8 +154,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
+
       stopNodes: ['fix1', 'fix2'],
     });
 
@@ -185,7 +177,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
+
       stopNodes: ['fix1', 'fix2'],
     });
 

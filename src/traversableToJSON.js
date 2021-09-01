@@ -1,68 +1,68 @@
+import { parseString } from 'dynamic-typing';
+
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 
-export function traversableToJSON(traversable, options, parentTagName) {
+export function traversableToJSON(node, options, parentTagName) {
+  const { dynamicTypingNodeValue, tagValueProcessor, arrayMode } = options;
   const result = {};
 
-  console.log(traversable);
+  if (tagValueProcessor) {
+    node.val = node.val && tagValueProcessor(node.val, node);
+  }
+  if (typeof node.val === 'string' && dynamicTypingNodeValue) {
+    node.val = parseString(node.val);
+  }
 
   // when no child node or attr is present
   if (
-    (!traversable.child || isEmptyObject(traversable.child)) &&
-    (!traversable.attrsMap || isEmptyObject(traversable.attrsMap))
+    (!node.child || isEmptyObject(node.child)) &&
+    (!node.attrsMap || isEmptyObject(node.attrsMap))
   ) {
-    return traversable.val === undefined ? '' : traversable.val;
+    return node.val === undefined ? '' : node.val;
   }
 
   // otherwise create a textnode if node has some text
   if (
-    traversable.val !== undefined &&
+    node.val !== undefined &&
     !(
-      typeof traversable.val === 'string' &&
-      (traversable.val === '' || traversable.val === options.cdataPositionChar)
+      typeof node.val === 'string' &&
+      (node.val === '' || node.val === options.cdataPositionChar)
     ) &&
-    traversable.val.length !== 0
+    node.val.length !== 0
   ) {
     const asArray = isTagNameInArrayMode(
-      traversable.tagname,
-      options.arrayMode,
+      node.tagName,
+      arrayMode,
       parentTagName,
     );
 
-    result[options.textNodeName] = asArray
-      ? [traversable.val]
-      : traversable.val;
+    result[options.textNodeName] = asArray ? [node.val] : node.val;
   }
 
-  merge(result, traversable.attrsMap, options.arrayMode);
+  merge(result, node.attrsMap, arrayMode);
 
-  const keys = Object.keys(traversable.child);
+  const keys = Object.keys(node.child);
   for (let index = 0; index < keys.length; index++) {
     const tagName = keys[index];
-    if (traversable.child[tagName] && traversable.child[tagName].length > 1) {
+    if (node.child[tagName] && node.child[tagName].length > 1) {
       result[tagName] = [];
-      for (let tag in traversable.child[tagName]) {
-        if (
-          Object.prototype.hasOwnProperty.call(traversable.child[tagName], tag)
-        ) {
+      for (let tag in node.child[tagName]) {
+        if (Object.prototype.hasOwnProperty.call(node.child[tagName], tag)) {
           result[tagName].push(
-            traversableToJSON(
-              traversable.child[tagName][tag],
-              options,
-              tagName,
-            ),
+            traversableToJSON(node.child[tagName][tag], options, tagName),
           );
         }
       }
     } else {
-      const result = traversableToJSON(
-        traversable.child[tagName][0],
+      const subResult = traversableToJSON(
+        node.child[tagName][0],
         options,
         tagName,
       );
       const asArray =
-        (options.arrayMode === true && typeof result === 'object') ||
-        isTagNameInArrayMode(tagName, options.arrayMode, parentTagName);
-      result[tagName] = asArray ? [result] : result;
+        (arrayMode === true && typeof subResult === 'object') ||
+        isTagNameInArrayMode(tagName, arrayMode, parentTagName);
+      result[tagName] = asArray ? [subResult] : subResult;
     }
   }
 

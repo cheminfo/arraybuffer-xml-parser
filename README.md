@@ -5,7 +5,7 @@
 [![Test coverage][codecov-image]][codecov-url]
 [![npm download][download-image]][download-url]
 
-This code is based on the fork of [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser). See the [original license](LICENSE-ORIGINAL).
+This code is based on a copy of [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser).
 
 The reason is that we wanted to parse large XML files (over 1Gb) and therefore in the current implementation of javascript in V8 we can not use a String (limited to 512Mb).
 
@@ -60,7 +60,7 @@ const jsonObj = parse(xmlData, options, true);
 - **arrayMode** : When `false`, a tag with single occurrence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only. When instance of `RegEx`, only tags will be parsed as array that match the regex. When `function` a tag name is passed to the callback that can be checked.
 - **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 - **attributeValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
-- **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
+- **stopNodes** : an array of tag names which are not required to be parsed. They are kept as Uint8Array.
 
 </details>
 

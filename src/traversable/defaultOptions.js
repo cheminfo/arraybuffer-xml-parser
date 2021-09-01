@@ -10,15 +10,16 @@ export const defaultOptions = {
   attributeNamePrefix: '@_',
   attributesNodeName: false,
   textNodeName: '#text',
-  ignoreAttributes: true,
+
+  trimValues: true,
+
+  ignoreAttributes: false,
   ignoreNameSpace: false,
+  dynamicTypingAttributeValue: true,
   allowBooleanAttributes: false,
 
-  //ignoreRootElement : false,
   dynamicTypingNodeValue: true,
-  dynamicTypingAttributeValue: false,
   arrayMode: false,
-  trimValues: true,
   cdataTagName: false,
   cdataPositionChar: '\\c',
   tagValueProcessor: (value) => {

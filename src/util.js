@@ -45,7 +45,7 @@ export function getValue(v) {
 /**
  * Check if a tag name should be treated as array
  *
- * @param tagName the node tagname
+ * @param tagName the node tagName
  * @param arrayMode the array mode option
  * @param parentTagName the parent tag name
  * @returns {boolean} true if node should be parsed as array

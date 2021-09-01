@@ -9,12 +9,9 @@ describe('XMLParser', function () {
 	    12345<AB/>678
         </AAA>`;
 
-    const expected = { AAA: { '#text': '12345678', AB: '' } };
+    const expected = { AAA: { '#text': 12345678, AB: '' } };
 
-    let result = parse(xmlData, {
-      attributeNamePrefix: '',
-      ignoreAttributes: false,
-    });
+    let result = parse(xmlData, {});
 
     expect(result).toStrictEqual(expected);
   });

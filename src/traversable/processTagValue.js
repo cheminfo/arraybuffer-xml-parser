@@ -1,6 +1,5 @@
 import { parseString } from 'dynamic-typing';
 
-import { arrayTrim } from '../bufferUtils/arrayTrim';
 /**
  * Trim -> valueProcessor -> parse value
  * @param {string} tagName
@@ -9,11 +8,8 @@ import { arrayTrim } from '../bufferUtils/arrayTrim';
  */
 
 export function processTagValue(value, options, tagName, currentNode) {
-  const { dynamicTypingNodeValue, tagValueProcessor, trimValues } = options;
+  const { dynamicTypingNodeValue, tagValueProcessor } = options;
 
-  if (trimValues) {
-    value = arrayTrim(value);
-  }
   if (tagValueProcessor) {
     value = tagValueProcessor(value, tagName, currentNode);
   }

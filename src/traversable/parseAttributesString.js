@@ -50,16 +50,16 @@ function stringParseValue(val, shouldParse) {
   }
 }
 
-function resolveNameSpace(tagname, options) {
+function resolveNameSpace(tagName, options) {
   if (options.ignoreNameSpace) {
-    const tags = tagname.split(':');
-    const prefix = tagname.charAt(0) === '/' ? '/' : '';
+    const tags = tagName.split(':');
+    const prefix = tagName.charAt(0) === '/' ? '/' : '';
     if (tags[0] === 'xmlns') {
       return '';
     }
     if (tags.length === 2) {
-      tagname = prefix + tags[1];
+      tagName = prefix + tags[1];
     }
   }
-  return tagname;
+  return tagName;
 }

@@ -6,7 +6,6 @@ import { getValue } from '../util';
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
 import { findClosingIndex } from './findClosingIndex.1';
 import { parseAttributesString } from './parseAttributesString';
-import { processTagValue } from './processTagValue';
 
 const utf8Decoder = new TextDecoder();
 
@@ -36,16 +35,13 @@ export function getTraversable(xmlData, options) {
           'Closing Tag is not closed.',
         );
         let tagName = decoder.decode(
-          arrayTrim(xmlData.subarray(i + 2, closeIndex)),
+          arrayTrim(xmlData.subarray(i + 2, closeIndex), {}),
         );
         tagName = removeNameSpaceIfNeeded(tagName, options);
         if (currentNode) {
-          const value = processTagValue(
-            xmlData.subarray(dataIndex, dataIndex + dataSize),
-            options,
-            tagName,
-            currentNode,
-          );
+          const value = options.trimValues
+            ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
+            : xmlData.subarray(dataIndex, dataIndex + dataSize);
           if (currentNode.val === undefined) {
             currentNode.val = value;
           } else {
@@ -54,15 +50,13 @@ export function getTraversable(xmlData, options) {
         }
         if (
           options.stopNodes.length &&
-          options.stopNodes.includes(currentNode.tagname)
+          options.stopNodes.includes(currentNode.tagName)
         ) {
           currentNode.child = [];
           if (currentNode.attrsMap === undefined) {
             currentNode.attrsMap = {};
           }
-          currentNode.val = decoder.decode(
-            xmlData.subarray(currentNode.startIndex + 1, i),
-          );
+          currentNode.val = xmlData.subarray(currentNode.startIndex + 1, i);
         }
         currentNode = currentNode.parent;
         i = closeIndex;
@@ -84,15 +78,12 @@ export function getTraversable(xmlData, options) {
           'Comment is not closed.',
         );
         if (currentNode && dataSize !== 0) {
-          if (currentNode.tagname !== '!xml') {
+          if (currentNode.tagName !== '!xml') {
             currentNode.val = concat(
               currentNode.val,
-              processTagValue(
-                xmlData.subarray(dataIndex, dataSize + dataIndex),
-                options,
-                currentNode.tagname,
-                currentNode,
-              ),
+              options.trimValues
+                ? arrayTrim(xmlData.subarray(dataIndex, dataSize + dataIndex))
+                : xmlData.subarray(dataIndex, dataSize + dataIndex),
             );
           }
         }
@@ -128,12 +119,9 @@ export function getTraversable(xmlData, options) {
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if (dataSize !== 0) {
-          const value = processTagValue(
-            xmlData.subarray(dataIndex, dataIndex + dataSize),
-            options,
-            currentNode.tagname,
-            currentNode,
-          );
+          const value = options.trimValues
+            ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
+            : xmlData.subarray(dataIndex, dataIndex + dataSize);
 
           currentNode.val = concat(currentNode.val, value);
         }
@@ -143,7 +131,7 @@ export function getTraversable(xmlData, options) {
           const childNode = new XMLNode(
             options.cdataTagName,
             currentNode,
-            decoder.decode(tagExp),
+            tagExp,
           );
           currentNode.addChild(childNode);
           //for backtracking
@@ -151,11 +139,10 @@ export function getTraversable(xmlData, options) {
             getValue(currentNode.val) + options.cdataPositionChar;
           //add rest value to parent node
           if (tagExp) {
-            childNode.val = decoder.decode(tagExp);
+            childNode.val = tagExp;
           }
         } else {
-          currentNode.val =
-            (currentNode.val || '') + (decoder.decode(tagExp) || '');
+          currentNode.val = concat(currentNode.val, tagExp);
         }
 
         i = closeIndex + 2;
@@ -185,15 +172,12 @@ export function getTraversable(xmlData, options) {
 
         //save text to parent node
         if (currentNode && dataSize !== 0) {
-          if (currentNode.tagname !== '!xml') {
+          if (currentNode.tagName !== '!xml') {
             currentNode.val = concat(
               currentNode.val,
-              processTagValue(
-                xmlData.subarray(dataIndex, dataIndex + dataSize),
-                options,
-                currentNode.tagname,
-                currentNode,
-              ),
+              options.trimValues
+                ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
+                : xmlData.subarray(dataIndex, dataIndex + dataSize),
             );
           }
         }
@@ -220,7 +204,7 @@ export function getTraversable(xmlData, options) {
           const childNode = new XMLNode(tagName, currentNode);
           if (
             options.stopNodes.length &&
-            options.stopNodes.includes(childNode.tagname)
+            options.stopNodes.includes(childNode.tagName)
           ) {
             childNode.startIndex = closeIndex;
           }

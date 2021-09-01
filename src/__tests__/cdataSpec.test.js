@@ -204,7 +204,7 @@ patronymic</person></root>`);
         a: 'text',
         b: 'text',
         c: 'textafter',
-        d: '2324',
+        d: 2324,
       },
     };
 
@@ -216,7 +216,7 @@ patronymic</person></root>`);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse CDATA as separate tag', function () {
+  it.only('should parse CDATA as separate tag', function () {
     const xmlData = encoder.encode(`\
 <xml>
     <a><![CDATA[text]]></a>

@@ -9,8 +9,6 @@ const encoder = new TextEncoder();
 
 describe('XMLParser', function () {
   it('should parse all type of nodes', function () {
-    //todo weird one
-
     const fileNamePath = join(__dirname, 'assets/sample.xml');
     const xmlData = readFileSync(fileNamePath);
 
@@ -20,7 +18,7 @@ describe('XMLParser', function () {
         '@attr': 'https://example.com/somepath',
         person: [
           {
-            '@id': '101',
+            '@id': 101,
             phone: [122233344550, 122233344551],
             name: 'Jack',
             age: 33,
@@ -54,7 +52,7 @@ describe('XMLParser', function () {
             ],
           },
           {
-            '@id': '102',
+            '@id': 102,
             phone: [122233344553, 122233344554],
             name: 'Boris',
             age: 34,
@@ -83,8 +81,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
-      ignoreNonTextNodeAttr: false,
       attributeNamePrefix: '@',
       textNodeName: '#_text',
     });
@@ -178,7 +174,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
     });
     //console.log(JSON.stringify(result,null,4));
@@ -221,7 +216,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
     });
 
@@ -258,7 +252,9 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parse(xmlData);
+    const result = parse(xmlData, {
+      ignoreAttributes: true,
+    });
     expect(result).toStrictEqual(expected);
   });
 
@@ -294,7 +290,6 @@ describe('XMLParser', function () {
 
     const result = parse(xmlData, {
       ignoreNameSpace: true,
-      ignoreAttributes: false,
     });
 
     expect(result).toStrictEqual(expected);
@@ -324,9 +319,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parse(xmlData, {
-      ignoreAttributes: false,
-    });
+    const result = parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
@@ -339,9 +332,7 @@ describe('XMLParser', function () {
     };
 
     //console.log(getTraversalObj(xmlData));
-    const result = parse(xmlData, {
-      ignoreAttributes: false,
-    });
+    const result = parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
@@ -431,7 +422,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
+      dynamicTypingAttributeValue: false,
     });
     expect(result).toStrictEqual(expected);
   });
@@ -449,7 +440,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       trimValues: false,
     });
     expect(result).toStrictEqual(expected);
@@ -467,9 +457,7 @@ describe('XMLParser', function () {
       },
     };
 
-    const result = parse(xmlData, {
-      ignoreAttributes: false,
-    });
+    const result = parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
@@ -480,13 +468,11 @@ describe('XMLParser', function () {
       'tag.2': 'val2',
     };
 
-    const result = parse(xmlData, {
-      ignoreAttributes: false,
-    });
+    const result = parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
-  it.only('should not parse text value with tag', function () {
+  it('should not parse text value with tag', function () {
     const xmlData = encoder.encode(
       `<score><c1>71<message>23</message>29</c1></score>`,
     );
@@ -494,14 +480,13 @@ describe('XMLParser', function () {
       score: {
         c1: {
           message: 23,
-          _text: '7129',
+          _text: 7129,
         },
       },
     };
 
     const result = parse(xmlData, {
       textNodeName: '_text',
-      ignoreAttributes: false,
     });
 
     expect(result).toStrictEqual(expected);
@@ -536,8 +521,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
-      ignoreNonTextNodeAttr: false,
+      dynamicTypingAttributeValue: false,
     });
 
     expect(result).toStrictEqual(expected);
@@ -582,7 +566,7 @@ describe('XMLParser', function () {
       attributeNamePrefix: '',
       attributesNodeName: '$',
       ignoreNameSpace: true,
-      ignoreAttributes: false,
+      dynamicTypingAttributeValue: false,
     });
 
     //console.log(JSON.stringify(result,null,4));

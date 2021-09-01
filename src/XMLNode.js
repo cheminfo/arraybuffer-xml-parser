@@ -1,17 +1,17 @@
 export class XMLNode {
-  constructor(tagname, parent, val) {
-    this.tagname = tagname;
+  constructor(tagName, parent, val) {
+    this.tagName = tagName;
     this.parent = parent;
     this.child = {}; //child tags
     this.attrsMap = {}; //attributes map
     this.val = val; //text only
   }
   addChild(child) {
-    if (Array.isArray(this.child[child.tagname])) {
+    if (Array.isArray(this.child[child.tagName])) {
       //already presents
-      this.child[child.tagname].push(child);
+      this.child[child.tagName].push(child);
     } else {
-      this.child[child.tagname] = [child];
+      this.child[child.tagName] = [child];
     }
   }
 }

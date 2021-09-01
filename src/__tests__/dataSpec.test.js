@@ -23,7 +23,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
-      ignoreAttributes: false,
+
       //dynamicTypingAttributeValue: true
     });
 
@@ -66,7 +66,7 @@ describe('XMLParser', function () {
 
     let result = parse(xmlData, {
       //attributeNamePrefix: "",
-      ignoreAttributes: false,
+
       //dynamicTypingAttributeValue: true,
       allowBooleanAttributes: true,
     });
@@ -110,7 +110,7 @@ describe('XMLParser', function () {
     };
     let result = parse(xmlData, {
       //attributeNamePrefix: "",
-      ignoreAttributes: false,
+
       //dynamicTypingAttributeValue: true,
       allowBooleanAttributes: true,
     });
@@ -134,7 +134,7 @@ describe('XMLParser', function () {
       xmlData,
       {
         //attributeNamePrefix: "",
-        ignoreAttributes: false,
+
         //dynamicTypingAttributeValue: true,
         allowBooleanAttributes: true,
       },
@@ -156,7 +156,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
     expect(result).toStrictEqual(expected);
@@ -175,7 +174,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
     expect(result).toStrictEqual(expected);
@@ -195,7 +193,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       allowBooleanAttributes: true,
       ignoreNameSpace: true,
     });
@@ -214,7 +211,6 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
     expect(result).toStrictEqual(expected);
@@ -239,14 +235,13 @@ describe('XMLParser', function () {
         },
         Period: {
           $: {
-            id: '1578477220',
+            id: 1578477220,
           },
         },
       },
     };
 
     const result = parse(xmlData, {
-      ignoreAttributes: false,
       allowBooleanAttributes: true,
       attributesNodeName: '$',
       attributeNamePrefix: '', //TODO attr node prefix should not  when they're grouped
@@ -286,7 +281,7 @@ describe('XMLParser', function () {
     }).toThrow('Pi Tag is not closed.');
   });
 
-  it('should parse XML when there is a space after tagname', function () {
+  it('should parse XML when there is a space after tagName', function () {
     const xmlData = encoder.encode(
       `<tag ><![CDATA[undefined]]><nested>undefined</nested></tag>`,
     );
@@ -300,7 +295,6 @@ describe('XMLParser', function () {
     const result = parse(
       xmlData,
       {
-        ignoreAttributes: false,
         allowBooleanAttributes: true,
       },
       true,
