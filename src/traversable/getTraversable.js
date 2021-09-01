@@ -134,9 +134,6 @@ export function getTraversable(xmlData, options) {
             tagExp,
           );
           currentNode.addChild(childNode);
-          //for backtracking
-          currentNode.val =
-            getValue(currentNode.val) + options.cdataPositionChar;
           //add rest value to parent node
           if (tagExp) {
             childNode.val = tagExp;

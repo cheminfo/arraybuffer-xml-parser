@@ -216,41 +216,7 @@ patronymic</person></root>`);
     expect(result).toStrictEqual(expected);
   });
 
-  it.only('should parse CDATA as separate tag', function () {
-    const xmlData = encoder.encode(`\
-<xml>
-    <a><![CDATA[text]]></a>
-    <b>\n       text    \n</b>
-    <c>     <![CDATA[text]]>after    </c>
-    <d>23<![CDATA[]]>   24</d>
-</xml>`);
-    const expected = {
-      xml: {
-        a: {
-          __cdata: 'text',
-        },
-        b: 'text',
-        c: {
-          '#text': '\\cafter',
-          __cdata: 'text',
-        },
-        d: {
-          '#text': '23\\c24',
-          __cdata: '',
-        },
-      },
-    };
-
-    const result = parse(xmlData, {
-      ignoreAttributes: false,
-      cdataTagName: '__cdata',
-    });
-
-    //console.log(JSON.stringify(result,null,4));
-    expect(result).toStrictEqual(expected);
-  });
-
-  it('should parse CDATA as separate tag without preserving cdata position', function () {
+  it('should parse CDATA as separate tag', function () {
     const xmlData = encoder.encode(`\
 <xml>
     <a><![CDATA[text]]></a>
@@ -269,7 +235,7 @@ patronymic</person></root>`);
           __cdata: 'text',
         },
         d: {
-          '#text': '2324',
+          '#text': 2324,
           __cdata: '',
         },
       },
@@ -278,7 +244,7 @@ patronymic</person></root>`);
     const result = parse(xmlData, {
       ignoreAttributes: false,
       cdataTagName: '__cdata',
-      cdataPositionChar: '',
+      cdataPositddionChar: '',
     });
 
     //console.log(JSON.stringify(result,null,4));

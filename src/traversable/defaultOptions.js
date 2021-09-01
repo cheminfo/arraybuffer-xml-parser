@@ -21,7 +21,6 @@ export const defaultOptions = {
   dynamicTypingNodeValue: true,
   arrayMode: false,
   cdataTagName: false,
-  cdataPositionChar: '\\c',
   tagValueProcessor: (value) => {
     return decoder.decode(value).replace(/\r/g, '');
   },

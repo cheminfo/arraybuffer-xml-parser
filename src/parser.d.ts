@@ -14,7 +14,6 @@ type X2jOptions = {
     | ((tagName: string, parentTagName: string) => boolean);
   trimValues: boolean;
   cdataTagName: false | string;
-  cdataPositionChar: string;
   tagValueProcessor: (tagValue: string, tagName: string) => string;
   attributeValueProcessor: (attrValue: string, attrName: string) => string;
   stopNodes: string[];

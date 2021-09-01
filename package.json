@@ -36,10 +36,12 @@
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.15.0",
     "@types/jest": "^27.0.1",
+    "base64-arraybuffer": "^1.0.1",
     "cheminfo-build": "^1.1.11",
     "eslint": "^7.32.0",
     "eslint-config-cheminfo": "^5.2.4",
     "he": "^1.2.0",
+    "iobuffer": "^5.0.3",
     "jest": "^27.1.0",
     "prettier": "^2.3.2",
     "rollup": "^2.56.3"

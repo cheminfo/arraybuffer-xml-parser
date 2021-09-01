@@ -12,7 +12,6 @@ export function traversableToJSON(node, options, parentTagName) {
   if (typeof node.val === 'string' && dynamicTypingNodeValue) {
     node.val = parseString(node.val);
   }
-
   // when no child node or attr is present
   if (
     (!node.child || isEmptyObject(node.child)) &&
@@ -22,14 +21,7 @@ export function traversableToJSON(node, options, parentTagName) {
   }
 
   // otherwise create a textnode if node has some text
-  if (
-    node.val !== undefined &&
-    !(
-      typeof node.val === 'string' &&
-      (node.val === '' || node.val === options.cdataPositionChar)
-    ) &&
-    node.val.length !== 0
-  ) {
+  if (node.val !== undefined && node.val.length !== 0) {
     const asArray = isTagNameInArrayMode(
       node.tagName,
       arrayMode,
