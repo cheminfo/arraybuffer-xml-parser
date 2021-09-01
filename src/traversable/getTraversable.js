@@ -35,21 +35,16 @@ export function getTraversable(xmlData, options) {
           i,
           'Closing Tag is not closed.',
         );
-        let tagName = arrayTrim(xmlData.subarray(i + 2, closeIndex));
-
-        if (options.ignoreNameSpace) {
-          const colonIndex = arrayIndexOf(tagName, [0x3a]);
-          if (colonIndex !== -1) {
-            tagName = xmlData.subarray(tagName.byteOffset + colonIndex + 1);
-          }
-        }
-
+        let tagName = decoder.decode(
+          arrayTrim(xmlData.subarray(i + 2, closeIndex)),
+        );
+        tagName = removeNameSpaceIfNeeded(tagName, options);
         if (currentNode) {
           const value = processTagValue(
             xmlData.subarray(dataIndex, dataIndex + dataSize),
+            options,
             tagName,
             currentNode,
-            options,
           );
           if (currentNode.val === undefined) {
             currentNode.val = value;
@@ -94,9 +89,9 @@ export function getTraversable(xmlData, options) {
               currentNode.val,
               processTagValue(
                 xmlData.subarray(dataIndex, dataSize + dataIndex),
+                options,
                 currentNode.tagname,
                 currentNode,
-                options,
               ),
             );
           }
@@ -135,9 +130,9 @@ export function getTraversable(xmlData, options) {
         if (dataSize !== 0) {
           const value = processTagValue(
             xmlData.subarray(dataIndex, dataIndex + dataSize),
+            options,
             currentNode.tagname,
             currentNode,
-            options,
           );
 
           currentNode.val = concat(currentNode.val, value);
@@ -195,9 +190,9 @@ export function getTraversable(xmlData, options) {
               currentNode.val,
               processTagValue(
                 xmlData.subarray(dataIndex, dataIndex + dataSize),
+                options,
                 currentNode.tagname,
                 currentNode,
-                options,
               ),
             );
           }
@@ -264,5 +259,13 @@ function concat(a, b) {
     throw new Error(
       `Unsuported value type for concatenation: ${typeof a} ${typeof b}`,
     );
+  }
+}
+
+function removeNameSpaceIfNeeded(tagName, options) {
+  if (!options.ignoreNameSpace) return tagName;
+  const colonIndex = tagName.indexOf(':');
+  if (colonIndex !== -1) {
+    tagName = tagName.substr(colonIndex + 1);
   }
 }

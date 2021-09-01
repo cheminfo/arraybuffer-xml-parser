@@ -486,7 +486,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not parse text value with tag', function () {
+  it.only('should not parse text value with tag', function () {
     const xmlData = encoder.encode(
       `<score><c1>71<message>23</message>29</c1></score>`,
     );

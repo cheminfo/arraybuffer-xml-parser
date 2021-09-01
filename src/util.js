@@ -43,29 +43,6 @@ export function getValue(v) {
 }
 
 /**
- * This method check that only allowed props are in the options object and append the default options
- * @param {object} options
- * @param {object} defaultOptions
- * @param {array} props
- * @returns
- */
-export function buildOptions(options, defaultOptions, props) {
-  let newOptions = {};
-  if (!options) {
-    return defaultOptions; //if there are not options
-  }
-
-  for (let i = 0; i < props.length; i++) {
-    if (options[props[i]] !== undefined) {
-      newOptions[props[i]] = options[props[i]];
-    } else {
-      newOptions[props[i]] = defaultOptions[props[i]];
-    }
-  }
-  return newOptions;
-}
-
-/**
  * Check if a tag name should be treated as array
  *
  * @param tagName the node tagname

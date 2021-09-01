@@ -4,13 +4,15 @@ const { join } = require('path');
 const data = readFileSync(join(__dirname, 'big.xml'));
 const { parse } = require('../lib/index.js');
 
+const decoder = new TextDecoder();
+
 console.time('start');
 const result = parse(data, {
   dynamicTypingAttributeValue: false,
   ignoreAttributes: false,
   dynamicTypingNodeValue: false,
-  tagValueProcessor: (value, name) => {
-    return value;
+  tagValueProcessor: (value, tagName) => {
+    //    return decoder.decode(value);
   },
 });
 console.timeEnd('start');

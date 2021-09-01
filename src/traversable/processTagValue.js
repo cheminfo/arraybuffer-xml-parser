@@ -8,7 +8,7 @@ import { arrayTrim } from '../bufferUtils/arrayTrim';
  * @param {object} options
  */
 
-export function processTagValue(value, tagName, currentNode, options) {
+export function processTagValue(value, options, tagName, currentNode) {
   const { dynamicTypingNodeValue, tagValueProcessor, trimValues } = options;
 
   if (trimValues) {
@@ -17,7 +17,6 @@ export function processTagValue(value, tagName, currentNode, options) {
   if (tagValueProcessor) {
     value = tagValueProcessor(value, tagName, currentNode);
   }
-
   if (typeof value === 'string' && dynamicTypingNodeValue) {
     return parseString(value);
   }
