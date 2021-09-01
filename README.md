@@ -7,9 +7,9 @@
 
 This code is based on a copy of [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser).
 
-The reason is that we wanted to parse large XML files (over 1Gb) and therefore in the current implementation of javascript in V8 we can not use a String (limited to 512Mb).
+The reason is that we wanted to parse large XML files (over 1Gb) and the current implementation of fast-xml-parser use as input a string. In the current implementation of javascript in V8 this limits the size to 512Mb.
 
-The code was therefore changed in order to use directly an ArrayBuffer.
+In this code we parse directly a Uint8Array (or an ArrayBuffer) and the limit is now 4Gb.
 
 ## Installation
 
@@ -22,26 +22,25 @@ The code was therefore changed in order to use directly an ArrayBuffer.
 ```js
 import { parse } from 'arraybuffer-xml-parser';
 
-const options = {
-  attributeNamePrefix: '@_',
-  attributesNodeName: 'attr', //default is 'false'
-  textNodeName: '#text',
-  ignoreAttributes: true,
-  ignoreNameSpace: false,
-  allowBooleanAttributes: false,
-  dynamicTypingNodeValue: true,
-  dynamicTypingAttributeValue: false,
-  trimValues: true,
-  cdataTagName: '__cdata', //default is 'false'
-  cdataPositionChar: '\\c',
-  arrayMode: false, //"strict"
-  attributeValueProcessor: (value, node) =>
-    he.decode(val, { isAttributeValue: true }), //default is a=>a
-  tagValueProcessor: (value, node) => he.decode(value), //default is a=>a
-  stopNodes: ['parse-me-as-string'],
-};
+// in order to show an example we will encode the data to get the ArrayBuffer.
 
-const jsonObj = parse(xmlData, options, true);
+const encoder = new TextEncoder();
+const xmlData = encoder.encode(
+  `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`,
+);
+
+const object = parse(xmlData, options);
+
+/*
+object = {
+  rootNode: {
+    tag: 'value',
+    boolean: 'true',
+    intTag: '045',
+    floatTag: '65.34',
+  },
+}
+*/
 ```
 
 ## Options
