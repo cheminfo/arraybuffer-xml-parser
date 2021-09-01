@@ -39,7 +39,7 @@
     "base64-arraybuffer": "^1.0.1",
     "cheminfo-build": "^1.1.11",
     "eslint": "^7.32.0",
-    "eslint-config-cheminfo": "^5.2.4",
+    "eslint-config-cheminfo": "^5.3.0",
     "he": "^1.2.0",
     "iobuffer": "^5.0.3",
     "jest": "^27.1.0",
