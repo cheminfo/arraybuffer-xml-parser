@@ -1,7 +1,9 @@
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 
 export function traversableToJSON(traversable, options, parentTagName) {
-  const jObj = {};
+  const result = {};
+
+  console.log(traversable);
 
   // when no child node or attr is present
   if (
@@ -26,21 +28,23 @@ export function traversableToJSON(traversable, options, parentTagName) {
       parentTagName,
     );
 
-    jObj[options.textNodeName] = asArray ? [traversable.val] : traversable.val;
+    result[options.textNodeName] = asArray
+      ? [traversable.val]
+      : traversable.val;
   }
 
-  merge(jObj, traversable.attrsMap, options.arrayMode);
+  merge(result, traversable.attrsMap, options.arrayMode);
 
   const keys = Object.keys(traversable.child);
   for (let index = 0; index < keys.length; index++) {
     const tagName = keys[index];
     if (traversable.child[tagName] && traversable.child[tagName].length > 1) {
-      jObj[tagName] = [];
+      result[tagName] = [];
       for (let tag in traversable.child[tagName]) {
         if (
           Object.prototype.hasOwnProperty.call(traversable.child[tagName], tag)
         ) {
-          jObj[tagName].push(
+          result[tagName].push(
             traversableToJSON(
               traversable.child[tagName][tag],
               options,
@@ -58,9 +62,9 @@ export function traversableToJSON(traversable, options, parentTagName) {
       const asArray =
         (options.arrayMode === true && typeof result === 'object') ||
         isTagNameInArrayMode(tagName, options.arrayMode, parentTagName);
-      jObj[tagName] = asArray ? [result] : result;
+      result[tagName] = asArray ? [result] : result;
     }
   }
 
-  return jObj;
+  return result;
 }
