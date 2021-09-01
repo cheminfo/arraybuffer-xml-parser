@@ -1,6 +1,6 @@
 import { closingIndexForOpeningTag } from '../closingIndexForOpeningTag';
 
-test('sclosingIndexForOpeningTag', function () {
+test('sclosingIndexForOpeningTag', () => {
   expect(
     closingIndexForOpeningTag(
       new Uint8Array([0x31, 0x32, 0x33, 0x34, 0x3e]),

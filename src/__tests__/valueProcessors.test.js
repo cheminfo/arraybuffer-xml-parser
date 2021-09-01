@@ -7,8 +7,8 @@ import { parse } from '../parse';
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-describe('XMLParser', function () {
-  it('should decode HTML entities if allowed', function () {
+describe('XMLParser', () => {
+  it('should decode HTML entities if allowed', () => {
     const xmlData = encoder.encode(
       '<rootNode>       foo&ampbar&apos;        </rootNode>',
     );
@@ -22,7 +22,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should decode HTML entities / char', function () {
+  it('should decode HTML entities / char', () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`,
     );
@@ -48,7 +48,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('tag value processor should be called with value, tag name and node', function () {
+  it('tag value processor should be called with value, tag name and node', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
 	    <any_name>
 		<person>
@@ -77,7 +77,7 @@ describe('XMLParser', function () {
     });
   });
 
-  it('tag value processor should be called with value and node', function () {
+  it('tag value processor should be called with value and node', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -108,7 +108,7 @@ describe('XMLParser', function () {
     });
   });
 
-  it('result should have no value if tag processor returns nothing', function () {
+  it('result should have no value if tag processor returns nothing', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -136,7 +136,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('result should have constant value returned by tag processor', function () {
+  it('result should have constant value returned by tag processor', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -165,7 +165,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('attribute parser should be called with  atrribute name and value', function () {
+  it('attribute parser should be called with  atrribute name and value', () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo bar" bug="foo n bar"/>`,
     );

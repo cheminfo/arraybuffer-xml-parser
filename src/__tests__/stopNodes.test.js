@@ -4,8 +4,8 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
-describe('XMLParser', function () {
-  it('1a. should support single stopNode', function () {
+describe('XMLParser', () => {
+  it('1a. should support single stopNode', () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1><p>p 1</p><div class="show">div 1</div></fix1></issue>`,
     );
@@ -27,7 +27,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('1b. 3. should support more than one stopNodes, with or without attr', function () {
+  it('1b. 3. should support more than one stopNodes, with or without attr', () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><div class="show">div 1</div></fix1><fix2><p>p 2</p><div class="show">div 2</div></fix2></issue>`,
     );
@@ -55,7 +55,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('1c. have two stopNodes, one within the other', function () {
+  it('1c. have two stopNodes, one within the other', () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><fix2><p>p 2</p><div class="show">div 2</div></fix2><div class="show">div 1</div></fix1></issue>`,
     );
@@ -83,7 +83,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('2a. stop node has nothing in it', function () {
+  it('2a. stop node has nothing in it', () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1></fix1></issue>`,
     );
@@ -107,7 +107,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('2b. stop node is self-closing', function () {
+  it('2b. stop node is self-closing', () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1/></issue>`,
     );
@@ -131,7 +131,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('4. cdata', function () {
+  it('4. cdata', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
 <issue>
     <fix1>
@@ -167,7 +167,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('5. stopNode at root level', function () {
+  it('5. stopNode at root level', () => {
     const xmlData = encoder.encode(
       `<fix1><p>p 1</p><div class="show">div 1</div></fix1>`,
     );

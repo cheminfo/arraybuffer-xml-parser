@@ -1,7 +1,7 @@
 import { parse } from '../parse';
 
-describe('XMLParser', function () {
-  it('should parse XML with cyrillic characters to JSON string', function () {
+describe('XMLParser', () => {
+  it('should parse XML with cyrillic characters to JSON string', () => {
     const xmlData = `<КорневаяЗапись><Тэг>ЗначениеValue53456</Тэг></КорневаяЗапись>`;
     const expected = {
       КорневаяЗапись: {

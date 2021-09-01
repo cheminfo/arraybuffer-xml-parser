@@ -5,8 +5,8 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
-describe('XMLParser', function () {
-  it('should parse multiline tag value when tags without spaces', function () {
+describe('XMLParser', () => {
+  it('should parse multiline tag value when tags without spaces', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?><root><person>lastname
 firstname
 patronymic</person></root>`);
@@ -24,7 +24,7 @@ patronymic</person></root>`);
     // result = validator.validate(xmlData);
     // expect(result).toBe(true);
   });
-  it('should parse tag having CDATA', function () {
+  it('should parse tag having CDATA', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
 <any_name>
     <person>
@@ -60,7 +60,7 @@ patronymic</person></root>`);
     // expect(result).toBe(true);
   });
 
-  it('should parse tag having CDATA 2', function () {
+  it('should parse tag having CDATA 2', () => {
     const xmlData = encoder.encode(`\
 <sql-queries>
     <sql-query id='testquery'><![CDATA[select * from search_urls]]></sql-query>
@@ -96,7 +96,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should parse tag having whitespaces before / after CDATA', function () {
+  it('should parse tag having whitespaces before / after CDATA', () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a>text</a>
@@ -124,7 +124,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should ignore comment', function () {
+  it('should ignore comment', () => {
     const xmlData = encoder.encode(
       `<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>`,
     );
@@ -145,7 +145,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should ignore multiline comments', function () {
+  it('should ignore multiline comments', () => {
     const xmlData = encoder.encode(
       '<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>',
     );
@@ -166,7 +166,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should parse tag having text before / after CDATA', function () {
+  it('should parse tag having text before / after CDATA', () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a>text</a>
@@ -191,7 +191,7 @@ patronymic</person></root>`);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not parse tag value if having CDATA', function () {
+  it('should not parse tag value if having CDATA', () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a>text</a>
@@ -216,7 +216,7 @@ patronymic</person></root>`);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse CDATA as separate tag', function () {
+  it('should parse CDATA as separate tag', () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a><![CDATA[text]]></a>
@@ -251,7 +251,7 @@ patronymic</person></root>`);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should validate XML with repeated multiline CDATA and comments', function () {
+  it('should validate XML with repeated multiline CDATA and comments', () => {
     const fileNamePath = join(__dirname, 'assets/mixed.xml');
     const xmlData = readFileSync(fileNamePath);
     const expected = {

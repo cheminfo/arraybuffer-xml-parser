@@ -2,8 +2,8 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
-describe('XMLParser with arrayMode enabled', function () {
-  it('should parse all the tags as an array no matter how many occurrences excluding primitive values when arrayMode is set to true', function () {
+describe('XMLParser with arrayMode enabled', () => {
+  it('should parse all the tags as an array no matter how many occurrences excluding primitive values when arrayMode is set to true', () => {
     const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
@@ -78,7 +78,7 @@ describe('XMLParser with arrayMode enabled', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse all the tags as an array no matter how many occurrences when arrayMode is set to strict', function () {
+  it('should parse all the tags as an array no matter how many occurrences when arrayMode is set to strict', () => {
     const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
@@ -153,7 +153,7 @@ describe('XMLParser with arrayMode enabled', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse all the tags as an array that match arrayMode RegEx or return true as callback', function () {
+  it('should parse all the tags as an array that match arrayMode RegEx or return true as callback', () => {
     const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
@@ -225,7 +225,7 @@ describe('XMLParser with arrayMode enabled', function () {
     expect(regExResult).toStrictEqual(expected);
 
     const cbExResult = parse(xmlData, {
-      arrayMode: function (tagName) {
+      arrayMode: (tagName) => {
         return ['inventory', 'item'].includes(tagName);
       },
       ignoreAttributes: false,
@@ -233,7 +233,7 @@ describe('XMLParser with arrayMode enabled', function () {
     expect(cbExResult).toStrictEqual(expected);
   });
 
-  it('should parse all the tags as an array that match arrayMode callback with parent tag', function () {
+  it('should parse all the tags as an array that match arrayMode callback with parent tag', () => {
     const xmlData = encoder.encode(`<report>
         <store>
             <region>US</region>
@@ -295,7 +295,7 @@ describe('XMLParser with arrayMode enabled', function () {
     };
 
     const cbExResult = parse(xmlData, {
-      arrayMode: function (tagName, parentTagName) {
+      arrayMode: (tagName, parentTagName) => {
         return parentTagName === 'inventory';
       },
       ignoreAttributes: false,

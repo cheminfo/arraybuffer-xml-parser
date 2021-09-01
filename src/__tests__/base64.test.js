@@ -6,7 +6,7 @@ import { parse } from '../parse';
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-test('base64 parsing', function () {
+test('base64 parsing', () => {
   const xmlData = encoder.encode(`
 <binaryDataArray encodedLength="3">
   <cvParam cvRef="MS" accession="MS:1000523" name="64-bit float" value=""/>

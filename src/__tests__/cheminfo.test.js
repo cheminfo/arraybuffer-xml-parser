@@ -2,8 +2,8 @@
 
 import { parse } from '../parse';
 
-describe('XMLParser', function () {
-  it('Try to parse a very simple example', function () {
+describe('XMLParser', () => {
+  it('Try to parse a very simple example', () => {
     const xmlData = `
  	<AAA>
 	    12345<AB/>678

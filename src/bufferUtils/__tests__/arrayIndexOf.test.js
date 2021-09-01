@@ -1,7 +1,7 @@
 import { arrayIndexOf } from '../arrayIndexOf';
 
-describe('arrayIndexOf', function () {
-  it('should find the index pointing to the begining of the found string in array', function () {
+describe('arrayIndexOf', () => {
+  it('should find the index pointing to the begining of the found string in array', () => {
     const whole = new Uint8Array([0x61, 0x6d, 0x6f, 0x67, 0x75, 0x73]);
     const sandwiched = new Uint8Array([
       0x41, 0x61, 0x6d, 0x6f, 0x67, 0x75, 0x73, 0x75, 0x73,

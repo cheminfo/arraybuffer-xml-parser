@@ -2,8 +2,8 @@
 import { parse } from '../parse';
 
 const encoder = new TextEncoder();
-describe('XMLParser', function () {
-  it("should parse attributes having '>' in value", function () {
+describe('XMLParser', () => {
+  it("should parse attributes having '>' in value", () => {
     const xmlData =
       encoder.encode(`<? xml version = "1.0" encoding = "UTF - 8" ?>
         <testStep type="restrequest" name="test step name (bankId -> Error)" id="90e453d3-30cd-4958-a3be-61ecfe7a7cbe">
@@ -34,7 +34,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('should parse attributes with valid names', function () {
+  it('should parse attributes with valid names', () => {
     const xmlData = encoder.encode(`
         <a>
             <bug atr="sasa" boolean>val
@@ -75,7 +75,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse attributes with correct names', function () {
+  it('should parse attributes with correct names', () => {
     const xmlData =
       encoder.encode(`<a:root xmlns:a="urn:none" xmlns:a-b="urn:none">
         <a:a attr="2foo&ampbar&apos;">1</a:a>
@@ -118,7 +118,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse tagName without whitespace chars', function () {
+  it('should parse tagName without whitespace chars', () => {
     const xmlData = encoder.encode(`<a:root
          attr='df'>val
     </a:root>`);
@@ -145,7 +145,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with DOCTYPE without internal DTD', function () {
+  it('should parse XML with DOCTYPE without internal DTD', () => {
     const xmlData = encoder.encode(
       '<?xml version=\'1.0\' standalone=\'no\'?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" ><svg><metadata>test</metadata></svg>',
     );
@@ -161,7 +161,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with DOCTYPE without internal DTD', function () {
+  it('should parse XML with DOCTYPE without internal DTD', () => {
     const xmlData = encoder.encode(`<?xml version='1.0' standalone='no'?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
         <svg>
@@ -179,7 +179,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML when namespaced ignored', function () {
+  it('should parse XML when namespaced ignored', () => {
     const xmlData = encoder.encode(
       `<a:b>c</a:b><a:d/><a:e atr="sasa" boolean>`,
     );
@@ -199,7 +199,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with undefined as text', function () {
+  it('should parse XML with undefined as text', () => {
     const xmlData = encoder.encode(
       `<tag><![CDATA[undefined]]><nested>undefined</nested></tag>`,
     );
@@ -216,7 +216,7 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should trim \\t or \\n chars', function () {
+  it('should trim \\t or \\n chars', () => {
     const xmlData = encoder.encode(
       '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<MPD\n' +
@@ -250,38 +250,38 @@ describe('XMLParser', function () {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should error for when any tag is left to close', function () {
+  it('should error for when any tag is left to close', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><tag></tag`);
     expect(() => {
       parse(xmlData);
     }).toThrow('Closing Tag is not closed.');
   });
-  it('should error for when any tag is left to close', function () {
+  it('should error for when any tag is left to close', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!-- bad `);
     expect(() => {
       parse(xmlData);
     }).toThrow('Comment is not closed.');
   });
-  it('should error for when any tag is left to close', function () {
+  it('should error for when any tag is left to close', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><![CDATA ]`);
     expect(() => {
       parse(xmlData);
     }).toThrow('CDATA is not closed.');
   });
-  it('should error for when any tag is left to close', function () {
+  it('should error for when any tag is left to close', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!DOCTYPE `);
     expect(() => {
       parse(xmlData);
     }).toThrow('DOCTYPE is not closed.');
   });
-  it('should error for when any tag is left to close', function () {
+  it('should error for when any tag is left to close', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><?pi  `);
     expect(() => {
       parse(xmlData);
     }).toThrow('Pi Tag is not closed.');
   });
 
-  it('should parse XML when there is a space after tagName', function () {
+  it('should parse XML when there is a space after tagName', () => {
     const xmlData = encoder.encode(
       `<tag ><![CDATA[undefined]]><nested>undefined</nested></tag>`,
     );

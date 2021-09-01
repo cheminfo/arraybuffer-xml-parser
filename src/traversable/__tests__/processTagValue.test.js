@@ -1,7 +1,7 @@
 import { defaultOptions } from '../defaultOptions';
 import { processTagValue } from '../processTagValue';
 
-test('processTagValue', function () {
+test('processTagValue', () => {
   expect(
     processTagValue(new Uint8Array([0x74, 0x72, 0x75, 0x65]), defaultOptions),
   ).toStrictEqual(true);

@@ -5,8 +5,8 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
-describe('XMLParser', function () {
-  it('should parse attributes with valid names', function () {
+describe('XMLParser', () => {
+  it('should parse attributes with valid names', () => {
     const xmlData = encoder.encode(
       `<issue _ent-ity.23="Mjg2MzY2OTkyNA==" state="partial" version="1"></issue>`,
     );
@@ -31,7 +31,7 @@ describe('XMLParser', function () {
     //expect(result).toBe(true);
   });
 
-  it('should parse attributes with newline char', function () {
+  it('should parse attributes with newline char', () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo\nbar" bug="true"/>`,
     );
@@ -56,7 +56,7 @@ describe('XMLParser', function () {
     //expect(result).toBe(true);
   });
 
-  it('should not decode HTML entities / char by default', function () {
+  it('should not decode HTML entities / char by default', () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo\nbar" bug="foo&ampbar&apos;"/>`,
     );
@@ -81,7 +81,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('should parse Boolean Attributes', function () {
+  it('should parse Boolean Attributes', () => {
     const xmlData = encoder.encode(
       `<element id="7" str="" data><selfclosing/><selfclosing /><selfclosingwith attr/></element>`,
     );
@@ -113,7 +113,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('should not remove xmlns when namespaces are not set to be ignored', function () {
+  it('should not remove xmlns when namespaces are not set to be ignored', () => {
     const xmlData = encoder.encode(
       `<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>`,
     );
@@ -140,7 +140,7 @@ describe('XMLParser', function () {
     // expect(result).toBe(true);
   });
 
-  it('should remove xmlns when namespaces are set to be ignored', function () {
+  it('should remove xmlns when namespaces are set to be ignored', () => {
     const xmlData = encoder.encode(
       `<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi-ns="http://www.w3.org/2001/XMLSchema-instance" xsi-ns:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>`,
     );
@@ -168,7 +168,7 @@ describe('XMLParser', function () {
     //   // expect(result).toBe(true);
   });
 
-  // it('should not parse attributes with name start with number', function () {
+  // it('should not parse attributes with name start with number', () => {
   //   const xmlData = encoder.encode(
   //     `<issue 35entity="Mjg2MzY2OTkyNA==" ></issue>`,
   //   );
@@ -185,7 +185,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should not parse attributes with invalid char', function () {
+  // it('should not parse attributes with invalid char', () => {
   //   const xmlData = encoder.encode(
   //     `<issue enti+ty="Mjg2MzY2OTkyNA=="></issue>`,
   //   );
@@ -202,7 +202,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should not parse attributes in closing tag', function () {
+  // it('should not parse attributes in closing tag', () => {
   //   const xmlData = encoder.encode(`<issue></issue invalid="true">`);
   //   const expected = {
   //     err: {
@@ -216,7 +216,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should err for invalid atributes', function () {
+  // it('should err for invalid atributes', () => {
   //   const xmlData = encoder.encode(`<rootNode =''></rootNode>`);
   //   const expected = {
   //     err: {
@@ -229,7 +229,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should validate xml with atributes', function () {
+  // it('should validate xml with atributes', () => {
   //   const xmlData = encoder.encode(
   //     `<rootNode attr="123"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`,
   //   );
@@ -238,7 +238,7 @@ describe('XMLParser', function () {
   //   expect(result).toBe(true);
   // });
 
-  // it("should validate xml atribute has '>' in value", function () {
+  // it("should validate xml atribute has '>' in value", () => {
   //   const xmlData = encoder.encode(
   //     `<rootNode attr="123>234"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`,
   //   );
@@ -247,7 +247,7 @@ describe('XMLParser', function () {
   //   expect(result).toBe(true);
   // });
 
-  // it('should not validate xml with invalid atributes', function () {
+  // it('should not validate xml with invalid atributes', () => {
   //   const xmlData = encoder.encode(
   //     `<rootNode attr="123><tag></tag><tag>1</tag><tag>val</tag></rootNode>`,
   //   );
@@ -262,7 +262,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should not validate xml with invalid attributes when duplicate attributes present', function () {
+  // it('should not validate xml with invalid attributes when duplicate attributes present', () => {
   //   const xmlData = encoder.encode(`<rootNode  abc='123' abc="567" />`);
   //   const expected = {
   //     err: {
@@ -276,7 +276,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should not validate xml with invalid attributes when no space between 2 attributes', function () {
+  // it('should not validate xml with invalid attributes when no space between 2 attributes', () => {
   //   const xmlData = encoder.encode(`<rootNode  abc='123'bc='567' />`);
   //   const expected = {
   //     err: {
@@ -289,7 +289,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should not validate a tag with attribute presents without value', function () {
+  // it('should not validate a tag with attribute presents without value', () => {
   //   const xmlData = encoder.encode(`<rootNode ab cd='ef'></rootNode>`);
   //   const expected = {
   //     err: {
@@ -302,7 +302,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should not validate xml with invalid attributes presents without value', function () {
+  // it('should not validate xml with invalid attributes presents without value', () => {
   //   const xmlData = encoder.encode(`<rootNode  123 abc='123' bc='567' />`);
   //   const expected = {
   //     err: {
@@ -317,7 +317,7 @@ describe('XMLParser', function () {
   //   expect(result).toStrictEqual(expected);
   // });
 
-  // it('should validate xml with attributeshaving openquote in value', function () {
+  // it('should validate xml with attributeshaving openquote in value', () => {
   //   const xmlData = encoder.encode('<rootNode  123 abc=\'1"23\' bc="56\'7" />');
   //   const expected = {
   //     err: {
