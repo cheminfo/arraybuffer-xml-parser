@@ -244,7 +244,7 @@ describe('XMLParser', function () {
     const result = parse(xmlData, {
       allowBooleanAttributes: true,
       attributesNodeName: '$',
-      attributeNamePrefix: '', //TODO attr node prefix should not  when they're grouped
+      attributeNamePrefix: '',
     });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);

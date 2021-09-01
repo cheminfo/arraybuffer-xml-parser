@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
-/* eslint-disable jest/no-if */
+/* eslint-disable no-tabs */
 import he from 'he';
 
 import { parse } from '../parse';
@@ -61,16 +60,8 @@ describe('XMLParser', function () {
 		</person>
 	    </any_name>`);
 
-    const expected = {
-      any_name: {
-        person: {
-          '#text': 'startmiddleend',
-        },
-      },
-    };
-
     const result = parse(xmlData, {
-      tagValueProcessor: (value, tagName) => {
+      tagValueProcessor: (value) => {
         return value;
       },
     });
@@ -166,7 +157,7 @@ describe('XMLParser', function () {
     };
 
     const result = parse(xmlData, {
-      tagValueProcessor: (val, tagName) => {
+      tagValueProcessor: () => {
         return 'fxp';
       },
     });

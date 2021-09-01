@@ -38,10 +38,6 @@ export function merge(target, a, arrayMode) {
   }
 }
 
-export function getValue(v) {
-  return v === undefined ? '' : v;
-}
-
 /**
  * Check if a tag name should be treated as array
  *

@@ -1,7 +1,6 @@
 import { XMLNode } from '../XMLNode';
 import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
 import { arrayTrim } from '../bufferUtils/arrayTrim';
-import { getValue } from '../util';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
 import { findClosingIndex } from './findClosingIndex.1';
