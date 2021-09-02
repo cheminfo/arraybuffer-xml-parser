@@ -1,0 +1,52 @@
+{
+  "name": "arraybuffer-xml-parser",
+  "version": "0.1.0",
+  "description": "Parse XML files contained in an array buffer",
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "scripts": {
+    "build": "cheminfo-build --entry src/index.js --root XMLParser",
+    "eslint": "eslint src",
+    "eslint-fix": "npm run eslint -- --fix",
+    "prepack": "rollup -c",
+    "prettier": "prettier --check src",
+    "prettier-write": "prettier --write src",
+    "test": "npm run test-coverage && npm run eslint && npm run prettier",
+    "test-coverage": "jest --coverage",
+    "test-only": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cheminfo/arraybuffer-xml-parser.git"
+  },
+  "keywords": [],
+  "author": "Luc Patiny",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cheminfo/arraybuffer-xml-parser/issues"
+  },
+  "homepage": "https://github.com/cheminfo/arraybuffer-xml-parser#readme",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.15.0",
+    "@types/jest": "^27.0.1",
+    "base64-arraybuffer": "^1.0.1",
+    "cheminfo-build": "^1.1.11",
+    "eslint": "^7.32.0",
+    "eslint-config-cheminfo": "^5.3.0",
+    "he": "^1.2.0",
+    "iobuffer": "^5.0.3",
+    "jest": "^27.1.0",
+    "prettier": "^2.3.2",
+    "rollup": "^2.56.3"
+  },
+  "dependencies": {
+    "dynamic-typing": "^0.1.2"
+  }
+}
