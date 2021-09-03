@@ -8,7 +8,7 @@ export const decoder = {
 
 export const defaultOptions = {
   trimValues: true,
-  attributeNamePrefix: '@_',
+  attributeNamePrefix: '$',
   attributesNodeName: false,
   ignoreAttributes: false,
   ignoreNameSpace: false,
