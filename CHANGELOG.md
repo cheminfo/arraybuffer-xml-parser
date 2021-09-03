@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.0 (2021-09-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename node.val to node.value
+* rename node.attrsMap to node.attributes
+* rename node.child to node.children
+
+### Miscellaneous Chores
+
+* rename node.attrsMap to node.attributes ([a630b11](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/a630b11d3627bc8c960e671088267d83472ae9f4))
+* rename node.child to node.children ([4501cb4](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/4501cb4835741d2b50a49c7f50cbad1a6d67ef4d))
+
+
+### Code Refactoring
+
+* rename node.val to node.value ([2b27e37](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/2b27e37fefa80d920b0d255ab4f59f90eee15386))
+
 ## 0.1.0 (2021-09-01)
 
 
