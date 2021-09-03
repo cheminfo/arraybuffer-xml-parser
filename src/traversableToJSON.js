@@ -22,7 +22,7 @@ export function traversableToJSON(node, options, parentTagName) {
   // when no child node or attr is present
   if (
     (!node.children || isEmptyObject(node.children)) &&
-    (!node.attrsMap || isEmptyObject(node.attrsMap))
+    (!node.attributes || isEmptyObject(node.attributes))
   ) {
     return node.val === undefined ? '' : node.val;
   }
@@ -38,7 +38,7 @@ export function traversableToJSON(node, options, parentTagName) {
     result[options.textNodeName] = asArray ? [node.val] : node.val;
   }
 
-  merge(result, node.attrsMap, arrayMode);
+  merge(result, node.attributes, arrayMode);
 
   const keys = Object.keys(node.children);
   for (let index = 0; index < keys.length; index++) {

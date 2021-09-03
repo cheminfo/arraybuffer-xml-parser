@@ -52,8 +52,8 @@ export function getTraversable(xmlData, options) {
           options.stopNodes.includes(currentNode.tagName)
         ) {
           currentNode.children = [];
-          if (currentNode.attrsMap === undefined) {
-            currentNode.attrsMap = {};
+          if (currentNode.attributes === undefined) {
+            currentNode.attributes = {};
           }
           currentNode.val = xmlData.subarray(currentNode.startIndex + 1, i);
         }
@@ -191,7 +191,10 @@ export function getTraversable(xmlData, options) {
 
           const childNode = new XMLNode(tagName, currentNode, '');
           if (tagAttributes) {
-            childNode.attrsMap = parseAttributesString(tagAttributes, options);
+            childNode.attributes = parseAttributesString(
+              tagAttributes,
+              options,
+            );
           }
           currentNode.addChild(childNode);
         } else {
@@ -205,7 +208,10 @@ export function getTraversable(xmlData, options) {
             childNode.startIndex = closeIndex;
           }
           if (tagAttributes && shouldBuildAttributesMap) {
-            childNode.attrsMap = parseAttributesString(tagAttributes, options);
+            childNode.attributes = parseAttributesString(
+              tagAttributes,
+              options,
+            );
           }
           currentNode.addChild(childNode);
           currentNode = childNode;

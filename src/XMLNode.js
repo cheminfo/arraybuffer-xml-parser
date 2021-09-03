@@ -1,10 +1,10 @@
 export class XMLNode {
-  constructor(tagName, parent, val) {
+  constructor(tagName, parent, value) {
     this.tagName = tagName;
     this.parent = parent;
     this.children = Object.create({}); //child tags
-    this.attrsMap = Object.create({}); //attributes map
-    this.val = val; //text only
+    this.attributes = Object.create({}); //attributes map
+    this.val = value; //text only
     this.startIndex = -1;
   }
   addChild(child) {
