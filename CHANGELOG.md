@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.1.0...v0.2.0) (2021-09-03)
+
+
+### Bug Fixes
+
+* publish ([b868fce](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/b868fce371514607ffb19dc577a6db94df817665))
+
 ## 0.1.0 (2021-09-03)
 
 
