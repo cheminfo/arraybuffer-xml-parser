@@ -42,11 +42,11 @@ export function parseAttributesString(string, options) {
   return attributes;
 }
 
-function stringParseValue(val, shouldParse) {
-  if (shouldParse && typeof val === 'string') {
-    return parseString(val);
+function stringParseValue(value, shouldParse) {
+  if (shouldParse && typeof value === 'string') {
+    return parseString(value);
   } else {
-    return val === undefined ? '' : val;
+    return value === undefined ? '' : value;
   }
 }
 

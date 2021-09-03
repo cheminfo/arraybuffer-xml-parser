@@ -4,7 +4,7 @@ export class XMLNode {
     this.parent = parent;
     this.children = Object.create({}); //child tags
     this.attributes = Object.create({}); //attributes map
-    this.val = value; //text only
+    this.value = value; //text only
     this.startIndex = -1;
   }
   addChild(child) {

@@ -14,28 +14,28 @@ export function traversableToJSON(node, options, parentTagName) {
   const result = {};
 
   if (tagValueProcessor) {
-    node.val = node.val && tagValueProcessor(node.val, node);
+    node.value = node.value && tagValueProcessor(node.value, node);
   }
-  if (typeof node.val === 'string' && dynamicTypingNodeValue) {
-    node.val = parseString(node.val);
+  if (typeof node.value === 'string' && dynamicTypingNodeValue) {
+    node.value = parseString(node.value);
   }
   // when no child node or attr is present
   if (
     (!node.children || isEmptyObject(node.children)) &&
     (!node.attributes || isEmptyObject(node.attributes))
   ) {
-    return node.val === undefined ? '' : node.val;
+    return node.value === undefined ? '' : node.value;
   }
 
   // otherwise create a textnode if node has some text
-  if (node.val !== undefined && node.val.length !== 0) {
+  if (node.value !== undefined && node.value.length !== 0) {
     const asArray = isTagNameInArrayMode(
       node.tagName,
       arrayMode,
       parentTagName,
     );
 
-    result[options.textNodeName] = asArray ? [node.val] : node.val;
+    result[options.textNodeName] = asArray ? [node.value] : node.value;
   }
 
   merge(result, node.attributes, arrayMode);

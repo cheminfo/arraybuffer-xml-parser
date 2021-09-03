@@ -41,10 +41,10 @@ export function getTraversable(xmlData, options) {
           const value = options.trimValues
             ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
             : xmlData.subarray(dataIndex, dataIndex + dataSize);
-          if (currentNode.val === undefined) {
-            currentNode.val = value;
+          if (currentNode.value === undefined) {
+            currentNode.value = value;
           } else {
-            currentNode.val = concat(currentNode.val, value);
+            currentNode.value = concat(currentNode.value, value);
           }
         }
         if (
@@ -55,7 +55,7 @@ export function getTraversable(xmlData, options) {
           if (currentNode.attributes === undefined) {
             currentNode.attributes = {};
           }
-          currentNode.val = xmlData.subarray(currentNode.startIndex + 1, i);
+          currentNode.value = xmlData.subarray(currentNode.startIndex + 1, i);
         }
         currentNode = currentNode.parent;
         i = closeIndex;
@@ -78,8 +78,8 @@ export function getTraversable(xmlData, options) {
         );
         if (currentNode && dataSize !== 0) {
           if (currentNode.tagName !== '!xml') {
-            currentNode.val = concat(
-              currentNode.val,
+            currentNode.value = concat(
+              currentNode.value,
               options.trimValues
                 ? arrayTrim(xmlData.subarray(dataIndex, dataSize + dataIndex))
                 : xmlData.subarray(dataIndex, dataSize + dataIndex),
@@ -122,7 +122,7 @@ export function getTraversable(xmlData, options) {
             ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
             : xmlData.subarray(dataIndex, dataIndex + dataSize);
 
-          currentNode.val = concat(currentNode.val, value);
+          currentNode.value = concat(currentNode.value, value);
         }
 
         if (options.cdataTagName) {
@@ -135,10 +135,10 @@ export function getTraversable(xmlData, options) {
           currentNode.addChild(childNode);
           //add rest value to parent node
           if (tagExp) {
-            childNode.val = tagExp;
+            childNode.value = tagExp;
           }
         } else {
-          currentNode.val = concat(currentNode.val, tagExp);
+          currentNode.value = concat(currentNode.value, tagExp);
         }
 
         i = closeIndex + 2;
@@ -169,8 +169,8 @@ export function getTraversable(xmlData, options) {
         //save text to parent node
         if (currentNode && dataSize !== 0) {
           if (currentNode.tagName !== '!xml') {
-            currentNode.val = concat(
-              currentNode.val,
+            currentNode.value = concat(
+              currentNode.value,
               options.trimValues
                 ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
                 : xmlData.subarray(dataIndex, dataIndex + dataSize),
