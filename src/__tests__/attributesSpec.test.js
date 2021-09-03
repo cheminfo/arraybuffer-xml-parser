@@ -24,7 +24,6 @@ describe('XMLParser', () => {
       dynamicTypingAttributeValue: true,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     //result = validator.validate(xmlData);
@@ -49,7 +48,6 @@ describe('XMLParser', () => {
       dynamicTypingAttributeValue: true,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     //result = validator.validate(xmlData);
@@ -74,11 +72,7 @@ describe('XMLParser', () => {
       dynamicTypingAttributeValue: true,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('should parse Boolean Attributes', () => {
@@ -104,13 +98,11 @@ describe('XMLParser', () => {
       allowBooleanAttributes: true,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
     // });
-    // expect(result).toBe(true);
   });
 
   it('should not remove xmlns when namespaces are not set to be ignored', () => {
@@ -131,13 +123,11 @@ describe('XMLParser', () => {
       ignoreAttributes: false,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
     // });
-    // expect(result).toBe(true);
   });
 
   it('should remove xmlns when namespaces are set to be ignored', () => {
@@ -159,7 +149,6 @@ describe('XMLParser', () => {
       ignoreNameSpace: true,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {

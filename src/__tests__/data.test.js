@@ -27,11 +27,7 @@ describe('XMLParser', () => {
       //dynamicTypingAttributeValue: true
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('should parse attributes with valid names', () => {
@@ -71,7 +67,6 @@ describe('XMLParser', () => {
       allowBooleanAttributes: true,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
   });
 
@@ -141,7 +136,6 @@ describe('XMLParser', () => {
       true,
     );
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
   });
 
@@ -246,7 +240,7 @@ describe('XMLParser', () => {
       attributesNodeName: '$',
       attributeNamePrefix: '',
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 

@@ -2,6 +2,13 @@ import { parseString } from 'dynamic-typing';
 
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 
+/**
+ *
+ * @param {*} node
+ * @param {*} options
+ * @param {*} parentTagName
+ * @returns
+ */
 export function traversableToJSON(node, options, parentTagName) {
   const { dynamicTypingNodeValue, tagValueProcessor, arrayMode } = options;
   const result = {};
@@ -14,7 +21,7 @@ export function traversableToJSON(node, options, parentTagName) {
   }
   // when no child node or attr is present
   if (
-    (!node.child || isEmptyObject(node.child)) &&
+    (!node.children || isEmptyObject(node.children)) &&
     (!node.attrsMap || isEmptyObject(node.attrsMap))
   ) {
     return node.val === undefined ? '' : node.val;
@@ -33,21 +40,21 @@ export function traversableToJSON(node, options, parentTagName) {
 
   merge(result, node.attrsMap, arrayMode);
 
-  const keys = Object.keys(node.child);
+  const keys = Object.keys(node.children);
   for (let index = 0; index < keys.length; index++) {
     const tagName = keys[index];
-    if (node.child[tagName] && node.child[tagName].length > 1) {
+    if (node.children[tagName] && node.children[tagName].length > 1) {
       result[tagName] = [];
-      for (let tag in node.child[tagName]) {
-        if (Object.prototype.hasOwnProperty.call(node.child[tagName], tag)) {
+      for (let tag in node.children[tagName]) {
+        if (Object.prototype.hasOwnProperty.call(node.children[tagName], tag)) {
           result[tagName].push(
-            traversableToJSON(node.child[tagName][tag], options, tagName),
+            traversableToJSON(node.children[tagName][tag], options, tagName),
           );
         }
       }
     } else {
       const subResult = traversableToJSON(
-        node.child[tagName][0],
+        node.children[tagName][0],
         options,
         tagName,
       );

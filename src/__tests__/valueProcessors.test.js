@@ -41,11 +41,7 @@ describe('XMLParser', () => {
       attributeValueProcessor: (a) => he.decode(a, { isAttributeValue: true }),
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('tag value processor should be called with value, tag name and node', () => {
@@ -132,7 +128,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       tagValueProcessor: () => '',
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -161,7 +157,7 @@ describe('XMLParser', () => {
         return 'fxp';
       },
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 

@@ -20,11 +20,7 @@ describe('XMLParser', () => {
       stopNodes: ['fix1'],
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('1b. 3. should support more than one stopNodes, with or without attr', () => {
@@ -48,11 +44,7 @@ describe('XMLParser', () => {
       stopNodes: ['fix1', 'fix2'],
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('1c. have two stopNodes, one within the other', () => {
@@ -76,11 +68,7 @@ describe('XMLParser', () => {
       stopNodes: ['fix1', 'fix2'],
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('2a. stop node has nothing in it', () => {
@@ -100,11 +88,7 @@ describe('XMLParser', () => {
       stopNodes: ['fix1', 'fix2'],
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('2b. stop node is self-closing', () => {
@@ -124,11 +108,7 @@ describe('XMLParser', () => {
       stopNodes: ['fix1', 'fix2'],
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('4. cdata', () => {
@@ -158,13 +138,11 @@ describe('XMLParser', () => {
       stopNodes: ['fix1', 'fix2'],
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
     // });
-    // expect(result).toBe(true);
   });
 
   it('5. stopNode at root level', () => {
@@ -181,12 +159,10 @@ describe('XMLParser', () => {
       stopNodes: ['fix1', 'fix2'],
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     // result = validator.validate(xmlData, {
     //   allowBooleanAttributes: true,
     // });
-    // expect(result).toBe(true);
   });
 });

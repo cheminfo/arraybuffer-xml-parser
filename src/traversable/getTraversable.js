@@ -51,7 +51,7 @@ export function getTraversable(xmlData, options) {
           options.stopNodes.length &&
           options.stopNodes.includes(currentNode.tagName)
         ) {
-          currentNode.child = [];
+          currentNode.children = [];
           if (currentNode.attrsMap === undefined) {
             currentNode.attrsMap = {};
           }

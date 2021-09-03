@@ -84,7 +84,7 @@ describe('XMLParser', () => {
       attributeNamePrefix: '@',
       textNodeName: '#_text',
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
   it('should parse all values as string, int, boolean, float, hexadecimal', () => {
@@ -105,7 +105,7 @@ describe('XMLParser', () => {
       },
     };
     const result = parse(xmlData);
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -128,7 +128,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData);
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -151,7 +151,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, { dynamicTypingNodeValue: false });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -176,7 +176,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       dynamicTypingAttributeValue: true,
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -569,7 +569,6 @@ describe('XMLParser', () => {
       dynamicTypingAttributeValue: false,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
   });
 
@@ -617,7 +616,7 @@ describe('XMLParser', () => {
       dynamicTypingNodeValue: false,
       trimValues: false,
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -629,7 +628,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       dynamicTypingNodeValue: false,
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -643,7 +642,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       dynamicTypingNodeValue: false,
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -667,7 +666,7 @@ describe('XMLParser', () => {
       //dynamicTypingNodeValue: false,
       //trimValues: false
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -693,7 +692,7 @@ describe('XMLParser', () => {
       },
     };
     const result = parse(xmlData);
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 });

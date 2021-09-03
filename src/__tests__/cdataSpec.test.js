@@ -20,9 +20,6 @@ patronymic</person></root>`);
       },
     };
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
   it('should parse tag having CDATA', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
@@ -52,12 +49,7 @@ patronymic</person></root>`);
       ignoreAttributes: false,
     });
 
-    //console.log(JSON.stringify(result,null,4));
-
     expect(result).toStrictEqual(expected);
-
-    // result = validator.validate(xmlData);
-    // expect(result).toBe(true);
   });
 
   it('should parse tag having CDATA 2', () => {
@@ -117,7 +109,6 @@ patronymic</person></root>`);
       ignoreAttributes: false,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
 
     //    result = validator.validate(xmlData);
@@ -187,7 +178,6 @@ patronymic</person></root>`);
       ignoreAttributes: false,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
   });
 
@@ -212,7 +202,6 @@ patronymic</person></root>`);
       ignoreAttributes: false,
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
   });
 
@@ -247,7 +236,6 @@ patronymic</person></root>`);
       cdataPositddionChar: '',
     });
 
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toStrictEqual(expected);
   });
 
@@ -273,7 +261,7 @@ patronymic</person></root>`);
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });
-    //console.log(JSON.stringify(result,null,4));
+
     expect(result).toStrictEqual(expected);
   });
 });
