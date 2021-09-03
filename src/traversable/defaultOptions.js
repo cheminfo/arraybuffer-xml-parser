@@ -7,16 +7,15 @@ export const decoder = {
 };
 
 export const defaultOptions = {
+  trimValues: true,
   attributeNamePrefix: '@_',
   attributesNodeName: false,
-  textNodeName: '#text',
-
-  trimValues: true,
-
   ignoreAttributes: false,
   ignoreNameSpace: false,
-  dynamicTypingAttributeValue: true,
   allowBooleanAttributes: false,
+  dynamicTypingAttributeValue: true,
+
+  textNodeName: '#text',
 
   dynamicTypingNodeValue: true,
   arrayMode: false,
