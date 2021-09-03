@@ -1,4 +1,4 @@
-import { decode as base64decode } from 'base64-arraybuffer';
+import { decode as base64decode } from 'uint8-base64';
 
 import { parse } from '../parse';
 // library to convert base64 <--> arrayBuffer: https://github.com/niklasvh/base64-arraybuffer/blob/master/src/index.ts
@@ -19,8 +19,9 @@ test('base64 parsing', () => {
     tagValueProcessor: (value, node) => {
       // console.log(node.parent.child.cvParam);
       if (node.tagName !== 'binary') return decoder.decode(value);
-      const decoded = base64decode(decoder.decode(value));
-      return new Float64Array(decoded);
+      const decoded = base64decode(value);
+      // isLittleEndian and the data were encoded in littleEndian
+      return new Float64Array(decoded.buffer);
     },
   });
   expect(result.binaryDataArray.binary).toStrictEqual(
