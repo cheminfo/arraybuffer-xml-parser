@@ -6,7 +6,7 @@ import { traversableToJSON } from './traversableToJSON';
  * Parse an ArrayBuffer or Uint8Array representing an XML
  * @param {ArrayBuffer|Uint8Arra} xmlData
  * @param {object} [options={}]
- * @param {string} [attributeNamePrefix='@_']
+ * @param {string} [attributeNamePrefix='$']
  * @param {boolean} [attributesNodeName=false]
  * @param {string} [textNodeName='#text']
  * @param {boolean} [trimValues=true] should we remove ascii < 32

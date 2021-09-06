@@ -25,15 +25,15 @@ export function isEmptyObject(obj) {
 /**
  * Copy all the properties of a into b.
  * @param {object} target
- * @param {object} a
+ * @param {object} source
  */
-export function merge(target, a, arrayMode) {
-  if (!a) return;
-  for (const key in a) {
+export function merge(target, source, arrayMode) {
+  if (!source) return;
+  for (const key in source) {
     if (arrayMode === 'strict') {
-      target[key] = [a[key]];
+      target[key] = [source[key]];
     } else {
-      target[key] = a[key];
+      target[key] = source[key];
     }
   }
 }

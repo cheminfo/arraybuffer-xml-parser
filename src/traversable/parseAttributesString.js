@@ -1,6 +1,6 @@
 import { parseString } from 'dynamic-typing';
 
-import { getAllMatches } from '../util';
+import { getAllMatches, isEmptyObject } from '../util';
 
 const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 const attrsRegx = new RegExp(newLocal, 'g');
@@ -22,23 +22,16 @@ export function parseAttributesString(string, options) {
           match[4] = match[4].trim();
         }
         match[4] = options.attributeValueProcessor(match[4], attrName);
-        attributes[options.attributeNamePrefix + attrName] = stringParseValue(
+        attributes[attrName] = stringParseValue(
           match[4],
           options.dynamicTypingAttributeValue,
         );
       } else if (options.allowBooleanAttributes) {
-        attributes[options.attributeNamePrefix + attrName] = true;
+        attributes[attrName] = true;
       }
     }
   }
-  if (!Object.keys(attributes).length) {
-    return;
-  }
-  if (options.attributesNodeName) {
-    const attrCollection = {};
-    attrCollection[options.attributesNodeName] = attributes;
-    return attrCollection;
-  }
+  if (isEmptyObject(attributes)) return;
   return attributes;
 }
 

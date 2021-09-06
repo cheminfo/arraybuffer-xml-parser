@@ -38,7 +38,24 @@ export function traversableToJSON(node, options, parentTagName) {
     result[options.textNodeName] = asArray ? [node.value] : node.value;
   }
 
-  merge(result, node.attributes, arrayMode);
+  if (node.attributes && !isEmptyObject(node.attributes)) {
+    let attributes = options.parseAttributesString ? {} : node.attributes;
+    if (options.attributeNamePrefix) {
+      // need to rename the attributes
+      const renamedAttributes = {};
+      for (let key in node.attributes) {
+        renamedAttributes[options.attributeNamePrefix + key] =
+          node.attributes[key];
+      }
+      attributes = renamedAttributes;
+    }
+    if (options.attributesNodeName) {
+      let encapsulatedAttributes = {};
+      encapsulatedAttributes[options.attributesNodeName] = attributes;
+      attributes = encapsulatedAttributes;
+    }
+    merge(result, attributes, arrayMode);
+  }
 
   const keys = Object.keys(node.children);
   for (let index = 0; index < keys.length; index++) {
