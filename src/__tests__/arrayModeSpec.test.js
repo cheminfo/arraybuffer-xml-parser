@@ -39,12 +39,12 @@ describe('XMLParser with arrayMode enabled', () => {
                 {
                   item: [
                     {
-                      '@_grade': 'A',
+                      $grade: 'A',
                       name: 'Banana',
                       count: 200,
                     },
                     {
-                      '@_grade': 'B',
+                      $grade: 'B',
                       name: 'Apple',
                       count: 100,
                     },
@@ -114,12 +114,12 @@ describe('XMLParser with arrayMode enabled', () => {
                 {
                   item: [
                     {
-                      '@_grade': ['A'],
+                      $grade: ['A'],
                       name: ['Banana'],
                       count: [200],
                     },
                     {
-                      '@_grade': ['B'],
+                      $grade: ['B'],
                       name: ['Apple'],
                       count: [100],
                     },
@@ -188,12 +188,12 @@ describe('XMLParser with arrayMode enabled', () => {
               {
                 item: [
                   {
-                    '@_grade': 'A',
+                    $grade: 'A',
                     name: 'Banana',
                     count: 200,
                   },
                   {
-                    '@_grade': 'B',
+                    $grade: 'B',
                     name: 'Apple',
                     count: 100,
                   },
@@ -267,12 +267,12 @@ describe('XMLParser with arrayMode enabled', () => {
             inventory: {
               item: [
                 {
-                  '@_grade': 'A',
+                  $grade: 'A',
                   name: 'Banana',
                   count: 200,
                 },
                 {
-                  '@_grade': 'B',
+                  $grade: 'B',
                   name: 'Apple',
                   count: 100,
                 },

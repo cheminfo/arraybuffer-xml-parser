@@ -63,15 +63,15 @@ patronymic</person></root>`);
       'sql-queries': {
         'sql-query': [
           {
-            '@_id': 'testquery',
+            '$id': 'testquery',
             '#text': 'select * from search_urls',
           },
           {
-            '@_id': 'searchinfo',
+            '$id': 'searchinfo',
             '#text': 'select * from search_urls where search_urls=?',
           },
           {
-            '@_id': 'searchurls',
+            '$id': 'searchurls',
             '#text': 'select search_url from search_urls ',
           },
         ],
@@ -247,13 +247,13 @@ patronymic</person></root>`);
         ptag: [
           {
             nestedtag: 'nesteddata',
-            '@_attr': 'val',
-            '@_boolean': true,
+            '$attr': 'val',
+            '$boolean': true,
             '#text': 'some dataafter',
           },
           'before text\n        <nestedtag>\n            nested cdata 1<!--single line comment-->\n        </nestedtag>\n    middle\n        <nestedtag>\n            nested cdata 2<!--multi line\n             comment-->\n        </nestedtag>\n    after\n        <nestedtag>\n            nested cdata 3\n        </nestedtag>\n    end',
         ],
-        '@_xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+        '$xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
       },
     };
 

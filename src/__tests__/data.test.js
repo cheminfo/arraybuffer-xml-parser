@@ -46,13 +46,13 @@ describe('XMLParser', () => {
         '#text': 'as well',
         bug: {
           '#text': 'valhere',
-          '@_atr': 'sasa',
-          '@_boolean': true,
+          $atr: 'sasa',
+          $boolean: true,
           b: '',
           br: [
             '',
             {
-              '@_b': true,
+              $b: true,
             },
           ],
           c: 'some',
@@ -86,11 +86,11 @@ describe('XMLParser', () => {
     </a:root>`);
     const expected = {
       'a:root': {
-        '@_xmlns:a': 'urn:none',
-        '@_xmlns:a-b': 'urn:none',
+        '$xmlns:a': 'urn:none',
+        '$xmlns:a-b': 'urn:none',
         'a:a': {
           '#text': 1,
-          '@_attr': '2foo&ampbar&apos;',
+          $attr: '2foo&ampbar&apos;',
         },
         'a:b': 2,
         'a-b:b-a': 2,
@@ -99,7 +99,7 @@ describe('XMLParser', () => {
         'c:string': {
           '#text':
             '&#x441;&#x442;&#x440;&#x430;&#x445;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x44f;    » &#x43e;&#x442; &#x441;&#x443;&#x43c;&#x43c;&#x44b;     &#x435;&#x433;&#x43e; &#x430;&#x43a;&#x442;&#x438;&#x432;&#x43e;&#x432;',
-          '@_lang': 'ru',
+          $lang: 'ru',
         },
       },
     };
@@ -120,7 +120,7 @@ describe('XMLParser', () => {
 
     const expected = {
       'a:root': {
-        '@_attr': 'df',
+        $attr: 'df',
         '#text': 'val',
       },
     };
@@ -181,8 +181,8 @@ describe('XMLParser', () => {
       b: 'c',
       d: '',
       e: {
-        '@_atr': 'sasa',
-        '@_boolean': true,
+        $atr: 'sasa',
+        $boolean: true,
       },
     };
 

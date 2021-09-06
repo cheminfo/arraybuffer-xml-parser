@@ -168,7 +168,7 @@ describe('XMLParser', () => {
         floatTag1: 1,
         floatTag2: 2,
         floatTag3: {
-          '@_float': 3,
+          $float: 3,
         },
       },
     };
@@ -207,10 +207,10 @@ describe('XMLParser', () => {
       rootNode: {
         tag: {
           '#text': 'value',
-          '@_int': 45,
-          '@_intNegative': -45,
-          '@_float': 65.34,
-          '@_floatNegative': -65.34,
+          $int: 45,
+          $intNegative: -45,
+          $float: 65.34,
+          $floatNegative: -65.34,
         },
       },
     };
@@ -271,17 +271,17 @@ describe('XMLParser', () => {
     const expected = {
       node: {
         tag: {
-          '@_arg': 'value',
+          $arg: 'value',
           '#text': 'value',
         },
         intTag: {
-          '@_arg': 'value',
-          '@_arg2': 'value2',
+          $arg: 'value',
+          $arg2: 'value2',
           '#text': 45,
         },
         floatTag: 65.34,
         nsTag: {
-          '@_attr': 'tns',
+          $attr: 'tns',
           //"#text": ""
         },
         nsTagNoAttr: '',
@@ -314,7 +314,7 @@ describe('XMLParser', () => {
     const expected = {
       rootNode: {
         tag: {
-          '@_ns:arg': 'value',
+          '$ns:arg': 'value',
         },
       },
     };
@@ -327,7 +327,7 @@ describe('XMLParser', () => {
     const xmlData = encoder.encode(`<tag arg='value'/>`);
     const expected = {
       tag: {
-        '@_arg': 'value',
+        $arg: 'value',
       },
     };
 
@@ -392,26 +392,26 @@ describe('XMLParser', () => {
       rootNode: {
         parenttag: [
           {
-            '@_attr1': 'some val',
-            '@_attr2': 'another val',
+            $attr1: 'some val',
+            $attr2: 'another val',
             tag: [
               'value',
               {
-                '@_attr1': 'val',
-                '@_attr2': '234',
+                $attr1: 'val',
+                $attr2: '234',
                 '#text': 45,
               },
               65.34,
             ],
           },
           {
-            '@_attr1': 'some val',
-            '@_attr2': 'another val',
+            $attr1: 'some val',
+            $attr2: 'another val',
             tag: [
               'value',
               {
-                '@_attr1': 'val',
-                '@_attr2': '234',
+                $attr1: 'val',
+                $attr2: '234',
                 '#text': 45,
               },
               65.34,
@@ -433,8 +433,8 @@ describe('XMLParser', () => {
     );
     const expected = {
       rootNode: {
-        '@_attr1': ' some val ',
-        '@_name': 'another val',
+        $attr1: ' some val ',
+        $name: 'another val',
         '#text': ' some val ',
       },
     };
@@ -451,8 +451,8 @@ describe('XMLParser', () => {
     );
     const expected = {
       rootNode: {
-        '@_attr1': 'some val',
-        '@_attr2': 'another val',
+        $attr1: 'some val',
+        $attr2: 'another val',
         '#text': 'val',
       },
     };
@@ -504,15 +504,15 @@ describe('XMLParser', () => {
     const expected = {
       root: {
         Meet: {
-          '@_date': '2017-05-03',
-          '@_type': 'A',
-          '@_name': "Meeting 'A'",
+          $date: '2017-05-03',
+          $type: 'A',
+          $name: "Meeting 'A'",
           Event: {
-            '@_time': '00:05:00',
-            '@_ID': '574',
-            '@_Name': 'Some Event Name',
+            $time: '00:05:00',
+            $ID: '574',
+            $Name: 'Some Event Name',
             User: {
-              '@_ID': '1',
+              $ID: '1',
               '#text': 'Bob',
             },
           },
