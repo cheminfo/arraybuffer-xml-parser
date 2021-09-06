@@ -63,15 +63,15 @@ patronymic</person></root>`);
       'sql-queries': {
         'sql-query': [
           {
-            '$id': 'testquery',
+            $id: 'testquery',
             '#text': 'select * from search_urls',
           },
           {
-            '$id': 'searchinfo',
+            $id: 'searchinfo',
             '#text': 'select * from search_urls where search_urls=?',
           },
           {
-            '$id': 'searchurls',
+            $id: 'searchurls',
             '#text': 'select search_url from search_urls ',
           },
         ],
@@ -247,8 +247,8 @@ patronymic</person></root>`);
         ptag: [
           {
             nestedtag: 'nesteddata',
-            '$attr': 'val',
-            '$boolean': true,
+            $attr: 'val',
+            $boolean: true,
             '#text': 'some dataafter',
           },
           'before text\n        <nestedtag>\n            nested cdata 1<!--single line comment-->\n        </nestedtag>\n    middle\n        <nestedtag>\n            nested cdata 2<!--multi line\n             comment-->\n        </nestedtag>\n    after\n        <nestedtag>\n            nested cdata 3\n        </nestedtag>\n    end',
