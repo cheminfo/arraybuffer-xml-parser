@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.2.0...v0.3.0) (2021-09-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Only change attribute names when creating JSON
+* attributeNamePrefix is by default '$'
+
+### Features
+
+* Only change attribute names when creating JSON ([8a8a3ba](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/8a8a3ba1bcd652be39cc659b42f717627141d9b4))
+
+
+### Miscellaneous Chores
+
+* attributeNamePrefix is by default '$' ([dc34e74](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/dc34e748d36220000784bdee9e829695e94589a1))
+
 ## [0.2.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.1.0...v0.2.0) (2021-09-03)
 
 
