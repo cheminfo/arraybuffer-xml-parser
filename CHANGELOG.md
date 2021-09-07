@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.3.0...v0.4.0) (2021-09-07)
+
+
+### Features
+
+* deal with bigint64 ([04a3ae8](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/04a3ae88292d531fe9a36d991fa8fb78a614bc94))
+
 ## [0.3.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.2.0...v0.3.0) (2021-09-06)
 
 
