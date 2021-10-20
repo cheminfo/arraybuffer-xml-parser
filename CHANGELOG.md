@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.4.0...v0.5.0) (2021-10-20)
+
+
+### Features
+
+* add tagNameProcessor and attributeNameProcessor ([1ed2965](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/1ed296551d04197609a5d30971d5096db812baa7))
+
 ## [0.4.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.3.0...v0.4.0) (2021-09-07)
 
 
