@@ -11,12 +11,12 @@ describe('arrayIndexOf', () => {
     const singleTest = new Uint8Array([0x2e]);
     const repeaTest = new Uint8Array([0x5d, 0x5d, 0x3e]);
     const repeats = new Uint8Array([0x5d, 0x5d, 0x5d, 0x5d, 0x3e, 0x5d]);
-    expect(arrayIndexOf(whole, testString)).toStrictEqual(0);
-    expect(arrayIndexOf(sandwiched, testString)).toStrictEqual(1);
+    expect(arrayIndexOf(whole, testString)).toBe(0);
+    expect(arrayIndexOf(sandwiched, testString)).toBe(1);
     expect(arrayIndexOf(notIn, testString)).toStrictEqual(-1);
     expect(
       arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest),
-    ).toStrictEqual(1);
-    expect(arrayIndexOf(repeats, repeaTest)).toStrictEqual(2);
+    ).toBe(1);
+    expect(arrayIndexOf(repeats, repeaTest)).toBe(2);
   });
 });

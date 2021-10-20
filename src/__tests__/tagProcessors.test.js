@@ -1,6 +1,4 @@
-/* eslint-disable camelcase */
 /* eslint-disable no-tabs */
-import he from 'he';
 
 import { parse } from '../parse';
 
