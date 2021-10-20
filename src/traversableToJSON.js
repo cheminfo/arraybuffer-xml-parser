@@ -10,7 +10,13 @@ import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
  * @returns
  */
 export function traversableToJSON(node, options, parentTagName) {
-  const { dynamicTypingNodeValue, tagValueProcessor, arrayMode } = options;
+  const {
+    dynamicTypingNodeValue,
+    tagValueProcessor,
+    arrayMode,
+    tagNameProcessor,
+    attributeNameProcessor,
+  } = options;
   const result = {};
 
   if (tagValueProcessor) {
@@ -43,9 +49,12 @@ export function traversableToJSON(node, options, parentTagName) {
     if (options.attributeNamePrefix) {
       // need to rename the attributes
       const renamedAttributes = {};
-      for (let key in node.attributes) {
-        renamedAttributes[options.attributeNamePrefix + key] =
-          node.attributes[key];
+      for (let attributeName in node.attributes) {
+        const newAttributeName = attributeNameProcessor
+          ? attributeNameProcessor(attributeName)
+          : attributeName;
+        renamedAttributes[options.attributeNamePrefix + newAttributeName] =
+          node.attributes[attributeName];
       }
       attributes = renamedAttributes;
     }
@@ -57,14 +66,13 @@ export function traversableToJSON(node, options, parentTagName) {
     merge(result, attributes, arrayMode);
   }
 
-  const keys = Object.keys(node.children);
-  for (let index = 0; index < keys.length; index++) {
-    const tagName = keys[index];
+  for (const tagName in node.children) {
+    const newTagName = tagNameProcessor ? tagNameProcessor(tagName) : tagName;
     if (node.children[tagName] && node.children[tagName].length > 1) {
       result[tagName] = [];
       for (let tag in node.children[tagName]) {
         if (Object.prototype.hasOwnProperty.call(node.children[tagName], tag)) {
-          result[tagName].push(
+          result[newTagName].push(
             traversableToJSON(node.children[tagName][tag], options, tagName),
           );
         }
@@ -78,7 +86,7 @@ export function traversableToJSON(node, options, parentTagName) {
       const asArray =
         (arrayMode === true && typeof subResult === 'object') ||
         isTagNameInArrayMode(tagName, arrayMode, parentTagName);
-      result[tagName] = asArray ? [subResult] : subResult;
+      result[newTagName] = asArray ? [subResult] : subResult;
     }
   }
 

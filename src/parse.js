@@ -4,22 +4,24 @@ import { traversableToJSON } from './traversableToJSON';
 
 /**
  * Parse an ArrayBuffer or Uint8Array representing an XML
- * @param {ArrayBuffer|Uint8Arra} xmlData
+ * @param {string|ArrayBuffer|Uint8Array} xmlData
  * @param {object} [options={}]
- * @param {string} [attributeNamePrefix='$']
- * @param {boolean} [attributesNodeName=false]
- * @param {string} [textNodeName='#text']
- * @param {boolean} [trimValues=true] should we remove ascii < 32
- * @param {boolean} [ignoreAttributes=false] skip attributes
- * @param {boolean} [ignoreNameSpace=false]
- * @param {boolean} [dynamicTypingAttributeValue=true] Parse attribute values that looks like number or boolean
- * @param {boolean} [allowBooleanAttributes=false]
- * @param {boolean} [dynamicTypingNodeValue=true] Parse tag values that looks like number or boolean
- * @param {boolean} [arrayMode=false]
- * @param {boolean} [cdataTagName=false]
- * @param {function} [tagValueProcessor=(v, node) => decoder.decode(v)] Tag values can be modified during parsing. By default we decode the tag value (a Uint8Array) using TextDecoder
- * @param {function} [attributeValueProcessor=(v) => v] Attribute values can be modified during parsing
- * @param {boolean} [stopNodes=[]] prevent further parsing
+ * @param {string} [options.attributeNamePrefix='$']
+ * @param {boolean} [options.attributesNodeName=false]
+ * @param {string} [options.textNodeName='#text']
+ * @param {boolean} [options.trimValues=true] should we remove ascii < 32
+ * @param {boolean} [options.ignoreAttributes=false] skip attributes
+ * @param {boolean} [options.ignoreNameSpace=false]
+ * @param {boolean} [options.dynamicTypingAttributeValue=true] Parse attribute values that looks like number or boolean
+ * @param {boolean} [options.allowBooleanAttributes=false]
+ * @param {boolean} [options.dynamicTypingNodeValue=true] Parse tag values that looks like number or boolean
+ * @param {boolean} [options.arrayMode=false]
+ * @param {boolean} [options.cdataTagName=false]
+ * @param {function} [options.tagValueProcessor=(v, node) => decoder.decode(v)] Tag values can be modified during parsing. By default we decode the tag value (a Uint8Array) using TextDecoder
+ * @param {function} [options.attributeValueProcessor=(v) => v] Attribute values can be modified during parsing
+ * @param {function} [options.tagNameProcessor=(v) => v] Callback allowing to rename tag names
+ * @param {function} [options.attributeNameProcessor=(v) => v] Callback allowing to rename attribute name
+ * @param {boolean} [options.stopNodes=[]] prevent further parsing
  *
  * @returns {object}
  */

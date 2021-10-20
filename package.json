@@ -35,19 +35,19 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.15.4",
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.0.2",
     "cheminfo-build": "^1.1.11",
-    "eslint": "^7.32.0",
-    "eslint-config-cheminfo": "^5.4.0",
+    "eslint": "^8.0.1",
+    "eslint-config-cheminfo": "^7.1.1",
     "he": "^1.2.0",
-    "iobuffer": "^5.0.3",
-    "jest": "^27.1.0",
+    "iobuffer": "^5.0.4",
+    "jest": "^27.3.1",
     "pako": "^2.0.4",
-    "prettier": "^2.3.2",
-    "rollup": "^2.56.3",
+    "prettier": "^2.4.1",
+    "rollup": "^2.58.0",
     "uint8-base64": "^0.1.1"
   },
   "dependencies": {
-    "dynamic-typing": "^0.1.2"
+    "dynamic-typing": "^0.1.3"
   }
 }
