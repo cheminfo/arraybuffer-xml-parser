@@ -10,7 +10,7 @@ import { traversableToJSON } from './traversableToJSON';
  * @param {boolean} [options.attributesNodeName=false]
  * @param {string} [options.textNodeName='#text']
  * @param {boolean} [options.trimValues=true] should we remove ascii < 32
- * @param {boolean} [options.ignoreAttributes=false] skip attributes
+ * @param {boolean} [options.ignoreAttributes?:boolean=false] skip attributes
  * @param {boolean} [options.ignoreNameSpace=false]
  * @param {boolean} [options.dynamicTypingAttributeValue=true] Parse attribute values that looks like number or boolean
  * @param {boolean} [options.allowBooleanAttributes=false]
@@ -25,9 +25,29 @@ import { traversableToJSON } from './traversableToJSON';
  *
  * @returns {object}
  */
-export function parse(xmlData, options = {}) {
+interface optionsType {
+  attributeNamePrefix?: string;
+  attributesNodeName?: boolean;
+  textNodeName?: string;
+  trimValues?: boolean;
+  ignoreAttributes?: boolean;
+  ignoreNameSpace?: boolean;
+  dynamicTypingAttributeValue?: boolean;
+  allowBooleanAttributes?: boolean;
+  dynamicTypingNodeValue?: boolean;
+  arrayMode?: boolean;
+  cdataTagName?: boolean;
+  tagValueProcessor?: (v: BufferSource, node?: any) => string;
+  attributeValueProcessor?: (v: BufferSource) => BufferSource;
+  tagNameProcessor?: (v: any) => any;
+  attributeNameProcessor?: (v: any) => any;
+  stopNodes?: boolean[];
+}
+export function parse(
+  xmlData: string | Uint8Array,
+  options: optionsType = {},
+): object {
   if (typeof xmlData === 'string') {
-    // eslint-disable-next-line no-undef
     const encoder = new TextEncoder();
     xmlData = encoder.encode(xmlData);
   }

@@ -1,7 +1,8 @@
-import { parseString } from 'dynamic-typing';
-
+import { XMLNode } from './XMLNode';
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { parseString } = require('dynamic-typing');
 /**
  *
  * @param {*} node
@@ -9,7 +10,22 @@ import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
  * @param {*} parentTagName
  * @returns
  */
-export function traversableToJSON(node, options, parentTagName) {
+interface optionsType {
+  dynamicTypingNodeValue?: boolean;
+  arrayMode?: boolean;
+  textNodeName?: string;
+  parseAttributesString?: string;
+  attributeNamePrefix?: string;
+  attributesNodeName?: boolean;
+  tagValueProcessor?: (v: any, node: any) => any;
+  tagNameProcessor?: (v: any) => any;
+  attributeNameProcessor?: (v: any) => any;
+}
+export function traversableToJSON(
+  node: XMLNode,
+  options: optionsType,
+  parentTagName?: any,
+) {
   const {
     dynamicTypingNodeValue,
     tagValueProcessor,
@@ -17,7 +33,7 @@ export function traversableToJSON(node, options, parentTagName) {
     tagNameProcessor,
     attributeNameProcessor,
   } = options;
-  const result = {};
+  const result: any = {};
 
   if (tagValueProcessor) {
     node.value = node.value && tagValueProcessor(node.value, node);
@@ -41,14 +57,16 @@ export function traversableToJSON(node, options, parentTagName) {
       parentTagName,
     );
 
-    result[options.textNodeName] = asArray ? [node.value] : node.value;
+    result[options.textNodeName as string] = asArray
+      ? [node.value]
+      : node.value;
   }
 
   if (node.attributes && !isEmptyObject(node.attributes)) {
     let attributes = options.parseAttributesString ? {} : node.attributes;
     if (options.attributeNamePrefix) {
       // need to rename the attributes
-      const renamedAttributes = {};
+      const renamedAttributes: any = {};
       for (let attributeName in node.attributes) {
         const newAttributeName = attributeNameProcessor
           ? attributeNameProcessor(attributeName)
@@ -59,8 +77,8 @@ export function traversableToJSON(node, options, parentTagName) {
       attributes = renamedAttributes;
     }
     if (options.attributesNodeName) {
-      let encapsulatedAttributes = {};
-      encapsulatedAttributes[options.attributesNodeName] = attributes;
+      let encapsulatedAttributes: any = {};
+      encapsulatedAttributes[options.attributesNodeName as any] = attributes;
       attributes = encapsulatedAttributes;
     }
     merge(result, attributes, arrayMode);

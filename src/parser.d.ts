@@ -34,4 +34,4 @@ export function parse(
   xmlData: string,
   options?: X2jOptionsOptional,
   validationOptions?: validationOptionsOptional | boolean,
-): any;
+): unknown;
