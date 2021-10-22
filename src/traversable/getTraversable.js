@@ -6,6 +6,7 @@ import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
 import { findClosingIndex } from './findClosingIndex.1';
 import { parseAttributesString } from './parseAttributesString';
 
+// eslint-disable-next-line no-undef
 const utf8Decoder = new TextDecoder();
 
 export const decoder = {

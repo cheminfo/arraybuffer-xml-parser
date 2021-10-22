@@ -1,4 +1,4 @@
-type X2jOptions = {
+interface X2jOptions {
   attributeNamePrefix: string;
   attributesNodeName: false | string;
   textNodeName: string;
@@ -17,18 +17,18 @@ type X2jOptions = {
   tagValueProcessor: (tagValue: string, tagName: string) => string;
   attributeValueProcessor: (attrValue: string, attrName: string) => string;
   stopNodes: string[];
-};
+}
 type X2jOptionsOptional = Partial<X2jOptions>;
-type validationOptions = {
+interface validationOptions {
   allowBooleanAttributes: boolean;
-};
+}
 type validationOptionsOptional = Partial<validationOptions>;
 
 type ESchema = string | object | Array<string | object>;
 
-type ValidationError = {
+interface ValidationError {
   err: { code: string; msg: string; line: number };
-};
+}
 
 export function parse(
   xmlData: string,

@@ -27,6 +27,7 @@ import { traversableToJSON } from './traversableToJSON';
  */
 export function parse(xmlData, options = {}) {
   if (typeof xmlData === 'string') {
+    // eslint-disable-next-line no-undef
     const encoder = new TextEncoder();
     xmlData = encoder.encode(xmlData);
   }
