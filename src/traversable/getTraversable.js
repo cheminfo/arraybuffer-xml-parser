@@ -3,7 +3,7 @@ import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
 import { arrayTrim } from '../bufferUtils/arrayTrim';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
-import { findClosingIndex } from './findClosingIndex.1';
+import { findClosingIndex } from './findClosingIndex';
 import { parseAttributesString } from './parseAttributesString';
 
 const utf8Decoder = new TextDecoder();
