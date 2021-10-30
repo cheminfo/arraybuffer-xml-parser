@@ -12,7 +12,11 @@ const { parseString } = require('dynamic-typing');
  */
 interface optionsType {
   dynamicTypingNodeValue?: boolean;
-  arrayMode?: boolean;
+  arrayMode?:
+    | ((tagName: string, parentTagName: string) => boolean)
+    | boolean
+    | RegExp
+    | string;
   textNodeName?: string;
   parseAttributesString?: string;
   attributeNamePrefix?: string;

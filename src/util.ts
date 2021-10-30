@@ -5,15 +5,15 @@ const nameRegexp = `[${nameStartChar}][${nameChar}]*`;
 // eslint-disable-next-line no-misleading-character-class
 const regexName = new RegExp(`^${nameRegexp}$`);
 
-export function getAllMatches(string, regex) {
+export function getAllMatches(string: string, regex: RegExp) {
   return Array.from(string.matchAll(regex));
 }
 
-export function isName(string) {
+export function isName(string: string) {
   return regexName.exec(string) !== null;
 }
 
-export function isEmptyObject(obj) {
+export function isEmptyObject(obj: []) {
   // fastest implementation: https://jsbench.me/qfkqv692c8/1
   // eslint-disable-next-line no-unreachable-loop
   for (const key in obj) {
@@ -27,7 +27,16 @@ export function isEmptyObject(obj) {
  * @param {object} target
  * @param {object} source
  */
-export function merge(target, source, arrayMode) {
+export function merge(
+  target: any,
+  source: any,
+  arrayMode:
+    | ((tagName: string, parentTagName: string) => boolean)
+    | boolean
+    | RegExp
+    | string
+    | undefined,
+) {
   if (!source) return;
   for (const key in source) {
     if (arrayMode === 'strict') {
@@ -46,7 +55,16 @@ export function merge(target, source, arrayMode) {
  * @param parentTagName the parent tag name
  * @returns {boolean} true if node should be parsed as array
  */
-export function isTagNameInArrayMode(tagName, arrayMode, parentTagName) {
+export function isTagNameInArrayMode(
+  tagName: string,
+  arrayMode:
+    | ((tagName: string, parentTagName: string) => boolean)
+    | boolean
+    | RegExp
+    | string
+    | undefined,
+  parentTagName: string,
+) {
   if (arrayMode === false) {
     return false;
   } else if (arrayMode instanceof RegExp) {
