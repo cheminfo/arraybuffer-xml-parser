@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { XMLNode } from './XMLNode';
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 

@@ -1,23 +1,9 @@
+import { optionsType } from "..";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const utf8Decoder = new TextDecoder();
 
-interface optionsType {
-  attributeNamePrefix?: string;
-  attributesNodeName?: boolean;
-  textNodeName?: string;
-  trimValues?: boolean;
-  ignoreAttributes?: boolean;
-  ignoreNameSpace?: boolean;
-  dynamicTypingAttributeValue?: boolean;
-  allowBooleanAttributes?: boolean;
-  dynamicTypingNodeValue?: boolean;
-  arrayMode?: boolean;
-  cdataTagName?: boolean;
-  tagValueProcessor?: (v: BufferSource, node?: any) => string;
-  attributeValueProcessor?: (v: BufferSource) => BufferSource;
-  tagNameProcessor?: (v: any) => any;
-  attributeNameProcessor?: (v: any) => any;
-  stopNodes?: boolean[];
-}
+
 export const decoder = {
   decode: (array: BufferSource) => {
     return utf8Decoder.decode(array);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defaultOptions } from './traversable/defaultOptions';
 import { getTraversable } from './traversable/getTraversable';
 import { traversableToJSON } from './traversableToJSON';
@@ -25,7 +26,7 @@ import { traversableToJSON } from './traversableToJSON';
  *
  * @returns {object}
  */
-interface optionsType {
+export interface optionsType {
   attributeNamePrefix?: string;
   attributesNodeName?: boolean;
   textNodeName?: string;
@@ -35,7 +36,7 @@ interface optionsType {
   dynamicTypingAttributeValue?: boolean;
   allowBooleanAttributes?: boolean;
   dynamicTypingNodeValue?: boolean;
-  arrayMode?: boolean;
+  arrayMode?: boolean |string |RegExp|((arg1:any) => boolean)|(( arg1:any, arg2?: any) => boolean);
   cdataTagName?: boolean;
   tagValueProcessor?: (v: BufferSource, node?: any) => string;
   attributeValueProcessor?: (v: BufferSource) => BufferSource;
