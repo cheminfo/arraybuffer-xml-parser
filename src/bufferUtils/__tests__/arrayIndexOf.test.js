@@ -14,9 +14,7 @@ describe('arrayIndexOf', () => {
     expect(arrayIndexOf(whole, testString)).toBe(0);
     expect(arrayIndexOf(sandwiched, testString)).toBe(1);
     expect(arrayIndexOf(notIn, testString)).toStrictEqual(-1);
-    expect(
-      arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest),
-    ).toBe(1);
+    expect(arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest)).toBe(1);
     expect(arrayIndexOf(repeats, repeaTest)).toBe(2);
   });
 });
