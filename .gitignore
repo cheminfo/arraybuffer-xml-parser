@@ -118,5 +118,5 @@ dist
 .DS_Store
 
 lib
-
+lib-esm
 big.xml
