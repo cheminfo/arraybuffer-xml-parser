@@ -1,4 +1,6 @@
-import { parseString } from 'dynamic-typing';
+const { parseString } =require('dynamic-typing');
+import { XMLNode } from '../XMLNode';
+import { optionsType } from './defaultOptions';
 
 /**
  * Trim -> valueProcessor -> parse value
@@ -7,11 +9,11 @@ import { parseString } from 'dynamic-typing';
  * @param {object} options
  */
 
-export function processTagValue(value, options, tagName, currentNode) {
+export function processTagValue(value: Uint8Array|string, options: optionsType, tagName?: string, currentNode?: XMLNode) {
   const { dynamicTypingNodeValue, tagValueProcessor } = options;
 
   if (tagValueProcessor) {
-    value = tagValueProcessor(value, tagName, currentNode);
+    value = tagValueProcessor(value as Uint8Array, tagName, currentNode);
   }
   if (typeof value === 'string' && dynamicTypingNodeValue) {
     return parseString(value);

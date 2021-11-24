@@ -5,16 +5,17 @@ import { arrayTrim } from '../bufferUtils/arrayTrim';
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
 import { findClosingIndex } from './findClosingIndex';
 import { parseAttributesString } from './parseAttributesString';
+import { optionsType } from './defaultOptions';
 
 const utf8Decoder = new TextDecoder();
 
 export const decoder = {
-  decode: (array) => {
+  decode: (array: BufferSource | Uint8Array) => {
     return utf8Decoder.decode(array);
   },
 };
 
-export function getTraversable(xmlData, options) {
+export function getTraversable(xmlData: Uint8Array, options:  optionsType ) {
   const traversable = new XMLNode('!xml');
   let currentNode = traversable;
   let dataSize = 0;
@@ -51,13 +52,13 @@ export function getTraversable(xmlData, options) {
           options.stopNodes.length &&
           options.stopNodes.includes(currentNode.tagName)
         ) {
-          currentNode.children = [];
+          currentNode.children = {};
           if (currentNode.attributes === undefined) {
             currentNode.attributes = {};
           }
           currentNode.value = xmlData.subarray(currentNode.startIndex + 1, i);
         }
-        currentNode = currentNode.parent;
+        currentNode = currentNode.parent as XMLNode;
         i = closeIndex;
         dataSize = 0;
         dataIndex = i + 1;
@@ -128,7 +129,7 @@ export function getTraversable(xmlData, options) {
         if (options.cdataTagName) {
           //add cdata node
           const childNode = new XMLNode(
-            options.cdataTagName,
+            options.cdataTagName as string,
             currentNode,
             tagExp,
           );
@@ -227,7 +228,7 @@ export function getTraversable(xmlData, options) {
   return traversable;
 }
 
-function concat(a, b) {
+function concat(a?: string | ArrayLike<number> | undefined, b?: string |ArrayLike<number> ) {
   if (a === undefined) {
     a = typeof b === 'string' ? '' : new Uint8Array(0);
   }
@@ -236,7 +237,7 @@ function concat(a, b) {
   }
   if (typeof a === 'string' && typeof b === 'string') {
     return a + b;
-  } else if (ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+  } else if (typeof a !== 'string' && typeof b !== 'string' && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
     const arrayConcat = new Uint8Array(a.length + b.length);
     arrayConcat.set(a);
     arrayConcat.set(b, a.length);
@@ -248,10 +249,11 @@ function concat(a, b) {
   }
 }
 
-function removeNameSpaceIfNeeded(tagName, options) {
+function removeNameSpaceIfNeeded(tagName: string, options: optionsType) {
   if (!options.ignoreNameSpace) return tagName;
   const colonIndex = tagName.indexOf(':');
   if (colonIndex !== -1) {
     tagName = tagName.substr(colonIndex + 1);
   }
+  return tagName;
 }

@@ -1,4 +1,4 @@
-export function arrayTrim(array:Uint8Array) {
+export function arrayTrim(array:Uint8Array,arg?:{}) {
   let i = 0;
   let j = array.length - 1;
   for (; i < array.length && array[i] <= 0x20; i++);
