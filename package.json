@@ -16,7 +16,11 @@
     "clean": "rimraf lib lib-esm",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
+<<<<<<< HEAD
     "prepack": "npm run tsc",
+=======
+    "prepack": "rollup -c && npm run tsc",
+>>>>>>> 9c0db83944ae8488b6d746de663607550364d6ce
     "prettier": "prettier --check src",
     "prettier-write": "prettier --write src",
     "test": "npm run test-coverage && npm run eslint && npm run prettier && npm run check-types",
@@ -38,9 +42,10 @@
   },
   "homepage": "https://github.com/cheminfo/arraybuffer-xml-parser#readme",
   "devDependencies": {
-    "@types/jest": "^27.0.3",
+    "@types/jest": "^27.0.2",
     "cheminfo-build": "^1.1.11",
-    "eslint": "^8.3.0",
+    "eslint": "^8.0.1",
+    "eslint-config-cheminfo-typescript": "^10.1.1",
     "he": "^1.2.0",
     "iobuffer": "^5.0.4",
     "jest": "^27.3.1",
