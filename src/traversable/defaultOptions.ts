@@ -22,9 +22,9 @@ export interface OptionsType {
   parseAttributesString?: boolean;
   dynamicTypingNodeValue?: boolean;
   arrayMode?:
-    | boolean
-    | string
     | ((tagName: string, parentTagName: string) => boolean)
+    | string
+    | boolean
     | RegExp;
   cdataTagName?: boolean | string;
   tagValueProcessor?: (

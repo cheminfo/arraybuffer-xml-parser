@@ -15,7 +15,7 @@ const { parseString } = require('dynamic-typing');
 export function traversableToJSON(
   node: XMLNode,
   options: OptionsType,
-  parentTagName?: string | undefined,
+  parentTagName?: string,
 ): string | Uint8Array | Record<string, string | Uint8Array> {
   const {
     dynamicTypingNodeValue,
@@ -45,8 +45,8 @@ export function traversableToJSON(
   if (node.value !== undefined && node.value.length !== 0) {
     const asArray = isTagNameInArrayMode(
       node.tagName,
-      arrayMode as string,
-      parentTagName,
+      arrayMode,
+      parentTagName as string,
     );
 
     result[options.textNodeName as string] = asArray
@@ -83,7 +83,7 @@ export function traversableToJSON(
       // eslint-disable-next-line @typescript-eslint/no-for-in-array
       for (let tag in node.children[tagName]) {
         if (Object.prototype.hasOwnProperty.call(node.children[tagName], tag)) {
-          (result[newTagName] as any[]).push(
+          result[newTagName].push(
             traversableToJSON(node.children[tagName][tag], options, tagName),
           );
         }
@@ -96,7 +96,11 @@ export function traversableToJSON(
       );
       const asArray =
         (arrayMode === true && typeof subResult === 'object') ||
-        isTagNameInArrayMode(tagName, arrayMode as string, parentTagName);
+        isTagNameInArrayMode(
+          tagName,
+          arrayMode as string,
+          parentTagName as string,
+        );
       result[newTagName] = asArray ? [subResult] : subResult;
     }
   }

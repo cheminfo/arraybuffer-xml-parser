@@ -32,9 +32,13 @@ export function isEmptyObject(
  * @param {object} source
  */
 export function merge(
-  target: Record<string, any>,
-  source: Record<string, any>,
-  arrayMode: string,
+  target: Record<string, boolean | XMLNode | (XMLNode | boolean)[]>,
+  source: Record<string, boolean | XMLNode>,
+  arrayMode:
+    | ((tagName: string, parentTagName: string) => boolean)
+    | string
+    | boolean
+    | RegExp,
 ) {
   if (!source) return;
   for (const key in source) {
@@ -60,8 +64,9 @@ export function isTagNameInArrayMode(
     | ((tagName: string, parentTagName: string) => boolean)
     | string
     | boolean
-    | RegExp,
-  parentTagName: any,
+    | RegExp
+    | undefined,
+  parentTagName: string,
 ) {
   if (arrayMode === false) {
     return false;
