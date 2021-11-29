@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/cheminfo/arraybuffer-xml-parser#readme",
   "devDependencies": {
+    "@types/he": "^1.1.2",
     "@types/jest": "^27.0.2",
     "cheminfo-build": "^1.1.11",
     "eslint": "^8.0.1",
