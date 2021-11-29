@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { XMLNode } from './XMLNode';
 import { OptionsType } from './traversable/defaultOptions';
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
