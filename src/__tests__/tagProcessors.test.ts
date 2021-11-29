@@ -23,7 +23,7 @@ describe('XMLParser', () => {
 	    </ab>`;
 
     const result = parse(xmlData, {
-      attributeNameProcessor: (name) => name.toUpperCase(),
+      attributeNameProcessor: (name: string) => name.toUpperCase(),
     });
     expect(result).toStrictEqual({ ab: { $PARAM1: 'abc', $PARAM2: 'def' } });
   });

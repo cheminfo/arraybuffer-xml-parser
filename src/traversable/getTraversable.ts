@@ -3,9 +3,9 @@ import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
 import { arrayTrim } from '../bufferUtils/arrayTrim';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
+import { OptionsType } from './defaultOptions';
 import { findClosingIndex } from './findClosingIndex';
 import { parseAttributesString } from './parseAttributesString';
-import { optionsType } from './defaultOptions';
 
 const utf8Decoder = new TextDecoder();
 
@@ -15,7 +15,7 @@ export const decoder = {
   },
 };
 
-export function getTraversable(xmlData: Uint8Array, options:  optionsType ) {
+export function getTraversable(xmlData: Uint8Array, options: OptionsType) {
   const traversable = new XMLNode('!xml');
   let currentNode = traversable;
   let dataSize = 0;
@@ -49,7 +49,7 @@ export function getTraversable(xmlData: Uint8Array, options:  optionsType ) {
           }
         }
         if (
-          options.stopNodes.length &&
+          options.stopNodes?.length &&
           options.stopNodes.includes(currentNode.tagName)
         ) {
           currentNode.children = {};
@@ -179,7 +179,7 @@ export function getTraversable(xmlData: Uint8Array, options:  optionsType ) {
           }
         }
 
-        if (tagData.length > 0 && tagData[tagData.length - 1] === '/') {
+        if (tagData.length > 0 && tagData.endsWith('/')) {
           //selfClosing tag
 
           if (tagAttributes) {
@@ -203,7 +203,7 @@ export function getTraversable(xmlData: Uint8Array, options:  optionsType ) {
 
           const childNode = new XMLNode(tagName, currentNode);
           if (
-            options.stopNodes.length &&
+            options.stopNodes?.length &&
             options.stopNodes.includes(childNode.tagName)
           ) {
             childNode.startIndex = closeIndex;
@@ -228,7 +228,10 @@ export function getTraversable(xmlData: Uint8Array, options:  optionsType ) {
   return traversable;
 }
 
-function concat(a?: string | ArrayLike<number> | undefined, b?: string |ArrayLike<number> ) {
+function concat(
+  a?: string | ArrayLike<number> | undefined,
+  b?: string | ArrayLike<number>,
+) {
   if (a === undefined) {
     a = typeof b === 'string' ? '' : new Uint8Array(0);
   }
@@ -237,7 +240,12 @@ function concat(a?: string | ArrayLike<number> | undefined, b?: string |ArrayLik
   }
   if (typeof a === 'string' && typeof b === 'string') {
     return a + b;
-  } else if (typeof a !== 'string' && typeof b !== 'string' && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+  } else if (
+    typeof a !== 'string' &&
+    typeof b !== 'string' &&
+    ArrayBuffer.isView(a) &&
+    ArrayBuffer.isView(b)
+  ) {
     const arrayConcat = new Uint8Array(a.length + b.length);
     arrayConcat.set(a);
     arrayConcat.set(b, a.length);
@@ -249,7 +257,7 @@ function concat(a?: string | ArrayLike<number> | undefined, b?: string |ArrayLik
   }
 }
 
-function removeNameSpaceIfNeeded(tagName: string, options: optionsType) {
+function removeNameSpaceIfNeeded(tagName: string, options: OptionsType) {
   if (!options.ignoreNameSpace) return tagName;
   const colonIndex = tagName.indexOf(':');
   if (colonIndex !== -1) {

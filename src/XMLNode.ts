@@ -1,11 +1,15 @@
 export class XMLNode {
-  tagName: string;
-  parent?: XMLNode;
-  children: Record<string,XMLNode[]>;
-  attributes?: Record<string,XMLNode|boolean>;
-  value?: string |Uint8Array;
-  startIndex: number;
-  constructor(tagName: string, parent?: XMLNode, value?: string|Uint8Array) {
+  public tagName: string;
+  public parent?: XMLNode;
+  public children: Record<string, XMLNode[]>;
+  public attributes?: Record<string, XMLNode | boolean>;
+  public value?: string | Uint8Array;
+  public startIndex: number;
+  public constructor(
+    tagName: string,
+    parent?: XMLNode,
+    value?: Uint8Array | string,
+  ) {
     this.tagName = tagName;
     this.parent = parent;
     this.children = Object.create({}); //child tags
@@ -13,7 +17,7 @@ export class XMLNode {
     this.value = value; //text only
     this.startIndex = -1;
   }
-  addChild(child: XMLNode) {
+  public addChild(child: XMLNode) {
     if (Array.isArray(this.children[child.tagName])) {
       //already presents
       this.children[child.tagName].push(child);

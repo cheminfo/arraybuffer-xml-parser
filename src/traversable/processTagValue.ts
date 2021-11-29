@@ -1,6 +1,9 @@
-const { parseString } =require('dynamic-typing');
 import { XMLNode } from '../XMLNode';
-import { optionsType } from './defaultOptions';
+
+import { OptionsType } from './defaultOptions';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { parseString } = require('dynamic-typing');
 
 /**
  * Trim -> valueProcessor -> parse value
@@ -9,11 +12,20 @@ import { optionsType } from './defaultOptions';
  * @param {object} options
  */
 
-export function processTagValue(value: Uint8Array|string, options: optionsType, tagName?: string, currentNode?: XMLNode) {
+export function processTagValue(
+  value: Uint8Array | string,
+  options: OptionsType,
+  tagName?: string,
+  currentNode?: XMLNode,
+) {
   const { dynamicTypingNodeValue, tagValueProcessor } = options;
 
   if (tagValueProcessor) {
-    value = tagValueProcessor(value as Uint8Array, tagName, currentNode);
+    value = tagValueProcessor(
+      value as Uint8Array,
+      currentNode as XMLNode,
+      tagName,
+    );
   }
   if (typeof value === 'string' && dynamicTypingNodeValue) {
     return parseString(value);

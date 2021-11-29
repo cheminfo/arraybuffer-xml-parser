@@ -1,4 +1,4 @@
-import { defaultOptions } from './traversable/defaultOptions';
+import { defaultOptions, OptionsType } from './traversable/defaultOptions';
 import { getTraversable } from './traversable/getTraversable';
 import { traversableToJSON } from './traversableToJSON';
 
@@ -25,7 +25,12 @@ import { traversableToJSON } from './traversableToJSON';
  *
  * @returns {object}
  */
-export function parse(xmlData, options = {}) {
+export function parse(
+  xmlData: string | Uint8Array | ArrayBufferLike,
+  options: OptionsType = {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _arg?: boolean,
+) {
   if (typeof xmlData === 'string') {
     const encoder = new TextEncoder();
     xmlData = encoder.encode(xmlData);
@@ -37,7 +42,7 @@ export function parse(xmlData, options = {}) {
 
   options = { ...defaultOptions, ...options };
 
-  const traversable = getTraversable(xmlData, options);
+  const traversable = getTraversable(xmlData as Uint8Array, options);
 
   return traversableToJSON(traversable, options);
 }

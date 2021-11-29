@@ -1,21 +1,23 @@
-const { parseString } =require('dynamic-typing');
-
-import { getAllMatches, isEmptyObject } from '../util';
 import { XMLNode } from '../XMLNode';
-import { optionsType } from './defaultOptions';
+import { getAllMatches, isEmptyObject } from '../util';
+
+import { OptionsType } from './defaultOptions';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { parseString } = require('dynamic-typing');
 
 const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 const attrsRegx = new RegExp(newLocal, 'g');
 
 //Attributes are strings so no point in using arrayBuffers here
-export function parseAttributesString(string: string, options:optionsType) {
+export function parseAttributesString(string: string, options: OptionsType) {
   if (options.ignoreAttributes) {
     return;
   }
   string = string.replace(/\r?\n/g, ' ');
 
   const matches = getAllMatches(string, attrsRegx);
-  const attributes:Record<string,XMLNode|boolean> = {};
+  const attributes: Record<string, XMLNode | boolean> = {};
   for (let match of matches) {
     const attrName = resolveNameSpace(match[1], options);
     if (attrName.length) {
@@ -23,11 +25,14 @@ export function parseAttributesString(string: string, options:optionsType) {
         if (options.trimValues) {
           match[4] = match[4].trim();
         }
-        match[4] = options.attributeValueProcessor(match[4], attrName);
-        attributes[attrName] = stringParseValue(
-          match[4],
-          options.dynamicTypingAttributeValue,
-        );
+        if (options.attributeValueProcessor) {
+          match[4] = options.attributeValueProcessor(match[4], attrName);
+
+          attributes[attrName] = stringParseValue(
+            match[4],
+            options.dynamicTypingAttributeValue as boolean,
+          );
+        }
       } else if (options.allowBooleanAttributes) {
         attributes[attrName] = true;
       }
@@ -37,7 +42,7 @@ export function parseAttributesString(string: string, options:optionsType) {
   return attributes;
 }
 
-function stringParseValue(value: string, shouldParse: any) {
+function stringParseValue(value: string, shouldParse: boolean) {
   if (shouldParse && typeof value === 'string') {
     return parseString(value);
   } else {
@@ -45,10 +50,10 @@ function stringParseValue(value: string, shouldParse: any) {
   }
 }
 
-function resolveNameSpace(tagName: string, options: optionsType) {
+function resolveNameSpace(tagName: string, options: OptionsType) {
   if (options.ignoreNameSpace) {
     const tags = tagName.split(':');
-    const prefix = tagName.charAt(0) === '/' ? '/' : '';
+    const prefix = tagName.startsWith('/') ? '/' : '';
     if (tags[0] === 'xmlns') {
       return '';
     }

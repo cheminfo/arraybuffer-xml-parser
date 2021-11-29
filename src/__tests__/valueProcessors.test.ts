@@ -85,7 +85,7 @@ describe('XMLParser', () => {
             </person>
         </any_name>`);
 
-    const resultMap = {};
+    const resultMap: Record<string, Uint8Array[]> = {};
     parse(xmlData, {
       tagValueProcessor: (value, node) => {
         if (resultMap[node.tagName]) {
@@ -173,7 +173,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const resultMap = {};
+    const resultMap: Record<string, string[]> = {};
 
     let result = parse(xmlData, {
       attributeNamePrefix: '',
