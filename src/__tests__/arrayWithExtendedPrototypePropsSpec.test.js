@@ -1,4 +1,4 @@
-import { parse } from '../parse';
+import { parse } from '../parse.ts';
 
 const encoder = new TextEncoder();
 
