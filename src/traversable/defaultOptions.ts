@@ -26,31 +26,82 @@ export const decoder = {
  *
  */
 export interface ParseOptions {
+  /**
+   * @default true
+   */
   trimValues?: boolean;
+  /**
+   * @default '$'
+   */
   attributeNamePrefix?: string;
+  /**
+   * @default false
+   */
   attributesNodeName?: string;
+  /**
+   * @default false
+   */
   ignoreAttributes?: boolean;
+  /**
+   * @default false
+   */
   ignoreNameSpace?: boolean;
+  /**
+   * @default false
+   */
   allowBooleanAttributes?: boolean;
+  /**
+   * @default true
+   */
   dynamicTypingAttributeValue?: boolean;
+  /**
+   * no default value
+   */
   tagNameProcessor?: (arg: string) => string;
+  /**
+   * @default '#text'
+   */
   textNodeName?: string;
+  /**
+   * @default true
+   */
   cdataPositddionChar?: string;
+  /**
+   * @default true
+   */
   attributeNameProcessor?: (name: string) => string;
+  /**
+   * @default true
+   */
   parseAttributesString?: boolean;
+  /**
+   * @default true
+   */
   dynamicTypingNodeValue?: boolean;
+  /**
+   * @default false
+   */
   arrayMode?:
     | ((tagName: string, parentTagName: string) => boolean)
     | string
     | boolean
     | RegExp;
+  /**
+   * @default false
+   */
   cdataTagName?: string;
   tagValueProcessor?: (
     value: Uint8Array,
     currentNode: XMLNode,
     tagName?: string,
   ) => string | Uint8Array;
+  /**
+   * @default  (value:string)=>value
+   */
   attributeValueProcessor?: (value: string, attrName: string) => string;
+  /**
+   * @default []
+   */
   stopNodes?: string[];
 }
 export const defaultOptions: ParseOptions = {
