@@ -1,4 +1,4 @@
-import { defaultOptions, OptionsType } from './traversable/defaultOptions';
+import { defaultOptions, ParseOptions } from './traversable/defaultOptions';
 import { getTraversable } from './traversable/getTraversable';
 import { traversableToJSON } from './traversableToJSON';
 
@@ -23,11 +23,11 @@ import { traversableToJSON } from './traversableToJSON';
  * @param {function} [options.attributeNameProcessor=(v) => v] Callback allowing to rename attribute name
  * @param {boolean} [options.stopNodes=[]] prevent further parsing
  *
- * @returns {object}
+ * @returns {string}
  */
 export function parse(
   xmlData: string | Uint8Array | ArrayBufferLike,
-  options: OptionsType = {},
+  options: ParseOptions = {},
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _arg?: boolean,
 ) {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { XMLNode } from './XMLNode';
-import { OptionsType } from './traversable/defaultOptions';
+import { ParseOptions } from './traversable/defaultOptions';
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -15,7 +15,7 @@ const { parseString } = require('dynamic-typing');
  */
 export function traversableToJSON(
   node: XMLNode,
-  options: OptionsType,
+  options: ParseOptions,
   parentTagName?: string,
 ): string | Uint8Array | Record<string, string | Uint8Array> {
   const {
@@ -71,7 +71,7 @@ export function traversableToJSON(
     }
     if (options.attributesNodeName) {
       let encapsulatedAttributes: Record<string, any> = {};
-      encapsulatedAttributes[options.attributesNodeName as string] = attributes;
+      encapsulatedAttributes[options.attributesNodeName] = attributes;
       attributes = encapsulatedAttributes;
     }
     merge(result, attributes, arrayMode as string);

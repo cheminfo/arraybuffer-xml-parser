@@ -3,7 +3,7 @@ import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
 import { arrayTrim } from '../bufferUtils/arrayTrim';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
-import { OptionsType } from './defaultOptions';
+import { ParseOptions } from './defaultOptions';
 import { findClosingIndex } from './findClosingIndex';
 import { parseAttributesString } from './parseAttributesString';
 
@@ -15,7 +15,7 @@ export const decoder = {
   },
 };
 
-export function getTraversable(xmlData: Uint8Array, options: OptionsType) {
+export function getTraversable(xmlData: Uint8Array, options: ParseOptions) {
   const traversable = new XMLNode('!xml');
   let currentNode = traversable;
   let dataSize = 0;
@@ -129,7 +129,7 @@ export function getTraversable(xmlData: Uint8Array, options: OptionsType) {
         if (options.cdataTagName) {
           //add cdata node
           const childNode = new XMLNode(
-            options.cdataTagName as string,
+            options.cdataTagName,
             currentNode,
             tagExp,
           );
@@ -257,7 +257,7 @@ function concat(
   }
 }
 
-function removeNameSpaceIfNeeded(tagName: string, options: OptionsType) {
+function removeNameSpaceIfNeeded(tagName: string, options: ParseOptions) {
   if (!options.ignoreNameSpace) return tagName;
   const colonIndex = tagName.indexOf(':');
   if (colonIndex !== -1) {

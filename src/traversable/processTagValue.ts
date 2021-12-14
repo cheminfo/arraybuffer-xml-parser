@@ -1,6 +1,6 @@
 import { XMLNode } from '../XMLNode';
 
-import { OptionsType } from './defaultOptions';
+import { ParseOptions } from './defaultOptions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { parseString } = require('dynamic-typing');
@@ -14,7 +14,7 @@ const { parseString } = require('dynamic-typing');
 
 export function processTagValue(
   value: Uint8Array | string,
-  options: OptionsType,
+  options: ParseOptions,
   tagName?: string,
   currentNode?: XMLNode,
 ) {

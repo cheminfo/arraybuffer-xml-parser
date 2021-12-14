@@ -1,7 +1,7 @@
 import { XMLNode } from '../XMLNode';
 import { getAllMatches, isEmptyObject } from '../util';
 
-import { OptionsType } from './defaultOptions';
+import { ParseOptions } from './defaultOptions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { parseString } = require('dynamic-typing');
@@ -10,7 +10,7 @@ const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
 const attrsRegx = new RegExp(newLocal, 'g');
 
 //Attributes are strings so no point in using arrayBuffers here
-export function parseAttributesString(string: string, options: OptionsType) {
+export function parseAttributesString(string: string, options: ParseOptions) {
   if (options.ignoreAttributes) {
     return;
   }
@@ -50,7 +50,7 @@ function stringParseValue(value: string, shouldParse: boolean) {
   }
 }
 
-function resolveNameSpace(tagName: string, options: OptionsType) {
+function resolveNameSpace(tagName: string, options: ParseOptions) {
   if (options.ignoreNameSpace) {
     const tags = tagName.split(':');
     const prefix = tagName.startsWith('/') ? '/' : '';
