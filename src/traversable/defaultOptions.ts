@@ -7,26 +7,9 @@ export const decoder = {
     return utf8Decoder.decode(array);
   },
 };
-/**
- * ParseOptions default values
- * @param {string} [attributeNamePrefix='$']
- * @param {boolean} [attributesNodeName=false]
- * @param {string} [textNodeName='#text']
- * @param {boolean} [trimValues=true] should we remove ascii < 32
- * @param {boolean} [ignoreAttributes=false] skip attributes
- * @param {boolean} [ignoreNameSpace=false]
- * @param {boolean} [dynamicTypingAttributeValue=true] Parse attribute values that looks like number or boolean
- * @param {boolean} [allowBooleanAttributes=false]
- * @param {boolean} [dynamicTypingNodeValue=true] Parse tag values that looks like number or boolean
- * @param {boolean} [arrayMode=false]
- * @param {boolean} [cdataTagName=false]
- * @param {function} [tagValueProcessor=(value: Uint8Array) => {return decoder.decode(value).replace(/\r/g, '');},] Tag values can be modified during parsing. By default we decode the tag value (a Uint8Array) using TextDecoder
- * @param {function} [attributeValueProcessor=(value: string) => value] Attribute values can be modified during parsing
- * @param {boolean} [stopNodes=[]] prevent further parsing
- *
- */
 export interface ParseOptions {
   /**
+   * should we remove ascii < 32
    * @default true
    */
   trimValues?: boolean;
@@ -39,6 +22,7 @@ export interface ParseOptions {
    */
   attributesNodeName?: string;
   /**
+   * skip attributes
    * @default false
    */
   ignoreAttributes?: boolean;
@@ -51,12 +35,10 @@ export interface ParseOptions {
    */
   allowBooleanAttributes?: boolean;
   /**
+   * Parse attribute values that looks like number or boolean
    * @default true
    */
   dynamicTypingAttributeValue?: boolean;
-  /**
-   * no default value
-   */
   tagNameProcessor?: (arg: string) => string;
   /**
    * @default '#text'
@@ -75,6 +57,7 @@ export interface ParseOptions {
    */
   parseAttributesString?: boolean;
   /**
+   * Parse tag values that looks like number or boolean
    * @default true
    */
   dynamicTypingNodeValue?: boolean;
@@ -90,16 +73,21 @@ export interface ParseOptions {
    * @default false
    */
   cdataTagName?: string;
+  /**
+   * Tag values can be modified during parsing. By default we decode the tag value (a Uint8Array) using TextDecoder
+   */
   tagValueProcessor?: (
     value: Uint8Array,
     currentNode: XMLNode,
     tagName?: string,
   ) => string | Uint8Array;
   /**
+   * Attribute values can be modified during parsing
    * @default  (value:string)=>value
    */
   attributeValueProcessor?: (value: string, attrName: string) => string;
   /**
+   * prevent further parsing
    * @default []
    */
   stopNodes?: string[];
