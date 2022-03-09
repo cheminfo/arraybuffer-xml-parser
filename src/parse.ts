@@ -7,7 +7,7 @@ import { traversableToJSON } from './traversableToJSON';
  * @param {string|ArrayBuffer|Uint8Array} xmlData
  * @param {object} [options={}]
  * @param {string} [options.attributeNamePrefix='$']
- * @param {boolean} [options.attributesNodeName=false]
+ * @param {boolean} [options.attributesNodeName='']
  * @param {string} [options.textNodeName='#text']
  * @param {boolean} [options.trimValues=true] should we remove ascii < 32
  * @param {boolean} [options.ignoreAttributes=false] skip attributes

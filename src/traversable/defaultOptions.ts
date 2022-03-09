@@ -18,7 +18,7 @@ export interface ParseOptions {
    */
   attributeNamePrefix?: string;
   /**
-   * @default false
+   * @default '''
    */
   attributesNodeName?: string;
   /**
