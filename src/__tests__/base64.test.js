@@ -1,6 +1,6 @@
 import { decode as base64decode } from 'uint8-base64';
 
-import { parse } from '../parse';
+import { parse } from '../parse.ts';
 // library to convert base64 <--> arrayBuffer: https://github.com/niklasvh/base64-arraybuffer/blob/master/src/index.ts
 
 const encoder = new TextEncoder();

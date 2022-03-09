@@ -1,6 +1,10 @@
-import { parseString } from 'dynamic-typing';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { XMLNode } from './XMLNode';
+import { ParseOptions } from './traversable/defaultOptions';
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { parseString } = require('dynamic-typing');
 
 /**
  *
@@ -9,7 +13,11 @@ import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
  * @param {*} parentTagName
  * @returns
  */
-export function traversableToJSON(node, options, parentTagName) {
+export function traversableToJSON(
+  node: XMLNode,
+  options: ParseOptions,
+  parentTagName?: string,
+): string | Uint8Array | Record<string, string | Uint8Array> {
   const {
     dynamicTypingNodeValue,
     tagValueProcessor,
@@ -17,10 +25,11 @@ export function traversableToJSON(node, options, parentTagName) {
     tagNameProcessor,
     attributeNameProcessor,
   } = options;
-  const result = {};
+  const result: Record<string, any> = {};
 
   if (tagValueProcessor) {
-    node.value = node.value && tagValueProcessor(node.value, node);
+    node.value =
+      node.value && tagValueProcessor(node.value as Uint8Array, node);
   }
   if (typeof node.value === 'string' && dynamicTypingNodeValue) {
     node.value = parseString(node.value);
@@ -38,17 +47,19 @@ export function traversableToJSON(node, options, parentTagName) {
     const asArray = isTagNameInArrayMode(
       node.tagName,
       arrayMode,
-      parentTagName,
+      parentTagName as string,
     );
 
-    result[options.textNodeName] = asArray ? [node.value] : node.value;
+    result[options.textNodeName as string] = asArray
+      ? [node.value]
+      : node.value;
   }
 
   if (node.attributes && !isEmptyObject(node.attributes)) {
     let attributes = options.parseAttributesString ? {} : node.attributes;
     if (options.attributeNamePrefix) {
       // need to rename the attributes
-      const renamedAttributes = {};
+      const renamedAttributes: Record<string, boolean | XMLNode> = {};
       for (let attributeName in node.attributes) {
         const newAttributeName = attributeNameProcessor
           ? attributeNameProcessor(attributeName)
@@ -59,17 +70,18 @@ export function traversableToJSON(node, options, parentTagName) {
       attributes = renamedAttributes;
     }
     if (options.attributesNodeName) {
-      let encapsulatedAttributes = {};
+      let encapsulatedAttributes: Record<string, any> = {};
       encapsulatedAttributes[options.attributesNodeName] = attributes;
       attributes = encapsulatedAttributes;
     }
-    merge(result, attributes, arrayMode);
+    merge(result, attributes, arrayMode as string);
   }
 
   for (const tagName in node.children) {
     const newTagName = tagNameProcessor ? tagNameProcessor(tagName) : tagName;
     if (node.children[tagName] && node.children[tagName].length > 1) {
       result[tagName] = [];
+      // eslint-disable-next-line @typescript-eslint/no-for-in-array
       for (let tag in node.children[tagName]) {
         if (Object.prototype.hasOwnProperty.call(node.children[tagName], tag)) {
           result[newTagName].push(
@@ -85,7 +97,11 @@ export function traversableToJSON(node, options, parentTagName) {
       );
       const asArray =
         (arrayMode === true && typeof subResult === 'object') ||
-        isTagNameInArrayMode(tagName, arrayMode, parentTagName);
+        isTagNameInArrayMode(
+          tagName,
+          arrayMode as string,
+          parentTagName as string,
+        );
       result[newTagName] = asArray ? [subResult] : subResult;
     }
   }

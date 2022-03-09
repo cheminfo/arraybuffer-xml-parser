@@ -1,4 +1,5 @@
-export function arrayTrim(array) {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+export function arrayTrim(array: Uint8Array, arg?: unknown) {
   let i = 0;
   let j = array.length - 1;
   for (; i < array.length && array[i] <= 0x20; i++);

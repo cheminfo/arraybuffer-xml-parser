@@ -295,7 +295,7 @@ describe('XMLParser with arrayMode enabled', () => {
     };
 
     const cbExResult = parse(xmlData, {
-      arrayMode: (tagName, parentTagName) => {
+      arrayMode: (tagName: string, parentTagName: string) => {
         return parentTagName === 'inventory';
       },
       ignoreAttributes: false,

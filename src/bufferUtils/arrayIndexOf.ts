@@ -1,4 +1,8 @@
-export function arrayIndexOf(array, referenceArray, index = 0) {
+export function arrayIndexOf(
+  array: Uint8Array,
+  referenceArray: Uint8Array | number[],
+  index = 0,
+) {
   let found = 0;
   let foundIndex = -1;
   for (let i = index; i < array.length && found < referenceArray.length; i++) {

@@ -1,9 +1,15 @@
 import { decoder } from './getTraversable';
 
-export function closingIndexForOpeningTag(data, i) {
+export function closingIndexForOpeningTag(
+  data: Uint8Array,
+  i: number,
+): {
+  data: string;
+  index: number;
+} {
   let attrBoundary;
   let endIndex = 0;
-  for (let index = i; index < data.length; index++) {
+  for (let index: number = i; index < data.length; index++) {
     let byte = data[index];
     if (attrBoundary) {
       if (byte === attrBoundary) attrBoundary = 0; //reset
@@ -19,4 +25,8 @@ export function closingIndexForOpeningTag(data, i) {
     }
     endIndex++;
   }
+  return {
+    data: decoder.decode(data.subarray(i, i + endIndex)),
+    index: 0,
+  };
 }
