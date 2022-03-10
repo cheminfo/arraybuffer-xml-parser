@@ -95,7 +95,7 @@ export interface ParseOptions {
 export const defaultOptions: ParseOptions = {
   trimValues: true,
   attributeNamePrefix: '$',
-  attributesNodeName: false as unknown as string,
+  attributesNodeName: '',
   ignoreAttributes: false,
   ignoreNameSpace: false,
   allowBooleanAttributes: false,
