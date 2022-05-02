@@ -28,8 +28,6 @@ import { traversableToJSON } from './traversableToJSON';
 export function parse(
   xmlData: string | Uint8Array | ArrayBufferLike,
   options: ParseOptions = {},
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _arg?: boolean,
 ) {
   if (typeof xmlData === 'string') {
     const encoder = new TextEncoder();

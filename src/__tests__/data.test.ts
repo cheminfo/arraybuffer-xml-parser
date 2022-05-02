@@ -125,16 +125,9 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(
-      xmlData,
-      {
-        //attributeNamePrefix: "",
-
-        //dynamicTypingAttributeValue: true,
-        allowBooleanAttributes: true,
-      },
-      true,
-    );
+    let result = parse(xmlData, {
+      allowBooleanAttributes: true,
+    });
 
     expect(result).toStrictEqual(expected);
   });
@@ -286,13 +279,9 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(
-      xmlData,
-      {
-        allowBooleanAttributes: true,
-      },
-      true,
-    );
+    const result = parse(xmlData, {
+      allowBooleanAttributes: true,
+    });
     expect(result).toStrictEqual(expected);
   });
 });
