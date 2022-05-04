@@ -1,4 +1,4 @@
-import { decoder } from './getTraversable';
+import { decoder } from './utils/utf8Decoder';
 
 export function closingIndexForOpeningTag(
   data: Uint8Array,

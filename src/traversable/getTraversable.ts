@@ -6,14 +6,9 @@ import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
 import { ParseOptions } from './defaultOptions';
 import { findClosingIndex } from './findClosingIndex';
 import { parseAttributesString } from './parseAttributesString';
-
-const utf8Decoder = new TextDecoder();
-
-export const decoder = {
-  decode: (array: BufferSource | Uint8Array) => {
-    return utf8Decoder.decode(array);
-  },
-};
+import { concat } from './utils/concat';
+import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded';
+import { decoder } from './utils/utf8Decoder';
 
 export function getTraversable(xmlData: Uint8Array, options: ParseOptions) {
   const traversable = new XMLNode('!xml');
@@ -226,42 +221,4 @@ export function getTraversable(xmlData: Uint8Array, options: ParseOptions) {
     }
   }
   return traversable;
-}
-
-function concat(
-  a?: string | ArrayLike<number> | undefined,
-  b?: string | ArrayLike<number>,
-) {
-  if (a === undefined) {
-    a = typeof b === 'string' ? '' : new Uint8Array(0);
-  }
-  if (b === undefined) {
-    b = typeof a === 'string' ? '' : new Uint8Array(0);
-  }
-  if (typeof a === 'string' && typeof b === 'string') {
-    return a + b;
-  } else if (
-    typeof a !== 'string' &&
-    typeof b !== 'string' &&
-    ArrayBuffer.isView(a) &&
-    ArrayBuffer.isView(b)
-  ) {
-    const arrayConcat = new Uint8Array(a.length + b.length);
-    arrayConcat.set(a);
-    arrayConcat.set(b, a.length);
-    return arrayConcat;
-  } else {
-    throw new Error(
-      `Unsuported value type for concatenation: ${typeof a} ${typeof b}`,
-    );
-  }
-}
-
-function removeNameSpaceIfNeeded(tagName: string, options: ParseOptions) {
-  if (!options.ignoreNameSpace) return tagName;
-  const colonIndex = tagName.indexOf(':');
-  if (colonIndex !== -1) {
-    tagName = tagName.substr(colonIndex + 1);
-  }
-  return tagName;
 }
