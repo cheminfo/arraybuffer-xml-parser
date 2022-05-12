@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.5.1](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.5.0...v0.5.1) (2022-05-11)
+
+
+### Bug Fixes
+
+* defaultOptions attributesNoddName is a string ([8cae984](https://www.github.com/cheminfo/arraybuffer-xml-parser/commit/8cae9848fbd644e937fedda8f9923042ce50688f))
+
 ## [0.5.0](https://www.github.com/cheminfo/arraybuffer-xml-parser/compare/v0.4.0...v0.5.0) (2021-10-20)
 
 
