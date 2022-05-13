@@ -7,7 +7,7 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
-describe('XMLParser', async () => {
+describe('XMLParser', () => {
   it('should parse all type of nodes', async () => {
     const fileNamePath = join(__dirname, 'assets/sample.xml');
     const xmlData = readFileSync(fileNamePath);

@@ -85,12 +85,16 @@ export async function traversableToJSON(
       for (let tag in node.children[tagName]) {
         if (Object.prototype.hasOwnProperty.call(node.children[tagName], tag)) {
           result[newTagName].push(
-            traversableToJSON(node.children[tagName][tag], options, tagName),
+            await traversableToJSON(
+              node.children[tagName][tag],
+              options,
+              tagName,
+            ),
           );
         }
       }
     } else {
-      const subResult = traversableToJSON(
+      const subResult = await traversableToJSON(
         node.children[tagName][0],
         options,
         tagName,

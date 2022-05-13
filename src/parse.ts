@@ -20,7 +20,7 @@ export async function parse(
 
   options = { ...defaultOptions, ...options };
 
-  const traversable = await getTraversable(xmlData as Uint8Array, options);
+  const traversable = getTraversable(xmlData as Uint8Array, options);
 
   return traversableToJSON(traversable, options);
 }

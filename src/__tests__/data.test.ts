@@ -3,7 +3,7 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 describe('XMLParser', () => {
-  it.only("should parse attributes having '>' in value", async () => {
+  it("should parse attributes having '>' in value", async () => {
     const xmlData =
       encoder.encode(`<? xml version = "1.0" encoding = "UTF - 8" ?>
         <testStep type="restrequest" name="test step name (bankId -> Error)" id="90e453d3-30cd-4958-a3be-61ecfe7a7cbe">
