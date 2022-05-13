@@ -1,11 +1,12 @@
-const { readFileSync } = require('fs');
-const { join } = require('path');
+import { readFileSync } from 'fs';
 
-const pako = require('pako');
-const { decode } = require('uint8-base64');
+import pako from 'pako';
+import { decode } from 'uint8-base64';
+import { parse } from '../lib/index.js';
 
-const data = readFileSync(join(__dirname, 'big.xml'));
-const { parse } = require('../lib/index.js');
+const data = readFileSync(new URL('big.xml', import.meta.url).pathname);
+
+console.log(data);
 
 const decoder = new TextDecoder();
 
