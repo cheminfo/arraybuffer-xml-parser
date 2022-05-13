@@ -7,8 +7,8 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 
-describe('XMLParser', () => {
-  it('should parse all type of nodes', () => {
+describe('XMLParser', async () => {
+  it('should parse all type of nodes', async () => {
     const fileNamePath = join(__dirname, 'assets/sample.xml');
     const xmlData = readFileSync(fileNamePath);
 
@@ -80,14 +80,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       attributeNamePrefix: '@',
       textNodeName: '#_text',
     });
 
     expect(result).toStrictEqual(expected);
   });
-  it('should parse all values as string, int, boolean, float, hexadecimal', () => {
+  it('should parse all values as string, int, boolean, float, hexadecimal', async () => {
     const xmlData = encoder.encode(`<rootNode>
         <tag>value</tag>
         <boolean>true</boolean>
@@ -104,12 +104,12 @@ describe('XMLParser', () => {
         hexadecimal: 21,
       },
     };
-    const result = parse(xmlData);
+    const result = await parse(xmlData);
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse only true numbers', () => {
+  it('should parse only true numbers', async () => {
     const xmlData = encoder.encode(`<rootNode>
         <tag>value</tag>
         <boolean>true</boolean>
@@ -127,12 +127,12 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData);
+    const result = await parse(xmlData);
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not convert number and boolean', () => {
+  it('should not convert number and boolean', async () => {
     const xmlData = encoder.encode(`<rootNode>
 	    <tag>value</tag>
 	    <boolean>true</boolean>
@@ -150,12 +150,12 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, { dynamicTypingNodeValue: false });
+    const result = await parse(xmlData, { dynamicTypingNodeValue: false });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse number ending in .0', () => {
+  it('should parse number ending in .0', async () => {
     const xmlData = encoder.encode(`<rootNode>
         <floatTag0>0.0</floatTag0>
         <floatTag1>1.0</floatTag1>
@@ -173,14 +173,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingAttributeValue: true,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not parse values to primitive type', () => {
+  it('should not parse values to primitive type', async () => {
     const xmlData = encoder.encode(
       `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`,
     );
@@ -193,13 +193,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingNodeValue: false,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse number values of attributes as number', () => {
+  it('should parse number values of attributes as number', async () => {
     const xmlData = encoder.encode(
       `<rootNode><tag int='045' intNegative='-045' float='65.34' floatNegative='-65.34'>value</tag></rootNode>`,
     );
@@ -215,14 +215,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingAttributeValue: true,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse number values as number if flag is set', () => {
+  it('should parse number values as number if flag is set', async () => {
     const xmlData = encoder.encode(
       `<rootNode><tag>value</tag><intTag>045</intTag><intTag>0</intTag><floatTag>65.34</floatTag></rootNode>`,
     );
@@ -234,13 +234,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingNodeValue: true,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should skip tag arguments', () => {
+  it('should skip tag arguments', async () => {
     const xmlData = encoder.encode(
       `<rootNode><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></rootNode>`,
     );
@@ -252,13 +252,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       ignoreAttributes: true,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should ignore namespace and text node attributes', () => {
+  it('should ignore namespace and text node attributes', async () => {
     const xmlData = encoder.encode(`\
   <root:node>
       <tag ns:arg='value'>value</tag>
@@ -288,14 +288,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       ignoreNameSpace: true,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse empty text Node', () => {
+  it('should parse empty text Node', async () => {
     const xmlData = encoder.encode(`<rootNode><tag></tag></rootNode>`);
     const expected = {
       rootNode: {
@@ -303,11 +303,11 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData);
+    const result = await parse(xmlData);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse self closing tags', () => {
+  it('should parse self closing tags', async () => {
     const xmlData = encoder.encode(
       "<rootNode><tag ns:arg='value'/></rootNode>",
     );
@@ -319,11 +319,11 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {});
+    const result = await parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse single self closing tag', () => {
+  it('should parse single self closing tag', async () => {
     const xmlData = encoder.encode(`<tag arg='value'/>`);
     const expected = {
       tag: {
@@ -332,11 +332,11 @@ describe('XMLParser', () => {
     };
 
     //console.log(getTraversalObj(xmlData));
-    const result = parse(xmlData, {});
+    const result = await parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse repeated nodes in array', () => {
+  it('should parse repeated nodes in array', async () => {
     const xmlData = encoder.encode(`\
   <rootNode>
       <tag>value</tag>
@@ -349,11 +349,11 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData);
+    const result = await parse(xmlData);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse nested nodes in nested properties', () => {
+  it('should parse nested nodes in nested properties', async () => {
     const xmlData = encoder.encode(`\
   <rootNode>
       <parenttag>
@@ -370,11 +370,11 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData);
+    const result = await parse(xmlData);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse non-text nodes with value for repeated nodes', () => {
+  it('should parse non-text nodes with value for repeated nodes', async () => {
     const xmlData = encoder.encode(`
   <rootNode>
       <parenttag attr1='some val' attr2='another val'>
@@ -421,13 +421,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingAttributeValue: false,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should preserve node value', () => {
+  it('should preserve node value', async () => {
     const xmlData = encoder.encode(
       `<rootNode attr1=' some val ' name='another val'> some val </rootNode>`,
     );
@@ -439,13 +439,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       trimValues: false,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse with attributes and value when there is single node', () => {
+  it('should parse with attributes and value when there is single node', async () => {
     const xmlData = encoder.encode(
       `<rootNode attr1='some val' attr2='another val'>val</rootNode>`,
     );
@@ -457,22 +457,22 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {});
+    const result = await parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse different tags', () => {
+  it('should parse different tags', async () => {
     const xmlData = encoder.encode(`<tag.1>val1</tag.1><tag.2>val2</tag.2>`);
     const expected = {
       'tag.1': 'val1',
       'tag.2': 'val2',
     };
 
-    const result = parse(xmlData, {});
+    const result = await parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not parse text value with tag', () => {
+  it('should not parse text value with tag', async () => {
     const xmlData = encoder.encode(
       `<score><c1>71<message>23</message>29</c1></score>`,
     );
@@ -485,14 +485,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       textNodeName: '_text',
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse nested elements with attributes', () => {
+  it('should parse nested elements with attributes', async () => {
     const xmlData = encoder.encode(`\
   <root>
       <Meet date="2017-05-03" type="A" name="Meeting 'A'">
@@ -520,14 +520,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingAttributeValue: false,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse nested elements with attributes wrapped in object', () => {
+  it('should parse nested elements with attributes wrapped in object', async () => {
     const xmlData = encoder.encode(`\
   <root xmlns="urn:none" xmlns:tns-ns="urn:none">
       <Meet xmlns="urn:none" tns-ns:nsattr="attr" date="2017-05-03" type="A" name="Meeting 'A'">
@@ -562,7 +562,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       attributeNamePrefix: '',
       attributesNodeName: '$',
       ignoreNameSpace: true,
@@ -572,7 +572,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should skip namespace', () => {
+  it('should skip namespace', async () => {
     const xmlData = encoder.encode(`\
   <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/" >
       <soap-env:Header>
@@ -603,16 +603,16 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, { ignoreNameSpace: true });
+    const result = await parse(xmlData, { ignoreNameSpace: true });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not trim tag value if not allowed', () => {
+  it('should not trim tag value if not allowed', async () => {
     const xmlData = encoder.encode('<rootNode>       123        </rootNode>');
     const expected = {
       rootNode: '       123        ',
     };
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingNodeValue: false,
       trimValues: false,
     });
@@ -620,33 +620,33 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not trim tag value but not parse if not allowed', () => {
+  it('should not trim tag value but not parse if not allowed', async () => {
     const xmlData = encoder.encode('<rootNode>       123        </rootNode>');
     const expected = {
       rootNode: '123',
     };
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingNodeValue: false,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not decode HTML entities by default', () => {
+  it('should not decode HTML entities by default', async () => {
     const xmlData = encoder.encode(
       '<rootNode>       foo&ampbar&apos;        </rootNode>',
     );
     const expected = {
       rootNode: 'foo&ampbar&apos;',
     };
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingNodeValue: false,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with DOCTYPE', () => {
+  it('should parse XML with DOCTYPE', async () => {
     const xmlData = encoder.encode(
       '<?xml version="1.0" standalone="yes" ?>' +
         '<!--open the DOCTYPE declaration -' +
@@ -662,7 +662,7 @@ describe('XMLParser', () => {
     const expected = {
       foo: 'Hello World.',
     };
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       //dynamicTypingNodeValue: false,
       //trimValues: false
     });
@@ -671,7 +671,7 @@ describe('XMLParser', () => {
   });
 
   //Issue #77
-  it('should parse node with space in closing node', () => {
+  it('should parse node with space in closing node', async () => {
     const xmlData = encoder.encode(
       "<?xml version='1.0'?>" +
         '<any_name>' +
@@ -691,7 +691,7 @@ describe('XMLParser', () => {
         },
       },
     };
-    const result = parse(xmlData);
+    const result = await parse(xmlData);
 
     expect(result).toStrictEqual(expected);
   });

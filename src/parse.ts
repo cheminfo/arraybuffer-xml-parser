@@ -5,7 +5,7 @@ import { traversableToJSON } from './traversableToJSON';
 /**
  * Parse an ArrayBuffer or Uint8Array representing an XML and return an object
  */
-export function parse(
+export async function parse(
   xmlData: string | Uint8Array | ArrayBufferLike,
   options: ParseOptions = {},
 ) {
@@ -20,7 +20,7 @@ export function parse(
 
   options = { ...defaultOptions, ...options };
 
-  const traversable = getTraversable(xmlData as Uint8Array, options);
+  const traversable = await getTraversable(xmlData as Uint8Array, options);
 
   return traversableToJSON(traversable, options);
 }

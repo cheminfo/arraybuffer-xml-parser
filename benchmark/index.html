@@ -8,7 +8,7 @@
     console.log(data);
 
     console.time('start');
-    const result = XMLParser.parse(data, {
+    const result = await XMLParser.parse(data, {
       dynamicTypingAttributeValue: false,
       ignoreAttributes: false,
       dynamicTypingNodeValue: false,

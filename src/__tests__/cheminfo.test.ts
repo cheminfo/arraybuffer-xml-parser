@@ -3,7 +3,7 @@
 import { parse } from '../parse';
 
 describe('XMLParser', () => {
-  it('Try to parse a very simple example', () => {
+  it('Try to parse a very simple example', async () => {
     const xmlData = `
  	<AAA>
 	    12345<AB/>678
@@ -11,7 +11,7 @@ describe('XMLParser', () => {
 
     const expected = { AAA: { '#text': 12345678, AB: '' } };
 
-    let result = parse(xmlData, {});
+    let result = await parse(xmlData, {});
 
     expect(result).toStrictEqual(expected);
   });

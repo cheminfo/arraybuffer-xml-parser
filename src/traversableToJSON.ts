@@ -13,11 +13,11 @@ const { parseString } = require('dynamic-typing');
  * @param {*} parentTagName
  * @returns
  */
-export function traversableToJSON(
+export async function traversableToJSON(
   node: XMLNode,
   options: ParseOptions,
   parentTagName?: string,
-): string | Uint8Array | Record<string, string | Uint8Array> {
+): Promise<string | Uint8Array | Record<string, string | Uint8Array>> {
   const {
     dynamicTypingNodeValue,
     tagValueProcessor,
@@ -29,7 +29,7 @@ export function traversableToJSON(
 
   if (tagValueProcessor) {
     node.value =
-      node.value && tagValueProcessor(node.value as Uint8Array, node);
+      node.value && (await tagValueProcessor(node.value as Uint8Array, node));
   }
   if (typeof node.value === 'string' && dynamicTypingNodeValue) {
     node.value = parseString(node.value);

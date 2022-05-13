@@ -29,7 +29,7 @@ const xmlData = encoder.encode(
   `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`,
 );
 
-const object = parse(xmlData, options);
+const object = await parse(xmlData, options);
 
 /*
 object = {

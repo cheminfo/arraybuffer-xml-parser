@@ -6,11 +6,11 @@ import { parse } from '../parse';
 const encoder = new TextEncoder();
 
 describe('XMLParser', () => {
-  it('should parse multiline tag value when tags without spaces', () => {
+  it('should parse multiline tag value when tags without spaces', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?><root><person>lastname
 firstname
 patronymic</person></root>`);
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -21,7 +21,7 @@ patronymic</person></root>`);
     };
     expect(result).toStrictEqual(expected);
   });
-  it('should parse tag having CDATA', () => {
+  it('should parse tag having CDATA', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
 <any_name>
     <person>
@@ -45,14 +45,14 @@ patronymic</person></root>`);
         },
       },
     };
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse tag having CDATA 2', () => {
+  it('should parse tag having CDATA 2', async () => {
     const xmlData = encoder.encode(`\
 <sql-queries>
     <sql-query id='testquery'><![CDATA[select * from search_urls]]></sql-query>
@@ -78,7 +78,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -88,7 +88,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should parse tag having whitespaces before / after CDATA', () => {
+  it('should parse tag having whitespaces before / after CDATA', async () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a>text</a>
@@ -105,7 +105,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -115,7 +115,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should ignore comment', () => {
+  it('should ignore comment', async () => {
     const xmlData = encoder.encode(
       `<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>`,
     );
@@ -126,7 +126,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -136,7 +136,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should ignore multiline comments', () => {
+  it('should ignore multiline comments', async () => {
     const xmlData = encoder.encode(
       '<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>',
     );
@@ -147,7 +147,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -157,7 +157,7 @@ patronymic</person></root>`);
     //    expect(result).toBe(true);
   });
 
-  it('should parse tag having text before / after CDATA', () => {
+  it('should parse tag having text before / after CDATA', async () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a>text</a>
@@ -174,14 +174,14 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should not parse tag value if having CDATA', () => {
+  it('should not parse tag value if having CDATA', async () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a>text</a>
@@ -198,14 +198,14 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       ignoreAttributes: false,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse CDATA as separate tag', () => {
+  it('should parse CDATA as separate tag', async () => {
     const xmlData = encoder.encode(`\
 <xml>
     <a><![CDATA[text]]></a>
@@ -230,7 +230,7 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       ignoreAttributes: false,
       cdataTagName: '__cdata',
       cdataPositddionChar: '',
@@ -239,7 +239,7 @@ patronymic</person></root>`);
     expect(result).toStrictEqual(expected);
   });
 
-  it('should validate XML with repeated multiline CDATA and comments', () => {
+  it('should validate XML with repeated multiline CDATA and comments', async () => {
     const fileNamePath = join(__dirname, 'assets/mixed.xml');
     const xmlData = readFileSync(fileNamePath);
     const expected = {
@@ -257,7 +257,7 @@ patronymic</person></root>`);
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       ignoreAttributes: false,
       allowBooleanAttributes: true,
     });

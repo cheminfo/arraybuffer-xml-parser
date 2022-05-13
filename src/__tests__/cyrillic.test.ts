@@ -1,7 +1,7 @@
 import { parse } from '../parse';
 
 describe('XMLParser', () => {
-  it('should parse XML with cyrillic characters to JSON string', () => {
+  it('should parse XML with cyrillic characters to JSON string', async () => {
     const xmlData = `<КорневаяЗапись><Тэг>ЗначениеValue53456</Тэг></КорневаяЗапись>`;
     const expected = {
       КорневаяЗапись: {
@@ -12,7 +12,7 @@ describe('XMLParser', () => {
       attributeNamePrefix: '@_',
     };
 
-    const result = parse(xmlData, options);
+    const result = await parse(xmlData, options);
     expect(result).toStrictEqual(expected);
     // console.log({ expected})
     // console.log({ result })

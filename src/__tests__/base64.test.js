@@ -6,7 +6,7 @@ import { parse } from '../parse.ts';
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-test('base64 parsing', () => {
+test('base64 parsing', async () => {
   const xmlData = encoder.encode(`
 <binaryDataArray encodedLength="3">
   <cvParam cvRef="MS" accession="MS:1000523" name="64-bit float" value=""/>
@@ -14,7 +14,7 @@ test('base64 parsing', () => {
   <binary>AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhA</binary>
 </binaryDataArray>`);
 
-  let result = parse(xmlData, {
+  let result = await parse(xmlData, {
     attributeNamePrefix: '',
     tagValueProcessor: (value, node) => {
       // console.log(node.parent.child.cvParam);

@@ -5,7 +5,7 @@ const data = readFileSync(join(__dirname, 'small.xml'));
 const { parse } = require('../lib/index.js');
 
 console.time('start');
-const result = parse(data, {
+const result = await parse(data, {
   dynamicTypingAttributeValue: false,
   ignoreAttributes: false,
   dynamicTypingNodeValue: false,

@@ -8,21 +8,21 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
 describe('XMLParser', () => {
-  it('should decode HTML entities if allowed', () => {
+  it('should decode HTML entities if allowed', async () => {
     const xmlData = encoder.encode(
       '<rootNode>       foo&ampbar&apos;        </rootNode>',
     );
     const expected = {
       rootNode: "foo&bar'",
     };
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       dynamicTypingNodeValue: false,
       tagValueProcessor: (a) => he.decode(decoder.decode(a)),
     }); //if you really need to work with a string convert it yourself
     expect(result).toStrictEqual(expected);
   });
 
-  it('should decode HTML entities / char', () => {
+  it('should decode HTML entities / char', async () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`,
     );
@@ -34,7 +34,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
@@ -44,7 +44,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('tag value processor should be called with value, tag name and node', () => {
+  it('tag value processor should be called with value, tag name and node', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
 	    <any_name>
 		<person>
@@ -56,7 +56,7 @@ describe('XMLParser', () => {
 		</person>
 	    </any_name>`);
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       tagValueProcessor: (value) => {
         return value;
       },
@@ -73,7 +73,7 @@ describe('XMLParser', () => {
     });
   });
 
-  it('tag value processor should be called with value and node', () => {
+  it('tag value processor should be called with value and node', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -86,7 +86,7 @@ describe('XMLParser', () => {
         </any_name>`);
 
     const resultMap: Record<string, Uint8Array[]> = {};
-    parse(xmlData, {
+    await parse(xmlData, {
       tagValueProcessor: (value, node) => {
         if (resultMap[node.tagName]) {
           resultMap[node.tagName].push(value);
@@ -104,7 +104,7 @@ describe('XMLParser', () => {
     });
   });
 
-  it('result should have no value if tag processor returns nothing', () => {
+  it('result should have no value if tag processor returns nothing', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -125,14 +125,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       tagValueProcessor: () => '',
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('result should have constant value returned by tag processor', () => {
+  it('result should have constant value returned by tag processor', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
         <any_name>
             <person>
@@ -152,7 +152,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       tagValueProcessor: () => {
         return 'fxp';
       },
@@ -161,7 +161,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('attribute parser should be called with  atrribute name and value', () => {
+  it('attribute parser should be called with  atrribute name and value', async () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo bar" bug="foo n bar"/>`,
     );
@@ -175,7 +175,7 @@ describe('XMLParser', () => {
 
     const resultMap: Record<string, string[]> = {};
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,

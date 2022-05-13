@@ -12,7 +12,7 @@ const { parseString } = require('dynamic-typing');
  * @param {object} options
  */
 
-export function processTagValue(
+export async function processTagValue(
   value: Uint8Array | string,
   options: ParseOptions,
   tagName?: string,
@@ -21,7 +21,7 @@ export function processTagValue(
   const { dynamicTypingNodeValue, tagValueProcessor } = options;
 
   if (tagValueProcessor) {
-    value = tagValueProcessor(
+    value = await tagValueProcessor(
       value as Uint8Array,
       currentNode as XMLNode,
       tagName,

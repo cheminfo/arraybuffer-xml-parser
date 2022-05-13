@@ -18,7 +18,7 @@ export interface ParseOptions {
    */
   attributeNamePrefix?: string;
   /**
-   * @default '''
+   * @default ''
    */
   attributesNodeName?: string;
   /**
@@ -80,7 +80,7 @@ export interface ParseOptions {
     value: Uint8Array,
     currentNode: XMLNode,
     tagName?: string,
-  ) => string | Uint8Array;
+  ) => Promise<string | Uint8Array>;
   /**
    * Attribute values can be modified during parsing
    * @default  (value:string)=>value

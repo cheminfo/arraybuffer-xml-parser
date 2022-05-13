@@ -5,7 +5,7 @@ import { parse } from '../parse';
 const encoder = new TextEncoder();
 
 describe('XMLParser', () => {
-  it('1a. should support single stopNode', () => {
+  it('1a. should support single stopNode', async () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1><p>p 1</p><div class="show">div 1</div></fix1></issue>`,
     );
@@ -15,7 +15,7 @@ describe('XMLParser', () => {
         fix1: '<p>p 1</p><div class="show">div 1</div>',
       },
     };
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       stopNodes: ['fix1'],
     });
@@ -23,7 +23,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('1b. 3. should support more than one stopNodes, with or without attr', () => {
+  it('1b. 3. should support more than one stopNodes, with or without attr', async () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><div class="show">div 1</div></fix1><fix2><p>p 2</p><div class="show">div 2</div></fix2></issue>`,
     );
@@ -38,7 +38,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -47,7 +47,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('1c. have two stopNodes, one within the other', () => {
+  it('1c. have two stopNodes, one within the other', async () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><fix2><p>p 2</p><div class="show">div 2</div></fix2><div class="show">div 1</div></fix1></issue>`,
     );
@@ -62,7 +62,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -71,7 +71,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('2a. stop node has nothing in it', () => {
+  it('2a. stop node has nothing in it', async () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1></fix1></issue>`,
     );
@@ -82,7 +82,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -91,7 +91,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('2b. stop node is self-closing', () => {
+  it('2b. stop node is self-closing', async () => {
     const xmlData = encoder.encode(
       `<issue><title>test 1</title><fix1/></issue>`,
     );
@@ -102,7 +102,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -111,7 +111,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('4. cdata', () => {
+  it('4. cdata', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
 <issue>
     <fix1>
@@ -132,7 +132,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -145,7 +145,7 @@ describe('XMLParser', () => {
     // });
   });
 
-  it('5. stopNode at root level', () => {
+  it('5. stopNode at root level', async () => {
     const xmlData = encoder.encode(
       `<fix1><p>p 1</p><div class="show">div 1</div></fix1>`,
     );
@@ -153,7 +153,7 @@ describe('XMLParser', () => {
       fix1: '<p>p 1</p><div class="show">div 1</div>',
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],

@@ -3,7 +3,7 @@ import { parse } from '../parse';
 
 const encoder = new TextEncoder();
 describe('XMLParser', () => {
-  it("should parse attributes having '>' in value", () => {
+  it.only("should parse attributes having '>' in value", async () => {
     const xmlData =
       encoder.encode(`<? xml version = "1.0" encoding = "UTF - 8" ?>
         <testStep type="restrequest" name="test step name (bankId -> Error)" id="90e453d3-30cd-4958-a3be-61ecfe7a7cbe">
@@ -21,7 +21,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
 
       //dynamicTypingAttributeValue: true
@@ -30,7 +30,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse attributes with valid names', () => {
+  it('should parse attributes with valid names', async () => {
     const xmlData = encoder.encode(`
         <a>
             <bug atr="sasa" boolean>val
@@ -60,7 +60,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       //attributeNamePrefix: "",
 
       //dynamicTypingAttributeValue: true,
@@ -70,7 +70,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse attributes with correct names', () => {
+  it('should parse attributes with correct names', async () => {
     const xmlData =
       encoder.encode(`<a:root xmlns:a="urn:none" xmlns:a-b="urn:none">
         <a:a attr="2foo&ampbar&apos;">1</a:a>
@@ -103,7 +103,7 @@ describe('XMLParser', () => {
         },
       },
     };
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       //attributeNamePrefix: "",
 
       //dynamicTypingAttributeValue: true,
@@ -113,7 +113,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse tagName without whitespace chars', () => {
+  it('should parse tagName without whitespace chars', async () => {
     const xmlData = encoder.encode(`<a:root
          attr='df'>val
     </a:root>`);
@@ -125,14 +125,14 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       allowBooleanAttributes: true,
     });
 
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with DOCTYPE without internal DTD', () => {
+  it('should parse XML with DOCTYPE without internal DTD', async () => {
     const xmlData = encoder.encode(
       '<?xml version=\'1.0\' standalone=\'no\'?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" ><svg><metadata>test</metadata></svg>',
     );
@@ -142,13 +142,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       allowBooleanAttributes: true,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with DOCTYPE without internal DTD', () => {
+  it('should parse XML with DOCTYPE without internal DTD', async () => {
     const xmlData = encoder.encode(`<?xml version='1.0' standalone='no'?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
         <svg>
@@ -160,13 +160,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       allowBooleanAttributes: true,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML when namespaced ignored', () => {
+  it('should parse XML when namespaced ignored', async () => {
     const xmlData = encoder.encode(
       `<a:b>c</a:b><a:d/><a:e atr="sasa" boolean>`,
     );
@@ -179,14 +179,14 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       allowBooleanAttributes: true,
       ignoreNameSpace: true,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with undefined as text', () => {
+  it('should parse XML with undefined as text', async () => {
     const xmlData = encoder.encode(
       `<tag><![CDATA[undefined]]><nested>undefined</nested></tag>`,
     );
@@ -197,13 +197,13 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       allowBooleanAttributes: true,
     });
     expect(result).toStrictEqual(expected);
   });
 
-  it('should trim \\t or \\n chars', () => {
+  it('should trim \\t or \\n chars', async () => {
     const xmlData = encoder.encode(
       '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<MPD\n' +
@@ -228,7 +228,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       allowBooleanAttributes: true,
       attributesNodeName: '$',
       attributeNamePrefix: '',
@@ -237,38 +237,28 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should error for when any tag is left to close', () => {
+  it('should error for when any tag is left to close', async () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><tag></tag`);
-    expect(() => {
-      parse(xmlData);
-    }).toThrow('Closing Tag is not closed.');
+    await expect(parse(xmlData)).rejects.toThrow('Closing Tag is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+  it('should error for when any tag is left to close', async () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!-- bad `);
-    expect(() => {
-      parse(xmlData);
-    }).toThrow('Comment is not closed.');
+    await expect(parse(xmlData)).rejects.toThrow('Comment is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+  it('should error for when any tag is left to close', async () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><![CDATA ]`);
-    expect(() => {
-      parse(xmlData);
-    }).toThrow('CDATA is not closed.');
+    await expect(parse(xmlData)).rejects.toThrow('CDATA is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+  it('should error for when any tag is left to close', async () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!DOCTYPE `);
-    expect(() => {
-      parse(xmlData);
-    }).toThrow('DOCTYPE is not closed.');
+    await expect(parse(xmlData)).rejects.toThrow('DOCTYPE is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+  it('should error for when any tag is left to close', async () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><?pi  `);
-    expect(() => {
-      parse(xmlData);
-    }).toThrow('Pi Tag is not closed.');
+    await expect(parse(xmlData)).rejects.toThrow('Pi Tag is not closed.');
   });
 
-  it('should parse XML when there is a space after tagName', () => {
+  it('should parse XML when there is a space after tagName', async () => {
     const xmlData = encoder.encode(
       `<tag ><![CDATA[undefined]]><nested>undefined</nested></tag>`,
     );
@@ -279,7 +269,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
+    const result = await parse(xmlData, {
       allowBooleanAttributes: true,
     });
     expect(result).toStrictEqual(expected);

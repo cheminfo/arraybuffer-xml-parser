@@ -6,7 +6,7 @@ import { parse } from '../parse';
 const encoder = new TextEncoder();
 
 describe('XMLParser', () => {
-  it('should parse attributes with valid names', () => {
+  it('should parse attributes with valid names', async () => {
     const xmlData = encoder.encode(
       `<issue _ent-ity.23="Mjg2MzY2OTkyNA==" state="partial" version="1"></issue>`,
     );
@@ -18,7 +18,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
@@ -30,7 +30,7 @@ describe('XMLParser', () => {
     //expect(result).toBe(true);
   });
 
-  it('should parse attributes with newline char', () => {
+  it('should parse attributes with newline char', async () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo\nbar" bug="true"/>`,
     );
@@ -42,7 +42,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
@@ -54,7 +54,7 @@ describe('XMLParser', () => {
     //expect(result).toBe(true);
   });
 
-  it('should not decode HTML entities / char by default', () => {
+  it('should not decode HTML entities / char by default', async () => {
     const xmlData = encoder.encode(
       `<element id="7" data="foo\nbar" bug="foo&ampbar&apos;"/>`,
     );
@@ -66,7 +66,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
@@ -75,7 +75,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse Boolean Attributes', () => {
+  it('should parse Boolean Attributes', async () => {
     const xmlData = encoder.encode(
       `<element id="7" str="" data><selfclosing/><selfclosing /><selfclosingwith attr/></element>`,
     );
@@ -91,7 +91,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
@@ -105,7 +105,7 @@ describe('XMLParser', () => {
     // });
   });
 
-  it('should not remove xmlns when namespaces are not set to be ignored', () => {
+  it('should not remove xmlns when namespaces are not set to be ignored', async () => {
     const xmlData = encoder.encode(
       `<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>`,
     );
@@ -118,7 +118,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
     });
@@ -130,7 +130,7 @@ describe('XMLParser', () => {
     // });
   });
 
-  it('should remove xmlns when namespaces are set to be ignored', () => {
+  it('should remove xmlns when namespaces are set to be ignored', async () => {
     const xmlData = encoder.encode(
       `<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi-ns="http://www.w3.org/2001/XMLSchema-instance" xsi-ns:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>`,
     );
@@ -143,7 +143,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    let result = await parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       ignoreNameSpace: true,
