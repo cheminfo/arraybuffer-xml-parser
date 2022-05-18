@@ -22,15 +22,24 @@ export async function* getTraversableGenerator(
   let currentNode: XMLNode | undefined;
 
   const reader = readableStream.getReader();
-  console.log(reader);
   let chunk = await reader.read();
+  console.log('---------', chunk);
   let endStream = chunk.done;
   let xmlData = new Uint8Array(chunk.value);
 
+  const SIZE_LIMIT = 1e6;
+
   for (let i = 0; i < xmlData.length; i++) {
-    while (xmlData.length < 1e6 && !endStream) {
-      chunk = await reader.read();
-      endStream = chunk.done;
+    if (xmlData.length < SIZE_LIMIT) {
+      // TODO we should remove from xmlData what was processed
+
+      let currentLength = xmlData.length;
+      const newChunks = [];
+      while (xmlData.length < SIZE_LIMIT && !endStream) {
+        chunk = await reader.read();
+        newChunks.push(new Uint8Array(chunk.value));
+        endStream = chunk.done;
+      }
     }
 
     if (xmlData[i] === 0x3c) {

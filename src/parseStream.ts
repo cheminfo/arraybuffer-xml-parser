@@ -13,9 +13,10 @@ export async function* parseStream(
 ) {
   options = { ...defaultOptions, ...options };
 
-  for await (let entry of getTraversableGenerator(readableStream, options)) {
-    const result = traversableToJSON(entry, options);
-
-    console.log(result);
+  for await (const traversableEntry of getTraversableGenerator(
+    readableStream,
+    options,
+  )) {
+    yield traversableToJSON(traversableEntry, options);
   }
 }
