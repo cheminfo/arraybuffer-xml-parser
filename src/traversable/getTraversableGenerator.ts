@@ -23,7 +23,6 @@ export async function* getTraversableGenerator(
 
   const reader = readableStream.getReader();
   let chunk = await reader.read();
-  console.log('---------', chunk);
   let endStream = chunk.done;
   let xmlData = new Uint8Array(chunk.value);
 
@@ -37,6 +36,7 @@ export async function* getTraversableGenerator(
       const newChunks = [];
       while (xmlData.length < SIZE_LIMIT && !endStream) {
         chunk = await reader.read();
+        console.log(chunk);
         newChunks.push(new Uint8Array(chunk.value));
         endStream = chunk.done;
       }

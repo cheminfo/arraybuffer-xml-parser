@@ -14,7 +14,7 @@ describe('parseStream', () => {
         if (chunk === null) controller.terminate();
         chunk = new Uint8Array(await chunk);
         for (let i = 0; i < chunk.length; i += CHUNK_SIZE) {
-          controller.enqueue(chunk.slice(i, CHUNK_SIZE));
+          controller.enqueue(chunk.slice(i, i + CHUNK_SIZE));
         }
       },
     });
