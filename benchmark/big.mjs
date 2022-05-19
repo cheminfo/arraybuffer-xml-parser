@@ -4,9 +4,23 @@ import pako from 'pako';
 import { decode } from 'uint8-base64';
 import { parse } from '../lib/index.js';
 
-const data = readFileSync(new URL('big.xml', import.meta.url).pathname);
+const data = readFileSync(new URL('big2.xml', import.meta.url).pathname);
 
-console.log(data);
+function getInflate() {
+  if (typeof DecompressionStream === 'undefined') {
+    console.log('PAKO');
+    return pako.inflate;
+  } else {
+    const ds = new DecompressionStream('gzip');
+    console.log('DecompressionStream');
+    return (blob) => {
+      const decompressedStream = blob.stream().pipeThrough(ds);
+      return new Response(decompressedStream).blob();
+    };
+  }
+}
+
+const inflate = getInflate();
 
 const decoder = new TextDecoder();
 
@@ -17,23 +31,17 @@ const result = await parse(data, {
   dynamicTypingNodeValue: false,
   tagValueProcessor: (value, node) => {
     if (node.tagName !== 'binary') return decoder.decode(value);
-    if (!node.parent.children) {
-      console.log(node);
-    }
     const ontologies = node.parent.children.cvParam.map(
       (entry) => entry.attributes.accession,
     );
     try {
       return decodeBase64(node.value, { ontologies });
     } catch (e) {
-      console.log(node);
+      // console.log(node);
     }
   },
 });
 console.timeEnd('start');
-//console.log(
-//  result.indexedmzML.mzML.run.spectrumList.spectrum[1].binaryDataArrayList,
-//);
 
 function decodeBase64(base64, options = {}) {
   let {
@@ -62,7 +70,7 @@ function decodeBase64(base64, options = {}) {
   let uint8Array = decode(base64);
   switch (compression.toLowerCase()) {
     case 'zlib':
-      uint8Array = pako.inflate(uint8Array);
+      uint8Array = inflate(uint8Array);
       break;
     case '':
     case 'none':

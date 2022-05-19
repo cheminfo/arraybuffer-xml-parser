@@ -5,7 +5,7 @@
     const response = await fetch('./big.xml');
     const data = await response.arrayBuffer();
 
-    console.log(data);
+    //   console.log(data);
 
     console.time('start');
     const result = await XMLParser.parse(data, {
@@ -18,7 +18,7 @@
     });
     console.timeEnd('start');
 
-    console.log(result);
+    // console.log(result);
   }
 
   doAll();

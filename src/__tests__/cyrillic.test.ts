@@ -14,7 +14,5 @@ describe('XMLParser', () => {
 
     const result = await parse(xmlData, options);
     expect(result).toStrictEqual(expected);
-    // console.log({ expected})
-    // console.log({ result })
   });
 });

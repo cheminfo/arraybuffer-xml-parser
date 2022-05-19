@@ -189,7 +189,6 @@ describe('XMLParser', () => {
       },
     });
 
-    //console.log(JSON.stringify(resultMap,null,4));
     expect(result).toStrictEqual(expected);
 
     expect(resultMap).toStrictEqual({
