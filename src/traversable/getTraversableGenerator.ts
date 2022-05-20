@@ -20,17 +20,24 @@ export async function* getTraversableGenerator(
   let dataSize = 0;
   let dataIndex = 0;
   let currentNode: XMLNode | undefined;
-
+  let lastMatchingClosedIndex = 0;
   const reader = readableStream.getReader();
   let chunk = await reader.read();
   let endStream = chunk.done;
   let xmlData = new Uint8Array(chunk.value);
 
-  const SIZE_LIMIT = 1e6;
+  const SIZE_LIMIT = 1e3;
 
   for (let i = 0; i < xmlData.length; i++) {
-    if (xmlData.length < SIZE_LIMIT) {
+    if (xmlData.length < SIZE_LIMIT && !endStream) {
       // TODO we should remove from xmlData what was processed
+      console.log({ lastMatchingClosedIndex });
+      if (lastMatchingClosedIndex > 0) {
+        i -= lastMatchingClosedIndex;
+        console.log({ i });
+        xmlData.splice(lastMatchingClosedIndex);
+        lastMatchingClosedIndex = 0;
+      }
 
       let currentLength = xmlData.length;
       const newChunks = [];
@@ -89,8 +96,8 @@ export async function* getTraversableGenerator(
             currentNode.value = xmlData.subarray(currentNode.startIndex + 1, i);
           }
           if (tagName === tag) {
-            console.log(currentNode);
             yield currentNode;
+            lastMatchingClosedIndex = i;
           }
           currentNode = currentNode.parent as XMLNode;
         }

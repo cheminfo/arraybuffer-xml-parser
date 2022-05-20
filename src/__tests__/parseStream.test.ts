@@ -19,11 +19,13 @@ describe('parseStream', () => {
       },
     });
 
+    const results = [];
     //@ts-expect-error feature is too new
     const readableStream = file.readableWebStream();
     for await (let entry of parseStream(
       readableStream.pipeThrough(transformStream),
     )) {
+      results.push(entry);
       console.log(entry);
     }
   });
