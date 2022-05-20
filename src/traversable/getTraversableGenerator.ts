@@ -34,12 +34,23 @@ export async function* getTraversableGenerator(
 
       let currentLength = xmlData.length;
       const newChunks = [];
-      while (xmlData.length < SIZE_LIMIT && !endStream) {
+      while (currentLength < SIZE_LIMIT && !endStream) {
         chunk = await reader.read();
-        console.log(chunk);
-        newChunks.push(new Uint8Array(chunk.value));
         endStream = chunk.done;
+        if (!endStream) {
+          newChunks.push(new Uint8Array(chunk.value));
+          currentLength += chunk.value.length;
+        }
       }
+      const newXmlData = new Uint8Array(currentLength);
+      let currentShift = 0;
+      newXmlData.set(xmlData, currentShift);
+      currentShift += xmlData.length;
+      for (let chunk of newChunks) {
+        newXmlData.set(chunk, currentShift);
+        currentShift += chunk.length;
+      }
+      xmlData = newXmlData;
     }
 
     if (xmlData[i] === 0x3c) {
