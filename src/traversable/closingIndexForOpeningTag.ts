@@ -1,5 +1,11 @@
 import { decoder } from './utils/utf8Decoder';
 
+/**
+ * Search for the corresponding closing tag '>'
+ * @param data
+ * @param i
+ * @returns
+ */
 export function closingIndexForOpeningTag(
   data: Uint8Array,
   i: number,
@@ -25,8 +31,5 @@ export function closingIndexForOpeningTag(
     }
     endIndex++;
   }
-  return {
-    data: decoder.decode(data.subarray(i, i + endIndex)),
-    index: 0,
-  };
+  throw new Error('Could not find closing tag');
 }
