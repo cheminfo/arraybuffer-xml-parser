@@ -1,11 +1,9 @@
-// @ts-nocheck
-
 import { XMLNode } from '../XMLNode';
 import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
 import { arrayTrim } from '../bufferUtils/arrayTrim';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
-import { ParseOptions } from './defaultOptions';
+import { StreamParseOptions } from './defaultOptions';
 import { findClosingIndex } from './findClosingIndex';
 import { parseAttributesString } from './parseAttributesString';
 import { concat } from './utils/concat';
@@ -14,9 +12,9 @@ import { decoder } from './utils/utf8Decoder';
 
 export async function* getTraversableGenerator(
   readableStream: ReadableStream,
-  options: ParseOptions,
+  lookupTagName: string,
+  options: StreamParseOptions,
 ) {
-  let tag = 'address';
   let dataSize = 0;
   let dataIndex = 0;
   let currentNode: XMLNode | undefined;
@@ -26,29 +24,28 @@ export async function* getTraversableGenerator(
   let endStream = chunk.done;
   let xmlData = new Uint8Array(chunk.value);
 
-  const SIZE_LIMIT = 1e3;
+  const { maxEntrySize = 1e7, maxBufferSize = 2e8 } = options;
 
   for (let i = 0; i < xmlData.length; i++) {
-    if (xmlData.length < SIZE_LIMIT && !endStream) {
+    if (xmlData.length - i < maxEntrySize && !endStream) {
       // TODO we should remove from xmlData what was processed
-      console.log({ lastMatchingClosedIndex });
       if (lastMatchingClosedIndex > 0) {
         i -= lastMatchingClosedIndex;
-        console.log({ i });
-        xmlData.splice(lastMatchingClosedIndex);
+        xmlData = xmlData.slice(lastMatchingClosedIndex);
         lastMatchingClosedIndex = 0;
       }
-
       let currentLength = xmlData.length;
       const newChunks = [];
-      while (currentLength < SIZE_LIMIT && !endStream) {
+      while (currentLength < maxBufferSize && !endStream) {
         chunk = await reader.read();
         endStream = chunk.done;
         if (!endStream) {
-          newChunks.push(new Uint8Array(chunk.value));
-          currentLength += chunk.value.length;
+          const newChunk = new Uint8Array(chunk.value);
+          newChunks.push(newChunk);
+          currentLength += newChunk.length;
         }
       }
+
       const newXmlData = new Uint8Array(currentLength);
       let currentShift = 0;
       newXmlData.set(xmlData, currentShift);
@@ -76,6 +73,7 @@ export async function* getTraversableGenerator(
           arrayTrim(xmlData.subarray(i + 2, closeIndex), {}),
         );
         tagName = removeNameSpaceIfNeeded(tagName, options);
+
         if (currentNode) {
           const value = options.trimValues
             ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
@@ -95,7 +93,7 @@ export async function* getTraversableGenerator(
             }
             currentNode.value = xmlData.subarray(currentNode.startIndex + 1, i);
           }
-          if (tagName === tag) {
+          if (tagName === lookupTagName) {
             yield currentNode;
             lastMatchingClosedIndex = i;
           }
@@ -165,7 +163,7 @@ export async function* getTraversableGenerator(
             ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
             : xmlData.subarray(dataIndex, dataIndex + dataSize);
 
-          currentNode.value = concat(currentNode.value, value);
+          if (currentNode) currentNode.value = concat(currentNode.value, value);
         }
 
         if (options.cdataTagName) {
@@ -175,13 +173,15 @@ export async function* getTraversableGenerator(
             currentNode,
             tagExp,
           );
-          currentNode.addChild(childNode);
+          if (currentNode) currentNode.addChild(childNode);
           //add rest value to parent node
           if (tagExp) {
             childNode.value = tagExp;
           }
         } else {
-          currentNode.value = concat(currentNode.value, tagExp);
+          if (currentNode) {
+            currentNode.value = concat(currentNode.value, tagExp);
+          }
         }
 
         i = closeIndex + 2;
@@ -245,7 +245,7 @@ export async function* getTraversableGenerator(
         } else {
           //opening tag
 
-          if (currentNode || tagName === tag) {
+          if (currentNode || tagName === lookupTagName) {
             const childNode = new XMLNode(tagName, currentNode);
             if (
               options.stopNodes?.length &&
@@ -263,6 +263,7 @@ export async function* getTraversableGenerator(
             currentNode = childNode;
           }
         }
+
         i = closeIndex;
         dataSize = 0;
         dataIndex = i + 1;

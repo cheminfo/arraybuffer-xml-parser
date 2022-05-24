@@ -1,6 +1,9 @@
 import { ReadableStream } from 'stream/web';
 
-import { defaultOptions, ParseOptions } from './traversable/defaultOptions';
+import {
+  defaultOptions,
+  StreamParseOptions,
+} from './traversable/defaultOptions';
 import { getTraversableGenerator } from './traversable/getTraversableGenerator';
 import { traversableToJSON } from './traversableToJSON';
 
@@ -9,12 +12,14 @@ import { traversableToJSON } from './traversableToJSON';
  */
 export async function* parseStream(
   readableStream: ReadableStream,
-  options: ParseOptions = {},
+  lookupTagName: string,
+  options: StreamParseOptions = {},
 ) {
   options = { ...defaultOptions, ...options };
 
   for await (const traversableEntry of getTraversableGenerator(
     readableStream,
+    lookupTagName,
     options,
   )) {
     yield traversableToJSON(traversableEntry, options);
