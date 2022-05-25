@@ -1,5 +1,3 @@
-import { ReadableStream } from 'stream/web';
-
 import {
   defaultOptions,
   StreamParseOptions,
