@@ -7,6 +7,20 @@ export const decoder = {
     return utf8Decoder.decode(array);
   },
 };
+
+export interface StreamParseOptions extends ParseOptions {
+  /**
+   * What is the maximal size (in bytes) of an entry
+   * @default 1e7
+   */
+  maxEntrySize?: number;
+  /**
+   * What is the maximal size for the buffer
+   * @default 2e8
+   */
+  maxBufferSize?: number;
+}
+
 export interface ParseOptions {
   /**
    * should we remove ascii < 32
@@ -92,6 +106,7 @@ export interface ParseOptions {
    */
   stopNodes?: string[];
 }
+
 export const defaultOptions: ParseOptions = {
   trimValues: true,
   attributeNamePrefix: '$',
