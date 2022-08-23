@@ -28,8 +28,10 @@ describe('parseStream', () => {
         'address',
       )) {
         results.push(entry);
-        //console.log(entry);
       }
+
+      await file.close();
+
       expect(results).toMatchInlineSnapshot(`
       Array [
         Object {
