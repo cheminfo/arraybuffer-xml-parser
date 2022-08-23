@@ -178,10 +178,8 @@ export async function* getTraversableGenerator(
           if (tagExp) {
             childNode.value = tagExp;
           }
-        } else {
-          if (currentNode) {
-            currentNode.value = concat(currentNode.value, tagExp);
-          }
+        } else if (currentNode) {
+          currentNode.value = concat(currentNode.value, tagExp);
         }
 
         i = closeIndex + 2;
@@ -245,6 +243,7 @@ export async function* getTraversableGenerator(
         } else {
           //opening tag
 
+          // eslint-disable-next-line no-lonely-if
           if (currentNode || tagName === lookupTagName) {
             const childNode = new XMLNode(tagName, currentNode);
             if (

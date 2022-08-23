@@ -11,8 +11,7 @@ export function arrayIndexOf(
         foundIndex = i;
       }
       found++;
-    } else {
-      if (found > 0) {
+    } else if (found > 0) {
         let j = 0;
         for (
           ;
@@ -29,7 +28,6 @@ export function arrayIndexOf(
         found = 0;
         foundIndex = -1;
       }
-    }
   }
   if (found !== referenceArray.length) {
     foundIndex = -1;
