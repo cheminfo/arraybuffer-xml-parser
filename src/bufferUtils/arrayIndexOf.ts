@@ -12,22 +12,22 @@ export function arrayIndexOf(
       }
       found++;
     } else if (found > 0) {
-        let j = 0;
-        for (
-          ;
-          j <= found && array[foundIndex + j] === array[foundIndex + found];
-          j++
-        );
-        if (j < found + 1) {
-          foundIndex = -1;
-          found = 0;
-        } else {
-          foundIndex++;
-        }
-      } else {
-        found = 0;
+      let j = 0;
+      for (
+        ;
+        j <= found && array[foundIndex + j] === array[foundIndex + found];
+        j++
+      );
+      if (j < found + 1) {
         foundIndex = -1;
+        found = 0;
+      } else {
+        foundIndex++;
       }
+    } else {
+      found = 0;
+      foundIndex = -1;
+    }
   }
   if (found !== referenceArray.length) {
     foundIndex = -1;

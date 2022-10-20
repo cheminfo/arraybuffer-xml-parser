@@ -21,9 +21,9 @@ describe('parseStream', () => {
       });
 
       const results = [];
-      //@ts-expect-error feature is too new
       const readableStream = file.readableWebStream();
       for await (let entry of parseStream(
+        // @ts-expect-error Incompatibility between node and web types.
         readableStream.pipeThrough(transformStream),
         'address',
       )) {
@@ -33,33 +33,33 @@ describe('parseStream', () => {
       await file.close();
 
       expect(results).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "buildingNo": 1,
-          "city": "New York",
-          "flatNo": 1,
-          "street": "Park Ave",
-        },
-        Object {
-          "buildingNo": 33,
-          "city": "Boston",
-          "flatNo": 24,
-          "street": "Centre St",
-        },
-        Object {
-          "buildingNo": 1,
-          "city": "Moscow",
-          "flatNo": 2,
-          "street": "Kahovka",
-        },
-        Object {
-          "buildingNo": 3,
-          "city": "Tula",
-          "flatNo": 78,
-          "street": "Lenina",
-        },
-      ]
-    `);
+        [
+          {
+            "buildingNo": 1,
+            "city": "New York",
+            "flatNo": 1,
+            "street": "Park Ave",
+          },
+          {
+            "buildingNo": 33,
+            "city": "Boston",
+            "flatNo": 24,
+            "street": "Centre St",
+          },
+          {
+            "buildingNo": 1,
+            "city": "Moscow",
+            "flatNo": 2,
+            "street": "Kahovka",
+          },
+          {
+            "buildingNo": 3,
+            "city": "Tula",
+            "flatNo": 78,
+            "street": "Lenina",
+          },
+        ]
+      `);
     }
   });
 });
