@@ -60,7 +60,7 @@ export function traversableToJSON(
     if (options.attributeNamePrefix) {
       // need to rename the attributes
       const renamedAttributes: Record<string, boolean | XMLNode> = {};
-      for (let attributeName in node.attributes) {
+      for (const attributeName in node.attributes) {
         const newAttributeName = attributeNameProcessor
           ? attributeNameProcessor(attributeName)
           : attributeName;
@@ -70,7 +70,7 @@ export function traversableToJSON(
       attributes = renamedAttributes;
     }
     if (options.attributesNodeName) {
-      let encapsulatedAttributes: Record<string, any> = {};
+      const encapsulatedAttributes: Record<string, any> = {};
       encapsulatedAttributes[options.attributesNodeName] = attributes;
       attributes = encapsulatedAttributes;
     }
@@ -82,8 +82,8 @@ export function traversableToJSON(
     if (node.children[tagName] && node.children[tagName].length > 1) {
       result[tagName] = [];
       // eslint-disable-next-line @typescript-eslint/no-for-in-array
-      for (let tag in node.children[tagName]) {
-        if (Object.prototype.hasOwnProperty.call(node.children[tagName], tag)) {
+      for (const tag in node.children[tagName]) {
+        if (Object.hasOwn(node.children[tagName], tag)) {
           result[newTagName].push(
             traversableToJSON(node.children[tagName][tag], options, tagName),
           );

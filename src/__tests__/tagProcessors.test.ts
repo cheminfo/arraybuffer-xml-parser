@@ -1,5 +1,3 @@
-/* eslint-disable no-tabs */
-
 import { parse } from '../parse';
 
 describe('XMLParser', () => {

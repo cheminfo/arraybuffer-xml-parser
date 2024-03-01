@@ -1,5 +1,3 @@
-/* eslint-disable no-tabs */
-
 import { parse } from '../parse';
 
 describe('XMLParser', () => {
@@ -11,7 +9,7 @@ describe('XMLParser', () => {
 
     const expected = { AAA: { '#text': 12345678, AB: '' } };
 
-    let result = parse(xmlData, {});
+    const result = parse(xmlData, {});
 
     expect(result).toStrictEqual(expected);
   });

@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-identical-title */
 import { parse } from '../parse';
 
 const encoder = new TextEncoder();
@@ -21,7 +20,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
 
       //dynamicTypingAttributeValue: true
@@ -60,7 +59,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       //attributeNamePrefix: "",
 
       //dynamicTypingAttributeValue: true,
@@ -70,7 +69,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse attributes with correct names', () => {
+  it('should parse attributes with correct names 2', () => {
     const xmlData =
       encoder.encode(`<a:root xmlns:a="urn:none" xmlns:a-b="urn:none">
         <a:a attr="2foo&ampbar&apos;">1</a:a>
@@ -103,7 +102,7 @@ describe('XMLParser', () => {
         },
       },
     };
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       //attributeNamePrefix: "",
 
       //dynamicTypingAttributeValue: true,
@@ -125,7 +124,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       allowBooleanAttributes: true,
     });
 

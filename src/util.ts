@@ -32,7 +32,7 @@ export function isEmptyObject(
  * @param {object} source
  */
 export function merge(
-  target: Record<string, boolean | XMLNode | (XMLNode | boolean)[]>,
+  target: Record<string, boolean | XMLNode | Array<XMLNode | boolean>>,
   source: Record<string, boolean | XMLNode>,
   arrayMode:
     | ((tagName: string, parentTagName: string) => boolean)

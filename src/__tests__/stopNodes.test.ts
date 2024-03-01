@@ -1,5 +1,3 @@
-/* eslint-disable no-tabs */
-
 import { parse } from '../parse';
 
 const encoder = new TextEncoder();
@@ -15,7 +13,7 @@ describe('XMLParser', () => {
         fix1: '<p>p 1</p><div class="show">div 1</div>',
       },
     };
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
       stopNodes: ['fix1'],
     });
@@ -38,7 +36,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -62,7 +60,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -82,7 +80,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -102,7 +100,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -132,7 +130,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],
@@ -153,7 +151,7 @@ describe('XMLParser', () => {
       fix1: '<p>p 1</p><div class="show">div 1</div>',
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
 
       stopNodes: ['fix1', 'fix2'],

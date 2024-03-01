@@ -1,5 +1,3 @@
-/* eslint-disable no-tabs */
-
 import { readFileSync } from 'fs';
 import { join } from 'path';
 

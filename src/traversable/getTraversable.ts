@@ -143,7 +143,7 @@ export function getTraversable(xmlData: Uint8Array, options: ParseOptions) {
       } else {
         //Opening a normal tag
         const parsedOpeningTag = closingIndexForOpeningTag(xmlData, i + 1);
-        let tagData = parsedOpeningTag.data.replace(/\r?\n|\t/g, ' ');
+        const tagData = parsedOpeningTag.data.replace(/\r?\n|\t/g, ' ');
         const closeIndex = parsedOpeningTag.index;
         const separatorIndex = tagData.indexOf(' ');
         let shouldBuildAttributesMap = true;

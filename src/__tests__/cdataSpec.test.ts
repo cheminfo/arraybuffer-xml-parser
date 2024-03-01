@@ -10,7 +10,7 @@ describe('XMLParser', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?><root><person>lastname
 firstname
 patronymic</person></root>`);
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -45,7 +45,7 @@ patronymic</person></root>`);
         },
       },
     };
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -78,7 +78,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -105,7 +105,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -126,7 +126,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 
@@ -147,7 +147,7 @@ patronymic</person></root>`);
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       ignoreAttributes: false,
     });
 

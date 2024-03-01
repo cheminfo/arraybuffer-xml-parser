@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-/* eslint-disable no-tabs */
+
 import he from 'he';
 
 import { parse } from '../parse';
@@ -34,7 +34,7 @@ describe('XMLParser', () => {
       },
     };
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,
@@ -175,7 +175,7 @@ describe('XMLParser', () => {
 
     const resultMap: Record<string, string[]> = {};
 
-    let result = parse(xmlData, {
+    const result = parse(xmlData, {
       attributeNamePrefix: '',
       ignoreAttributes: false,
       dynamicTypingAttributeValue: true,

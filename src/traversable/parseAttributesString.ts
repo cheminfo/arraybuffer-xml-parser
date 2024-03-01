@@ -18,7 +18,7 @@ export function parseAttributesString(string: string, options: ParseOptions) {
 
   const matches = getAllMatches(string, attrsRegx);
   const attributes: Record<string, XMLNode | boolean> = {};
-  for (let match of matches) {
+  for (const match of matches) {
     const attrName = resolveNameSpace(match[1], options);
     if (attrName.length) {
       if (match[4] !== undefined) {

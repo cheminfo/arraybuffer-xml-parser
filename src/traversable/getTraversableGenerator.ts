@@ -37,6 +37,7 @@ export async function* getTraversableGenerator(
       let currentLength = xmlData.length;
       const newChunks = [];
       while (currentLength < maxBufferSize && !endStream) {
+        // eslint-disable-next-line no-await-in-loop
         chunk = await reader.read();
         endStream = chunk.done;
         if (!endStream) {
@@ -50,7 +51,7 @@ export async function* getTraversableGenerator(
       let currentShift = 0;
       newXmlData.set(xmlData, currentShift);
       currentShift += xmlData.length;
-      for (let chunk of newChunks) {
+      for (const chunk of newChunks) {
         newXmlData.set(chunk, currentShift);
         currentShift += chunk.length;
       }
@@ -188,7 +189,7 @@ export async function* getTraversableGenerator(
       } else {
         //Opening a normal tag
         const parsedOpeningTag = closingIndexForOpeningTag(xmlData, i + 1);
-        let tagData = parsedOpeningTag.data.replace(/\r?\n|\t/g, ' ');
+        const tagData = parsedOpeningTag.data.replace(/\r?\n|\t/g, ' ');
         const closeIndex = parsedOpeningTag.index;
         const separatorIndex = tagData.indexOf(' ');
         let shouldBuildAttributesMap = true;

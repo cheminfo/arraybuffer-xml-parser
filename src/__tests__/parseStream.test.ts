@@ -5,7 +5,6 @@ import { parseStream } from '../parseStream';
 
 describe('parseStream', () => {
   it('simple case', async () => {
-    // eslint-disable-next-line jest/no-if
     if (Number(process.versions.node.split('.')[0]) >= 18) {
       const file = await open(join(__dirname, 'assets/sample.xml'), 'r');
       const CHUNK_SIZE = 10;
@@ -22,7 +21,7 @@ describe('parseStream', () => {
 
       const results = [];
       const readableStream = file.readableWebStream();
-      for await (let entry of parseStream(
+      for await (const entry of parseStream(
         // @ts-expect-error Incompatibility between node and web types.
         readableStream.pipeThrough(transformStream),
         'address',
