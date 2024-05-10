@@ -1,7 +1,4 @@
-export function concat(
-  a?: string | ArrayLike<number> | undefined,
-  b?: string | ArrayLike<number>,
-) {
+export function concat(a?: string | Uint8Array, b?: string | Uint8Array) {
   if (a === undefined) {
     a = typeof b === 'string' ? '' : new Uint8Array(0);
   }

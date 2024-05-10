@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { parseString } from 'dynamic-typing';
+
 import { XMLNode } from './XMLNode';
 import { ParseOptions } from './traversable/defaultOptions';
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { parseString } = require('dynamic-typing');
 
 /**
  *
