@@ -1,7 +1,6 @@
-export function concat(
-  a?: string | ArrayLike<number> | undefined,
-  b?: string | ArrayLike<number>,
-) {
+import { XMLNodeValue } from '../../XMLNode';
+
+export function concat(a?: XMLNodeValue, b?: XMLNodeValue) {
   if (a === undefined) {
     a = typeof b === 'string' ? '' : new Uint8Array(0);
   }

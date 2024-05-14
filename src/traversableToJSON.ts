@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { XMLNode } from './XMLNode';
+import { parseString } from 'dynamic-typing';
+
+import { XMLNode, XMLNodeValue } from './XMLNode';
 import { ParseOptions } from './traversable/defaultOptions';
 import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { parseString } = require('dynamic-typing');
 
 /**
  *
@@ -17,7 +15,7 @@ export function traversableToJSON(
   node: XMLNode,
   options: ParseOptions,
   parentTagName?: string,
-): string | Uint8Array | Record<string, string | Uint8Array> {
+): XMLNodeValue | Record<string, XMLNodeValue> {
   const {
     dynamicTypingNodeValue,
     tagValueProcessor,
@@ -43,7 +41,12 @@ export function traversableToJSON(
   }
 
   // otherwise create a textnode if node has some text
-  if (node.value !== undefined && node.value.length !== 0) {
+  if (
+    node.value !== undefined &&
+    (typeof node.value === 'number' ||
+      typeof node.value === 'boolean' ||
+      node.value.length !== 0)
+  ) {
     const asArray = isTagNameInArrayMode(
       node.tagName,
       arrayMode,
