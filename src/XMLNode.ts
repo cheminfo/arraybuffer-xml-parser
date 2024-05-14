@@ -1,9 +1,11 @@
+export type XMLNodeValue = string | Uint8Array | number | boolean;
+
 export class XMLNode {
   public tagName: string;
   public parent?: XMLNode;
   public children: Record<string, XMLNode[]>;
   public attributes?: Record<string, XMLNode | boolean>;
-  public value?: string | Uint8Array | undefined | number;
+  public value?: XMLNodeValue;
   public startIndex: number;
   public constructor(
     tagName: string,
