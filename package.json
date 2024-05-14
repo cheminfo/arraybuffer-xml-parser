@@ -40,7 +40,7 @@
     "@types/he": "^1.2.3",
     "@types/jest": "^29.5.12",
     "cheminfo-build": "^1.2.0",
-    "eslint": "^9.2.0",
+    "eslint": "^8.57.0",
     "eslint-config-cheminfo-typescript": "^12.4.0",
     "he": "^1.2.0",
     "iobuffer": "^5.3.2",
