@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 // import he from 'he';
 
 import { parse } from '../parse';
@@ -18,9 +19,8 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
     });
 
     expect(result).toStrictEqual(expected);
@@ -42,9 +42,8 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
     });
 
     expect(result).toStrictEqual(expected);
@@ -66,9 +65,8 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
     });
 
     expect(result).toStrictEqual(expected);
@@ -91,9 +89,8 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
       allowBooleanAttributes: true,
     });
 
@@ -118,7 +115,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
     });
 
@@ -143,7 +140,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
       ignoreNameSpace: true,
     });

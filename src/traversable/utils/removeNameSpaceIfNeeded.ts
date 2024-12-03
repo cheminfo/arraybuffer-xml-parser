@@ -1,4 +1,4 @@
-import { ParseOptions } from '../defaultOptions';
+import type { ParseOptions } from '../defaultOptions';
 
 export function removeNameSpaceIfNeeded(
   tagName: string,
@@ -9,7 +9,7 @@ export function removeNameSpaceIfNeeded(
   }
   const colonIndex = tagName.indexOf(':');
   if (colonIndex !== -1) {
-    tagName = tagName.substr(colonIndex + 1);
+    tagName = tagName.slice(colonIndex + 1);
   }
   return tagName;
 }

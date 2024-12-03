@@ -1,4 +1,6 @@
-import { XMLNode } from '../XMLNode';
+import { parseString } from 'dynamic-typing';
+
+import type { XMLAttributeValue, XMLNode } from '../XMLNode';
 
 const utf8Decoder = new TextDecoder();
 
@@ -21,6 +23,11 @@ export interface StreamParseOptions extends ParseOptions {
   maxBufferSize?: number;
 }
 
+export type TagValueProcessor = (
+  value: Uint8Array,
+  currentNode: XMLNode,
+) => any;
+
 export interface ParseOptions {
   /**
    * should we remove ascii < 32
@@ -28,13 +35,13 @@ export interface ParseOptions {
    */
   trimValues?: boolean;
   /**
-   * @default '$'
-   */
-  attributeNamePrefix?: string;
-  /**
-   * @default '''
+   * @default ''
    */
   attributesNodeName?: string;
+  /**
+   * Tag values can be modified during parsing. By default we decode the tag value (a Uint8Array) using TextDecoder
+   */
+  tagValueProcessor?: TagValueProcessor;
   /**
    * skip attributes
    * @default false
@@ -49,32 +56,23 @@ export interface ParseOptions {
    */
   allowBooleanAttributes?: boolean;
   /**
-   * Parse attribute values that looks like number or boolean
-   * @default true
-   */
-  dynamicTypingAttributeValue?: boolean;
-  tagNameProcessor?: (arg: string) => string;
-  /**
    * @default '#text'
    */
   textNodeName?: string;
   /**
-   * @default true
+   * Callback to process tag names
+   * @default (name:string) => name
    */
-  cdataPositddionChar?: string;
+  tagNameProcessor?: (name: string) => string;
   /**
-   * @default true
+   * Callback to process attribute names
+   * @default (name:string) => `$${name}`
    */
   attributeNameProcessor?: (name: string) => string;
   /**
    * @default true
    */
   parseAttributesString?: boolean;
-  /**
-   * Parse tag values that looks like number or boolean
-   * @default true
-   */
-  dynamicTypingNodeValue?: boolean;
   /**
    * @default false
    */
@@ -88,18 +86,10 @@ export interface ParseOptions {
    */
   cdataTagName?: string;
   /**
-   * Tag values can be modified during parsing. By default we decode the tag value (a Uint8Array) using TextDecoder
-   */
-  tagValueProcessor?: (
-    value: Uint8Array,
-    currentNode: XMLNode,
-    tagName?: string,
-  ) => string | Uint8Array;
-  /**
    * Attribute values can be modified during parsing
    * @default  (value:string)=>value
    */
-  attributeValueProcessor?: (value: string, attrName: string) => string;
+  attributeValueProcessor?: (value: string, name: string) => XMLAttributeValue;
   /**
    * prevent further parsing
    * @default []
@@ -107,23 +97,34 @@ export interface ParseOptions {
   stopNodes?: string[];
 }
 
-export const defaultOptions: ParseOptions = {
+export type RealParseOptions = Required<ParseOptions>;
+
+export type RealStreamParseOptions = Required<StreamParseOptions>;
+
+export const defaultOptions: RealParseOptions = {
   trimValues: true,
-  attributeNamePrefix: '$',
   attributesNodeName: '',
   ignoreAttributes: false,
   ignoreNameSpace: false,
   allowBooleanAttributes: false,
-  dynamicTypingAttributeValue: true,
+  parseAttributesString: true,
 
   textNodeName: '#text',
 
-  dynamicTypingNodeValue: true,
   arrayMode: false,
   cdataTagName: false as unknown as string,
+  tagNameProcessor: (name: string) => name,
+  attributeNameProcessor: (name: string) => `$${name}`,
   tagValueProcessor: (value: Uint8Array) => {
-    return decoder.decode(value).replace(/\r/g, '');
+    const string = decoder.decode(value).replaceAll('\r', '');
+    return parseString(string);
   },
-  attributeValueProcessor: (value: string) => value,
+  attributeValueProcessor: (value: string) => parseString(value),
   stopNodes: [],
+};
+
+export const defaultStreamOptions: RealStreamParseOptions = {
+  ...defaultOptions,
+  maxEntrySize: 1e7,
+  maxBufferSize: 2e8,
 };

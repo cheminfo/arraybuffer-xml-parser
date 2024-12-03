@@ -1,6 +1,7 @@
+import { parseString } from 'dynamic-typing';
+import he from 'he'; // HTML entity encoder/decoder
+import { describe, it, expect } from 'vitest';
 /* eslint-disable camelcase */
-
-import he from 'he';
 
 import { parse } from '../parse';
 
@@ -16,7 +17,6 @@ describe('XMLParser', () => {
       rootNode: "foo&bar'",
     };
     const result = parse(xmlData, {
-      dynamicTypingNodeValue: false,
       tagValueProcessor: (a) => he.decode(decoder.decode(a)),
     }); //if you really need to work with a string convert it yourself
     expect(result).toStrictEqual(expected);
@@ -35,10 +35,10 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
-      attributeValueProcessor: (a) => he.decode(a, { isAttributeValue: true }),
+      attributeValueProcessor: (a) =>
+        parseString(he.decode(a, { isAttributeValue: true })),
     });
 
     expect(result).toStrictEqual(expected);
@@ -97,7 +97,6 @@ describe('XMLParser', () => {
       },
     });
     expect(resultMap).toStrictEqual({
-      any_name: [new Uint8Array()],
       person: [encoder.encode('startmiddleend')],
       name1: [encoder.encode('Jack 1')],
       name2: [encoder.encode('35')],
@@ -119,6 +118,7 @@ describe('XMLParser', () => {
     const expected = {
       any_name: {
         person: {
+          '#text': '',
           name1: '',
           name2: '',
         },
@@ -143,9 +143,7 @@ describe('XMLParser', () => {
 
     const expected = {
       any_name: {
-        '#text': 'fxp',
         person: {
-          '#text': 'fxp',
           name1: 'fxp',
           name2: 'fxp',
         },
@@ -176,16 +174,15 @@ describe('XMLParser', () => {
     const resultMap: Record<string, string[]> = {};
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       ignoreAttributes: false,
-      dynamicTypingAttributeValue: true,
       attributeValueProcessor: (val, attrName) => {
         if (resultMap[attrName]) {
           resultMap[attrName].push(val);
         } else {
           resultMap[attrName] = [val];
         }
-        return val;
+        return parseString(val);
       },
     });
 

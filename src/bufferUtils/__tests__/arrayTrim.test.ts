@@ -1,3 +1,5 @@
+import { test, expect } from 'vitest';
+
 import { arrayTrim } from '../arrayTrim';
 
 test('arrayTrim', () => {

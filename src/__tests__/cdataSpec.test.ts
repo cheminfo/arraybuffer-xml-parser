@@ -1,5 +1,7 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { describe, it, expect } from 'vitest';
 
 import { parse } from '../parse';
 
@@ -233,7 +235,6 @@ patronymic</person></root>`);
     const result = parse(xmlData, {
       ignoreAttributes: false,
       cdataTagName: '__cdata',
-      cdataPositddionChar: '',
     });
 
     expect(result).toStrictEqual(expected);

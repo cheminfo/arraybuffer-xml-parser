@@ -3,18 +3,21 @@ import { arrayIndexOf } from '../bufferUtils/arrayIndexOf';
 import { arrayTrim } from '../bufferUtils/arrayTrim';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag';
-import { StreamParseOptions } from './defaultOptions';
+import type { RealStreamParseOptions } from './defaultOptions';
 import { findClosingIndex } from './findClosingIndex';
 import { parseAttributesString } from './parseAttributesString';
-import { concat } from './utils/concat';
 import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded';
 import { decoder } from './utils/utf8Decoder';
 
 export async function* getTraversableGenerator(
   readableStream: ReadableStream,
   lookupTagName: string,
-  options: StreamParseOptions,
+  // tagValueProcessor is not mandatory so I need to change StreamParseOptions to Partial<StreamParseOptions>
+  // to avoid the error: Property 'tagValueProcessor' is missing in type 'StreamParseOptions' but required in type 'Partial<StreamParseOptions>'
+  // streamParseOptions: StreamParseOptions,
+  options: RealStreamParseOptions,
 ) {
+  const { tagValueProcessor } = options;
   let dataSize = 0;
   let dataIndex = 0;
   let currentNode: XMLNode | undefined;
@@ -76,14 +79,11 @@ export async function* getTraversableGenerator(
         tagName = removeNameSpaceIfNeeded(tagName, options);
 
         if (currentNode) {
-          const value = options.trimValues
-            ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
-            : xmlData.subarray(dataIndex, dataIndex + dataSize);
-          if (currentNode.value === undefined) {
-            currentNode.value = value;
-          } else {
-            currentNode.value = concat(currentNode.value, value);
-          }
+          currentNode.append(
+            options.trimValues
+              ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
+              : xmlData.subarray(dataIndex, dataIndex + dataSize),
+          );
           if (
             options.stopNodes?.length &&
             options.stopNodes.includes(currentNode.tagName)
@@ -92,7 +92,7 @@ export async function* getTraversableGenerator(
             if (currentNode.attributes === undefined) {
               currentNode.attributes = {};
             }
-            currentNode.value = xmlData.subarray(currentNode.startIndex + 1, i);
+            currentNode.bytes = xmlData.subarray(currentNode.startIndex + 1, i);
           }
           if (tagName === lookupTagName) {
             yield currentNode;
@@ -118,15 +118,12 @@ export async function* getTraversableGenerator(
           i,
           'Comment is not closed.',
         );
-        if (currentNode && dataSize !== 0) {
-          if (currentNode.tagName !== '!xml') {
-            currentNode.value = concat(
-              currentNode.value,
-              options.trimValues
-                ? arrayTrim(xmlData.subarray(dataIndex, dataSize + dataIndex))
-                : xmlData.subarray(dataIndex, dataSize + dataIndex),
-            );
-          }
+        if (currentNode && dataSize !== 0 && currentNode.tagName !== '!xml') {
+          currentNode.append(
+            options.trimValues
+              ? arrayTrim(xmlData.subarray(dataIndex, dataSize + dataIndex))
+              : xmlData.subarray(dataIndex, dataSize + dataIndex),
+          );
         }
         dataSize = 0;
         dataIndex = i + 1;
@@ -164,7 +161,7 @@ export async function* getTraversableGenerator(
             ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
             : xmlData.subarray(dataIndex, dataIndex + dataSize);
 
-          if (currentNode) currentNode.value = concat(currentNode.value, value);
+          currentNode?.append(value);
         }
 
         if (options.cdataTagName) {
@@ -173,14 +170,15 @@ export async function* getTraversableGenerator(
             options.cdataTagName,
             currentNode,
             tagExp,
+            tagValueProcessor,
           );
-          if (currentNode) currentNode.addChild(childNode);
+          currentNode?.addChild(childNode);
           //add rest value to parent node
           if (tagExp) {
-            childNode.value = tagExp;
+            childNode.bytes = tagExp;
           }
         } else if (currentNode) {
-          currentNode.value = concat(currentNode.value, tagExp);
+          currentNode.append(tagExp);
         }
 
         i = closeIndex + 2;
@@ -189,35 +187,32 @@ export async function* getTraversableGenerator(
       } else {
         //Opening a normal tag
         const parsedOpeningTag = closingIndexForOpeningTag(xmlData, i + 1);
-        const tagData = parsedOpeningTag.data.replace(/\r?\n|\t/g, ' ');
+        const tagData = parsedOpeningTag.data.replaceAll(/\r?\n|\t/g, ' ');
         const closeIndex = parsedOpeningTag.index;
         const separatorIndex = tagData.indexOf(' ');
         let shouldBuildAttributesMap = true;
         let tagName =
-          separatorIndex >= 0
-            ? tagData.substr(0, separatorIndex).replace(/\s+$/, '')
+          separatorIndex !== -1
+            ? tagData.slice(0, Math.max(0, separatorIndex)).replace(/\s+$/, '')
             : tagData;
         let tagAttributes =
-          separatorIndex >= 0 ? tagData.substr(separatorIndex + 1) : '';
+          separatorIndex !== -1 ? tagData.slice(separatorIndex + 1) : '';
         if (options.ignoreNameSpace) {
           const colonIndex = tagName.indexOf(':');
           if (colonIndex !== -1) {
-            tagName = tagName.substr(colonIndex + 1);
+            tagName = tagName.slice(colonIndex + 1);
             shouldBuildAttributesMap =
-              tagName !== parsedOpeningTag.data.substr(colonIndex + 1);
+              tagName !== parsedOpeningTag.data.slice(colonIndex + 1);
           }
         }
 
         //save text to parent node
-        if (currentNode && dataSize !== 0) {
-          if (currentNode.tagName !== '!xml') {
-            currentNode.value = concat(
-              currentNode.value,
-              options.trimValues
-                ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
-                : xmlData.subarray(dataIndex, dataIndex + dataSize),
-            );
-          }
+        if (currentNode && dataSize !== 0 && currentNode.tagName !== '!xml') {
+          currentNode.append(
+            options.trimValues
+              ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
+              : xmlData.subarray(dataIndex, dataIndex + dataSize),
+          );
         }
 
         if (tagData.length > 0 && tagData.endsWith('/')) {
@@ -226,13 +221,21 @@ export async function* getTraversableGenerator(
           if (currentNode) {
             if (tagAttributes) {
               // <abc def="123"/>
-              tagAttributes = tagAttributes.substr(0, tagAttributes.length - 1);
+              tagAttributes = tagAttributes.slice(
+                0,
+                Math.max(0, tagAttributes.length - 1),
+              );
             } else {
               // <abc/>
-              tagName = tagName.substr(0, tagName.length - 1);
+              tagName = tagName.slice(0, Math.max(0, tagName.length - 1));
             }
 
-            const childNode = new XMLNode(tagName, currentNode, '');
+            const childNode = new XMLNode(
+              tagName,
+              currentNode,
+              new Uint8Array(0),
+              tagValueProcessor,
+            );
             if (tagAttributes) {
               childNode.attributes = parseAttributesString(
                 tagAttributes,
@@ -246,7 +249,12 @@ export async function* getTraversableGenerator(
 
           // eslint-disable-next-line no-lonely-if
           if (currentNode || tagName === lookupTagName) {
-            const childNode = new XMLNode(tagName, currentNode);
+            const childNode = new XMLNode(
+              tagName,
+              currentNode,
+              new Uint8Array(0),
+              tagValueProcessor,
+            );
             if (
               options.stopNodes?.length &&
               options.stopNodes.includes(childNode.tagName)

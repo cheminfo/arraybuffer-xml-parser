@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { parse } from '../parse';
 
 describe('XMLParser', () => {
@@ -21,7 +23,7 @@ describe('XMLParser', () => {
 	    </ab>`;
 
     const result = parse(xmlData, {
-      attributeNameProcessor: (name: string) => name.toUpperCase(),
+      attributeNameProcessor: (name: string) => `$${name.toUpperCase()}`,
     });
     expect(result).toStrictEqual({ ab: { $PARAM1: 'abc', $PARAM2: 'def' } });
   });

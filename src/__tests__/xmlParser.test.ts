@@ -1,9 +1,18 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { parseString } from 'dynamic-typing';
+import { describe, it, expect } from 'vitest';
 
 import { parse } from '../parse';
+import { resolveRecursive } from '../resursiveResolve';
 
 const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+const tagValueProcessorNoDynamicTyping = (value: Uint8Array) => {
+  return decoder.decode(value).replaceAll('\r', '');
+};
 
 describe('XMLParser', () => {
   it('should parse all type of nodes', () => {
@@ -79,12 +88,97 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '@',
+      attributeNameProcessor: (name) => `@${name}`,
       textNodeName: '#_text',
     });
 
     expect(result).toStrictEqual(expected);
   });
+
+  it('should parse all type of nodes but return promise rather than values', async () => {
+    const fileNamePath = join(__dirname, 'assets/sample.xml');
+    const xmlData = readFileSync(fileNamePath);
+
+    const expected = {
+      // eslint-disable-next-line camelcase
+      any_name: {
+        '@attr': 'https://example.com/somepath',
+        person: [
+          {
+            '@id': 101,
+            phone: [122233344550, 122233344551],
+            name: 'Jack',
+            age: 33,
+            emptyNode: '',
+            booleanNode: [false, true],
+            selfclosing: [
+              '',
+              {
+                '@with': 'value',
+              },
+            ],
+            married: {
+              '@firstTime': 'No',
+              '@attr': 'val 2',
+              '#_text': 'Yes',
+            },
+            birthday: 'Wed, 28 Mar 1979 12:13:14 +0300',
+            address: [
+              {
+                city: 'New York',
+                street: 'Park Ave',
+                buildingNo: 1,
+                flatNo: 1,
+              },
+              {
+                city: 'Boston',
+                street: 'Centre St',
+                buildingNo: 33,
+                flatNo: 24,
+              },
+            ],
+          },
+          {
+            '@id': 102,
+            phone: [122233344553, 122233344554],
+            name: 'Boris',
+            age: 34,
+            married: {
+              '@firstTime': 'Yes',
+              '#_text': 'Yes',
+            },
+            birthday: 'Mon, 31 Aug 1970 02:03:04 +0300',
+            address: [
+              {
+                city: 'Moscow',
+                street: 'Kahovka',
+                buildingNo: 1,
+                flatNo: 2,
+              },
+              {
+                city: 'Tula',
+                street: 'Lenina',
+                buildingNo: 3,
+                flatNo: 78,
+              },
+            ],
+          },
+        ],
+      },
+    };
+
+    const result = parse(xmlData, {
+      attributeNameProcessor: (name) => `@${name}`,
+      textNodeName: '#_text',
+      tagValueProcessor: async (value: Uint8Array) => {
+        return parseString(decoder.decode(value).replaceAll('\r', ''));
+      },
+    });
+
+    await resolveRecursive(result);
+    expect(result).toStrictEqual(expected);
+  });
+
   it('should parse all values as string, int, boolean, float, hexadecimal', () => {
     const xmlData = encoder.encode(`<rootNode>
         <tag>value</tag>
@@ -148,7 +242,9 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, { dynamicTypingNodeValue: false });
+    const result = parse(xmlData, {
+      tagValueProcessor: tagValueProcessorNoDynamicTyping,
+    });
 
     expect(result).toStrictEqual(expected);
   });
@@ -171,9 +267,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
-      dynamicTypingAttributeValue: true,
-    });
+    const result = parse(xmlData, {});
 
     expect(result).toStrictEqual(expected);
   });
@@ -192,8 +286,9 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      dynamicTypingNodeValue: false,
+      tagValueProcessor: tagValueProcessorNoDynamicTyping,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -213,9 +308,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
-      dynamicTypingAttributeValue: true,
-    });
+    const result = parse(xmlData, {});
 
     expect(result).toStrictEqual(expected);
   });
@@ -232,9 +325,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
-      dynamicTypingNodeValue: true,
-    });
+    const result = parse(xmlData, {});
     expect(result).toStrictEqual(expected);
   });
 
@@ -420,7 +511,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      dynamicTypingAttributeValue: false,
+      attributeValueProcessor: (name) => name,
     });
     expect(result).toStrictEqual(expected);
   });
@@ -507,10 +598,10 @@ describe('XMLParser', () => {
           $name: "Meeting 'A'",
           Event: {
             $time: '00:05:00',
-            $ID: '574',
+            $ID: 574,
             $Name: 'Some Event Name',
             User: {
-              $ID: '1',
+              $ID: 1,
               '#text': 'Bob',
             },
           },
@@ -518,9 +609,7 @@ describe('XMLParser', () => {
       },
     };
 
-    const result = parse(xmlData, {
-      dynamicTypingAttributeValue: false,
-    });
+    const result = parse(xmlData, {});
 
     expect(result).toStrictEqual(expected);
   });
@@ -546,12 +635,12 @@ describe('XMLParser', () => {
           Event: {
             $: {
               time: '00:05:00',
-              ID: '574',
+              ID: 574,
               Name: 'Some Event Name',
             },
             User: {
               $: {
-                ID: '1',
+                ID: 1,
               },
               '#text': 'Bob',
             },
@@ -561,10 +650,9 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       attributesNodeName: '$',
       ignoreNameSpace: true,
-      dynamicTypingAttributeValue: false,
     });
 
     expect(result).toStrictEqual(expected);
@@ -610,8 +698,9 @@ describe('XMLParser', () => {
     const expected = {
       rootNode: '       123        ',
     };
+
     const result = parse(xmlData, {
-      dynamicTypingNodeValue: false,
+      tagValueProcessor: tagValueProcessorNoDynamicTyping,
       trimValues: false,
     });
 
@@ -623,8 +712,9 @@ describe('XMLParser', () => {
     const expected = {
       rootNode: '123',
     };
+
     const result = parse(xmlData, {
-      dynamicTypingNodeValue: false,
+      tagValueProcessor: tagValueProcessorNoDynamicTyping,
     });
 
     expect(result).toStrictEqual(expected);
@@ -637,9 +727,7 @@ describe('XMLParser', () => {
     const expected = {
       rootNode: 'foo&ampbar&apos;',
     };
-    const result = parse(xmlData, {
-      dynamicTypingNodeValue: false,
-    });
+    const result = parse(xmlData, {});
 
     expect(result).toStrictEqual(expected);
   });

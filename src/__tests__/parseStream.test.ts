@@ -1,5 +1,7 @@
-import { open } from 'fs/promises';
-import { join } from 'path';
+import { open } from 'node:fs/promises';
+import { join } from 'node:path';
+
+import { describe, it, expect } from 'vitest';
 
 import { parseStream } from '../parseStream';
 

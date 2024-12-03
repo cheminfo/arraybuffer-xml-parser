@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { parse } from '../parse';
 
 const encoder = new TextEncoder();
@@ -16,12 +18,13 @@ describe('XMLParser', () => {
         name: 'test step name (bankId -> Error)',
         id: '90e453d3-30cd-4958-a3be-61ecfe7a7cbe',
         settings: '',
+        // eslint-disable-next-line unicorn/text-encoding-identifier-case
         encoding: 'UTF-8',
       },
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
 
       //dynamicTypingAttributeValue: true
     });
@@ -60,9 +63,6 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      //attributeNamePrefix: "",
-
-      //dynamicTypingAttributeValue: true,
       allowBooleanAttributes: true,
     });
 
@@ -103,9 +103,6 @@ describe('XMLParser', () => {
       },
     };
     const result = parse(xmlData, {
-      //attributeNamePrefix: "",
-
-      //dynamicTypingAttributeValue: true,
       allowBooleanAttributes: true,
     });
 
@@ -202,7 +199,7 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should trim \\t or \\n chars', () => {
+  it(String.raw`should trim \t or \n chars`, () => {
     const xmlData = encoder.encode(
       '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<MPD\n' +
@@ -230,7 +227,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       allowBooleanAttributes: true,
       attributesNodeName: '$',
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
     });
 
     expect(result).toStrictEqual(expected);

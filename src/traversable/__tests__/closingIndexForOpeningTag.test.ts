@@ -1,3 +1,5 @@
+import { test, expect } from 'vitest';
+
 import { closingIndexForOpeningTag } from '../closingIndexForOpeningTag';
 
 test('sclosingIndexForOpeningTag', () => {

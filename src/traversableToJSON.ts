@@ -1,74 +1,55 @@
-import { parseString } from 'dynamic-typing';
-
-import { XMLNode, XMLNodeValue } from './XMLNode';
-import { ParseOptions } from './traversable/defaultOptions';
-import { isTagNameInArrayMode, merge, isEmptyObject } from './util';
+import type { XMLAttributeValue, XMLNode, XMLNodeValue } from './XMLNode';
+import type { RealParseOptions } from './traversable/defaultOptions';
+import {
+  isTagNameInArrayMode,
+  merge,
+  isEmptyObject,
+  isEmptySimpleObject,
+} from './util';
 
 /**
  *
- * @param {*} node
- * @param {*} options
- * @param {*} parentTagName
+ * @param node
+ * @param options
+ * @param parentTagName
  * @returns
  */
 export function traversableToJSON(
   node: XMLNode,
-  options: ParseOptions,
+  options: RealParseOptions,
   parentTagName?: string,
 ): XMLNodeValue | Record<string, XMLNodeValue> {
-  const {
-    dynamicTypingNodeValue,
-    tagValueProcessor,
-    arrayMode,
-    tagNameProcessor,
-    attributeNameProcessor,
-  } = options;
+  const { arrayMode, tagNameProcessor, attributeNameProcessor, textNodeName } =
+    options;
   const result: Record<string, any> = {};
 
-  if (tagValueProcessor) {
-    node.value =
-      node.value && tagValueProcessor(node.value as Uint8Array, node);
-  }
-  if (typeof node.value === 'string' && dynamicTypingNodeValue) {
-    node.value = parseString(node.value);
-  }
   // when no child node or attr is present
   if (
     (!node.children || isEmptyObject(node.children)) &&
-    (!node.attributes || isEmptyObject(node.attributes))
+    (!node.attributes || isEmptySimpleObject(node.attributes))
   ) {
-    return node.value === undefined ? '' : node.value;
+    return node.value;
   }
 
   // otherwise create a textnode if node has some text
-  if (
-    node.value !== undefined &&
-    (typeof node.value === 'number' ||
-      typeof node.value === 'boolean' ||
-      node.value.length !== 0)
-  ) {
+  if (node.bytes.length > 0) {
     const asArray = isTagNameInArrayMode(
       node.tagName,
       arrayMode,
       parentTagName as string,
     );
 
-    result[options.textNodeName as string] = asArray
-      ? [node.value]
-      : node.value;
+    result[textNodeName] = asArray ? [node.value] : node.value;
   }
 
-  if (node.attributes && !isEmptyObject(node.attributes)) {
+  if (node.attributes && !isEmptySimpleObject(node.attributes)) {
     let attributes = options.parseAttributesString ? {} : node.attributes;
-    if (options.attributeNamePrefix) {
+    if (attributeNameProcessor) {
       // need to rename the attributes
-      const renamedAttributes: Record<string, boolean | XMLNode> = {};
+      const renamedAttributes: Record<string, XMLAttributeValue> = {};
       for (const attributeName in node.attributes) {
-        const newAttributeName = attributeNameProcessor
-          ? attributeNameProcessor(attributeName)
-          : attributeName;
-        renamedAttributes[options.attributeNamePrefix + newAttributeName] =
-          node.attributes[attributeName];
+        const newAttributeName = attributeNameProcessor(attributeName);
+        renamedAttributes[newAttributeName] = node.attributes[attributeName];
       }
       attributes = renamedAttributes;
     }
@@ -77,6 +58,7 @@ export function traversableToJSON(
       encapsulatedAttributes[options.attributesNodeName] = attributes;
       attributes = encapsulatedAttributes;
     }
+    //@ts-expect-error Should fix this type issue
     merge(result, attributes, arrayMode as string);
   }
 

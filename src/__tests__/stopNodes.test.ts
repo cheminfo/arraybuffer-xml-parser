@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { parse } from '../parse';
 
 const encoder = new TextEncoder();
@@ -14,7 +16,7 @@ describe('XMLParser', () => {
       },
     };
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
       stopNodes: ['fix1'],
     });
 
@@ -37,7 +39,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
 
       stopNodes: ['fix1', 'fix2'],
     });
@@ -61,7 +63,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
 
       stopNodes: ['fix1', 'fix2'],
     });
@@ -81,7 +83,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
 
       stopNodes: ['fix1', 'fix2'],
     });
@@ -101,7 +103,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
 
       stopNodes: ['fix1', 'fix2'],
     });
@@ -131,7 +133,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
 
       stopNodes: ['fix1', 'fix2'],
     });
@@ -152,7 +154,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {
-      attributeNamePrefix: '',
+      attributeNameProcessor: (name) => name,
 
       stopNodes: ['fix1', 'fix2'],
     });

@@ -1,56 +1,47 @@
-import { XMLNode } from '../XMLNode';
-import { getAllMatches, isEmptyObject } from '../util';
+import { getAllMatches, isEmptySimpleObject } from '../util';
 
-import { ParseOptions } from './defaultOptions';
+import type { RealParseOptions } from './defaultOptions';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { parseString } = require('dynamic-typing');
-
-const newLocal = '([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?';
+const newLocal = String.raw`([^\s=]+)\s*(=\s*(['"])(.*?)\3)?`;
 const attrsRegx = new RegExp(newLocal, 'g');
 
 //Attributes are strings so no point in using arrayBuffers here
-export function parseAttributesString(string: string, options: ParseOptions) {
-  if (options.ignoreAttributes) {
+export function parseAttributesString(
+  string: string,
+  options: RealParseOptions,
+) {
+  const { ignoreAttributes } = options;
+  if (ignoreAttributes) {
     return;
   }
-  string = string.replace(/\r?\n/g, ' ');
+  string = string.replaceAll(/\r?\n/g, ' ');
 
   const matches = getAllMatches(string, attrsRegx);
-  const attributes: Record<string, XMLNode | boolean> = {};
+  // argument 1 is the key, argument 4 is the value
+  const attributes: Record<string, string | number | boolean> = {};
   for (const match of matches) {
-    const attrName = resolveNameSpace(match[1], options);
-    if (attrName.length) {
+    const attributeName = resolveNameSpace(match[1], options);
+    if (attributeName.length > 0) {
       if (match[4] !== undefined) {
         if (options.trimValues) {
           match[4] = match[4].trim();
         }
         if (options.attributeValueProcessor) {
-          match[4] = options.attributeValueProcessor(match[4], attrName);
-
-          attributes[attrName] = stringParseValue(
+          attributes[attributeName] = options.attributeValueProcessor(
             match[4],
-            options.dynamicTypingAttributeValue as boolean,
+            attributeName,
           );
         }
       } else if (options.allowBooleanAttributes) {
-        attributes[attrName] = true;
+        attributes[attributeName] = true;
       }
     }
   }
-  if (isEmptyObject(attributes)) return;
+  if (isEmptySimpleObject(attributes)) return;
   return attributes;
 }
 
-function stringParseValue(value: string, shouldParse: boolean) {
-  if (shouldParse && typeof value === 'string') {
-    return parseString(value);
-  } else {
-    return value === undefined ? '' : value;
-  }
-}
-
-function resolveNameSpace(tagName: string, options: ParseOptions) {
+function resolveNameSpace(tagName: string, options: RealParseOptions) {
   if (options.ignoreNameSpace) {
     const tags = tagName.split(':');
     const prefix = tagName.startsWith('/') ? '/' : '';

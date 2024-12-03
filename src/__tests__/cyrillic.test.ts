@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { parse } from '../parse';
 
 describe('XMLParser', () => {
@@ -9,12 +11,10 @@ describe('XMLParser', () => {
       },
     };
     const options = {
-      attributeNamePrefix: '@_',
+      attributeNameProcessor: (name: string) => `@_${name}`,
     };
 
     const result = parse(xmlData, options);
     expect(result).toStrictEqual(expected);
-    // console.log({ expected})
-    // console.log({ result })
   });
 });
