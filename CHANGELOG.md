@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v0.6.1...v1.0.0) (2024-12-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* Simplifcations of the code
+
+### Features
+
+* Simplifcations of the code ([45a57d6](https://github.com/cheminfo/arraybuffer-xml-parser/commit/45a57d61f3038cfa6293706562f7c9fb934d6188))
+
 ## [0.6.1](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v0.6.0...v0.6.1) (2024-05-14)
 
 
