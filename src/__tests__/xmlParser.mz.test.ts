@@ -2,11 +2,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { recursiveResolve } from 'ml-spectra-processing';
 import { decode } from 'uint8-base64';
 import { test, expect } from 'vitest';
 
 import { parse } from '../parse';
-import { resolveRecursive } from '../resursiveResolve';
 
 const decoder = new TextDecoder();
 
@@ -28,7 +28,7 @@ test('decompress zip file', async () => {
     tagValueProcessor,
   }) as any;
 
-  await resolveRecursive(result);
+  await recursiveResolve(result);
 
   const oneSpectrum =
     result.indexedmzML.mzML.run.spectrumList.spectrum[0].binaryDataArrayList;

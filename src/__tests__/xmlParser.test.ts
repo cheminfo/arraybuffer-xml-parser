@@ -2,10 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { parseString } from 'dynamic-typing';
+import { recursiveResolve } from 'ml-spectra-processing';
 import { describe, it, expect } from 'vitest';
 
 import { parse } from '../parse';
-import { resolveRecursive } from '../resursiveResolve';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -175,7 +175,7 @@ describe('XMLParser', () => {
       },
     });
 
-    await resolveRecursive(result);
+    await recursiveResolve(result);
     expect(result).toStrictEqual(expected);
   });
 
