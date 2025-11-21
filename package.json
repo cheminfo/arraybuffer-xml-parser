@@ -1,6 +1,6 @@
 {
   "name": "arraybuffer-xml-parser",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Parse XML files contained in an array buffer",
   "type": "module",
   "exports": {
