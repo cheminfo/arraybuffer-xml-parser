@@ -63,7 +63,7 @@ export interface ParseOptions {
    * Callback to process tag names
    * @default (name:string) => name
    */
-  tagNameProcessor?: (name: string) => string;
+  tagNameProcessor?: (name: string, nodes: XMLNode[]) => string;
   /**
    * Callback to process attribute names
    * @default (name:string) => `$${name}`

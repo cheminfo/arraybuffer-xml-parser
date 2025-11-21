@@ -63,15 +63,17 @@ export function traversableToJSON(
   }
 
   for (const tagName in node.children) {
-    const newTagName = tagNameProcessor ? tagNameProcessor(tagName) : tagName;
-    const children = node.children[tagName];
-    if (children?.length > 1) {
+    const nodes = node.children[tagName];
+    const newTagName = tagNameProcessor
+      ? tagNameProcessor(tagName, nodes)
+      : tagName;
+    if (nodes?.length > 1) {
       result[tagName] = [];
-      for (const child of children) {
+      for (const child of nodes) {
         result[newTagName].push(traversableToJSON(child, options, tagName));
       }
     } else {
-      const subResult = traversableToJSON(children[0], options, tagName);
+      const subResult = traversableToJSON(nodes[0], options, tagName);
       const asArray =
         (arrayMode === true && typeof subResult === 'object') ||
         isTagNameInArrayMode(

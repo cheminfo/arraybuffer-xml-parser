@@ -16,6 +16,19 @@ describe('XMLParser', () => {
     });
 
     expect(result).toStrictEqual({ ANY_NAME: { PERSON: 'end' } });
+
+    const tagNames: Array<{ name: string; nodes: string[] }> = [];
+    parse(xmlData, {
+      tagNameProcessor: (name, nodes) => {
+        tagNames.push({ name, nodes: nodes.map((c) => c.tagName) });
+        return name.toUpperCase();
+      },
+    });
+
+    expect(tagNames).toStrictEqual([
+      { name: 'any_name', nodes: ['any_name'] },
+      { name: 'person', nodes: ['person'] },
+    ]);
   });
 
   it('attribute name processor', () => {
