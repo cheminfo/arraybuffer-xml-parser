@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse';
+import { parse } from '../parse.js';
 
 describe('XMLParser', () => {
   it('tag name processor', () => {
@@ -14,6 +14,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       tagNameProcessor: (name) => name.toUpperCase(),
     });
+
     expect(result).toStrictEqual({ ANY_NAME: { PERSON: 'end' } });
   });
 
@@ -25,6 +26,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       attributeNameProcessor: (name: string) => `$${name.toUpperCase()}`,
     });
+
     expect(result).toStrictEqual({ ab: { $PARAM1: 'abc', $PARAM2: 'def' } });
   });
 });

@@ -1,6 +1,6 @@
 import { parseString } from 'dynamic-typing';
 
-import type { XMLAttributeValue, XMLNode } from '../XMLNode';
+import type { XMLAttributeValue, XMLNode } from '../XMLNode.js';
 
 const utf8Decoder = new TextDecoder();
 

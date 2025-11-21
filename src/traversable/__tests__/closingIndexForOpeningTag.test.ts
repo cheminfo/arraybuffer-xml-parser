@@ -1,6 +1,6 @@
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 
-import { closingIndexForOpeningTag } from '../closingIndexForOpeningTag';
+import { closingIndexForOpeningTag } from '../closingIndexForOpeningTag.js';
 
 test('sclosingIndexForOpeningTag', () => {
   expect(

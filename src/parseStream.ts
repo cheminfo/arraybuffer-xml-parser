@@ -1,7 +1,7 @@
-import type { StreamParseOptions } from './traversable/defaultOptions';
-import { defaultStreamOptions } from './traversable/defaultOptions';
-import { getTraversableGenerator } from './traversable/getTraversableGenerator';
-import { traversableToJSON } from './traversableToJSON';
+import type { StreamParseOptions } from './traversable/defaultOptions.js';
+import { defaultStreamOptions } from './traversable/defaultOptions.js';
+import { getTraversableGenerator } from './traversable/getTraversableGenerator.js';
+import { traversableToJSON } from './traversableToJSON.js';
 
 /**
  * Parse a web stream representing an XML and emit objects

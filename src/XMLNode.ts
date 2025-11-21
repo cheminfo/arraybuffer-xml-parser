@@ -1,4 +1,4 @@
-import type { TagValueProcessor } from './traversable/defaultOptions';
+import type { TagValueProcessor } from './traversable/defaultOptions.js';
 
 export type XMLNodeValue = string | Uint8Array | number | boolean;
 export type XMLAttributeValue = string | number | boolean;

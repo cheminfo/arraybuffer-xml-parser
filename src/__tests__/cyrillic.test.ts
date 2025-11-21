@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse';
+import { parse } from '../parse.js';
 
 describe('XMLParser', () => {
   it('should parse XML with cyrillic characters to JSON string', () => {
@@ -15,6 +15,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, options);
+
     expect(result).toStrictEqual(expected);
   });
 });

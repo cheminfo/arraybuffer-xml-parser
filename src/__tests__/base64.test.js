@@ -1,7 +1,7 @@
 import { decode as base64decode } from 'uint8-base64';
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 
-import { parse } from '../parse.ts';
+import { parse } from '../parse.js';
 // library to convert base64 <--> arrayBuffer: https://github.com/niklasvh/base64-arraybuffer/blob/master/src/index.ts
 
 const encoder = new TextEncoder();
@@ -24,6 +24,7 @@ test('base64 parsing', () => {
       return new Float64Array(decoded.buffer);
     },
   });
+
   expect(result.binaryDataArray.binary).toStrictEqual(
     Float64Array.from([1, 2, 3]),
   );

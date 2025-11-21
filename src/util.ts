@@ -1,7 +1,7 @@
-import type { XMLAttributeValue, XMLNode } from './XMLNode';
+import type { XMLAttributeValue, XMLNode } from './XMLNode.js';
 
 const nameStartChar = String.raw`:A-Za-z_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD`;
-const nameChar = `${nameStartChar}\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040`;
+const nameChar = String.raw`${nameStartChar}\-.\d\u00B7\u0300-\u036F\u203F-\u2040`;
 const nameRegexp = `[${nameStartChar}][${nameChar}]*`;
 // eslint-disable-next-line no-misleading-character-class
 const regexName = new RegExp(`^${nameRegexp}$`);
@@ -41,8 +41,11 @@ export function isEmptyObject(
  * @param arrayMode
  */
 export function merge(
-  target: Record<string, boolean | XMLNode | Array<XMLNode | boolean>>,
-  source: Record<string, boolean | XMLNode>,
+  target: Record<
+    string,
+    XMLAttributeValue | XMLNode | Array<XMLNode | XMLAttributeValue>
+  >,
+  source: Record<string, XMLAttributeValue | XMLNode>,
   arrayMode:
     | ((tagName: string, parentTagName: string) => boolean)
     | string
@@ -81,7 +84,7 @@ export function isTagNameInArrayMode(
   } else if (arrayMode instanceof RegExp) {
     return arrayMode.test(tagName);
   } else if (typeof arrayMode === 'function') {
-    return !!arrayMode(tagName, parentTagName);
+    return arrayMode(tagName, parentTagName);
   }
 
   return arrayMode === 'strict';

@@ -3,9 +3,9 @@ import { join } from 'node:path';
 
 import { parseString } from 'dynamic-typing';
 import { recursiveResolve } from 'ml-spectra-processing';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse';
+import { parse } from '../parse.js';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -176,6 +176,7 @@ describe('XMLParser', () => {
     });
 
     await recursiveResolve(result);
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -326,6 +327,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {});
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -344,6 +346,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       ignoreAttributes: true,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -393,6 +396,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData);
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -409,6 +413,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {});
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -422,6 +427,7 @@ describe('XMLParser', () => {
 
     //console.log(getTraversalObj(xmlData));
     const result = parse(xmlData, {});
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -439,6 +445,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData);
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -460,6 +467,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData);
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -513,6 +521,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       attributeValueProcessor: (name) => name,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -531,6 +540,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       trimValues: false,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -547,6 +557,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {});
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -558,6 +569,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, {});
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -690,6 +702,7 @@ describe('XMLParser', () => {
     };
 
     const result = parse(xmlData, { ignoreNameSpace: true });
+
     expect(result).toStrictEqual(expected);
   });
 

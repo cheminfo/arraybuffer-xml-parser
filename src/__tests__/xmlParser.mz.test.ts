@@ -4,9 +4,9 @@ import { join } from 'node:path';
 
 import { recursiveResolve } from 'ml-spectra-processing';
 import { decode } from 'uint8-base64';
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 
-import { parse } from '../parse';
+import { parse } from '../parse.js';
 
 const decoder = new TextDecoder();
 
@@ -32,10 +32,9 @@ test('decompress zip file', async () => {
 
   const oneSpectrum =
     result.indexedmzML.mzML.run.spectrumList.spectrum[0].binaryDataArrayList;
-  expect(Array.isArray(oneSpectrum.binaryDataArray[0].cvParam)).toBeTruthy();
-  expect(
-    ArrayBuffer.isView(oneSpectrum.binaryDataArray[0].binary),
-  ).toBeTruthy();
+
+  expect(Array.isArray(oneSpectrum.binaryDataArray[0].cvParam)).toBe(true);
+  expect(ArrayBuffer.isView(oneSpectrum.binaryDataArray[0].binary)).toBe(true);
   expect(oneSpectrum).toMatchObject({
     $count: 2,
     binaryDataArray: [

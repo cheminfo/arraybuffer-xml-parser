@@ -1,14 +1,4 @@
-import cheminfo from 'eslint-config-cheminfo-typescript';
-import globals from 'globals';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import ts from 'eslint-config-cheminfo-typescript';
 
-export default [
-  ...cheminfo,
-  {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-    },
-    rules: {},
-  },
-];
+export default defineConfig(globalIgnores(['coverage', 'lib']), ts);

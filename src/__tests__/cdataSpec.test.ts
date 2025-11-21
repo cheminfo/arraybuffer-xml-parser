@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse';
+import { parse } from '../parse.js';
 
 const encoder = new TextEncoder();
 
@@ -21,8 +21,10 @@ patronymic</person></root>`);
         person: 'lastname\nfirstname\npatronymic',
       },
     };
+
     expect(result).toStrictEqual(expected);
   });
+
   it('should parse tag having CDATA', () => {
     const xmlData = encoder.encode(`<?xml version='1.0'?>
 <any_name>

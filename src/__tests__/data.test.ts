@@ -1,8 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse';
+import { parse } from '../parse.js';
 
 const encoder = new TextEncoder();
+
 describe('XMLParser', () => {
   it("should parse attributes having '>' in value", () => {
     const xmlData =
@@ -141,10 +142,11 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       allowBooleanAttributes: true,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
-  it('should parse XML with DOCTYPE without internal DTD', () => {
+  it('should parse XML with DOCTYPE without internal DTD on multiple lines', () => {
     const xmlData = encoder.encode(`<?xml version='1.0' standalone='no'?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
         <svg>
@@ -159,6 +161,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       allowBooleanAttributes: true,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -179,6 +182,7 @@ describe('XMLParser', () => {
       allowBooleanAttributes: true,
       ignoreNameSpace: true,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -196,6 +200,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       allowBooleanAttributes: true,
     });
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -233,32 +238,41 @@ describe('XMLParser', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should error for when any tag is left to close', () => {
+  it('should error for when any tag is left to close. Missing end >', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><tag></tag`);
+
     expect(() => {
       parse(xmlData);
     }).toThrow('Closing Tag is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+
+  it('should error for when any tag is left to close. Missing end > in a comment', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!-- bad `);
+
     expect(() => {
       parse(xmlData);
     }).toThrow('Comment is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+
+  it('should error for when any tag is left to close. Missing end > in CDATA', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><![CDATA ]`);
+
     expect(() => {
       parse(xmlData);
     }).toThrow('CDATA is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+
+  it('should error for when any tag is left to close. Missing end > in DOCTYPE', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><!DOCTYPE `);
+
     expect(() => {
       parse(xmlData);
     }).toThrow('DOCTYPE is not closed.');
   });
-  it('should error for when any tag is left to close', () => {
+
+  it('should error for when any tag is left to close. Missing end > in Pi Tag', () => {
     const xmlData = encoder.encode(`<?xml version="1.0"?><?pi  `);
+
     expect(() => {
       parse(xmlData);
     }).toThrow('Pi Tag is not closed.');
@@ -278,6 +292,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       allowBooleanAttributes: true,
     });
+
     expect(result).toStrictEqual(expected);
   });
 });

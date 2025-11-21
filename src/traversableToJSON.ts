@@ -1,11 +1,11 @@
-import type { XMLAttributeValue, XMLNode, XMLNodeValue } from './XMLNode';
-import type { RealParseOptions } from './traversable/defaultOptions';
+import type { XMLAttributeValue, XMLNode, XMLNodeValue } from './XMLNode.js';
+import type { RealParseOptions } from './traversable/defaultOptions.js';
 import {
-  isTagNameInArrayMode,
-  merge,
   isEmptyObject,
   isEmptySimpleObject,
-} from './util';
+  isTagNameInArrayMode,
+  merge,
+} from './util.js';
 
 /**
  *
@@ -54,32 +54,24 @@ export function traversableToJSON(
       attributes = renamedAttributes;
     }
     if (options.attributesNodeName) {
-      const encapsulatedAttributes: Record<string, any> = {};
-      encapsulatedAttributes[options.attributesNodeName] = attributes;
+      const encapsulatedAttributes: Record<string, any> = {
+        [options.attributesNodeName]: attributes,
+      };
       attributes = encapsulatedAttributes;
     }
-    //@ts-expect-error Should fix this type issue
     merge(result, attributes, arrayMode as string);
   }
 
   for (const tagName in node.children) {
     const newTagName = tagNameProcessor ? tagNameProcessor(tagName) : tagName;
-    if (node.children[tagName] && node.children[tagName].length > 1) {
+    const children = node.children[tagName];
+    if (children?.length > 1) {
       result[tagName] = [];
-      // eslint-disable-next-line @typescript-eslint/no-for-in-array
-      for (const tag in node.children[tagName]) {
-        if (Object.hasOwn(node.children[tagName], tag)) {
-          result[newTagName].push(
-            traversableToJSON(node.children[tagName][tag], options, tagName),
-          );
-        }
+      for (const child of children) {
+        result[newTagName].push(traversableToJSON(child, options, tagName));
       }
     } else {
-      const subResult = traversableToJSON(
-        node.children[tagName][0],
-        options,
-        tagName,
-      );
+      const subResult = traversableToJSON(children[0], options, tagName);
       const asArray =
         (arrayMode === true && typeof subResult === 'object') ||
         isTagNameInArrayMode(

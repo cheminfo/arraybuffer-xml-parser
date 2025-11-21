@@ -1,10 +1,10 @@
 import type {
   ParseOptions,
   RealParseOptions,
-} from './traversable/defaultOptions';
-import { defaultOptions } from './traversable/defaultOptions';
-import { getTraversable } from './traversable/getTraversable';
-import { traversableToJSON } from './traversableToJSON';
+} from './traversable/defaultOptions.js';
+import { defaultOptions } from './traversable/defaultOptions.js';
+import { getTraversable } from './traversable/getTraversable.js';
+import { traversableToJSON } from './traversableToJSON.js';
 
 /**
  * Parse an ArrayBuffer or Uint8Array representing an XML and return an object
@@ -26,7 +26,7 @@ export function parse(
 
   const realOptions: RealParseOptions = { ...defaultOptions, ...options };
 
-  const traversable = getTraversable(xmlData as Uint8Array, realOptions);
+  const traversable = getTraversable(xmlData, realOptions);
 
   return traversableToJSON(traversable, realOptions);
 }

@@ -1,6 +1,6 @@
-import { getAllMatches, isEmptySimpleObject } from '../util';
+import { getAllMatches, isEmptySimpleObject } from '../util.js';
 
-import type { RealParseOptions } from './defaultOptions';
+import type { RealParseOptions } from './defaultOptions.js';
 
 const newLocal = String.raw`([^\s=]+)\s*(=\s*(['"])(.*?)\3)?`;
 const attrsRegx = new RegExp(newLocal, 'g');

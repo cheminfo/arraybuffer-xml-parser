@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse.ts';
+import { parse } from '../parse.js';
 
 const encoder = new TextEncoder();
 
@@ -23,6 +23,7 @@ describe('XMLParser array with extended prototype props', () => {
       arrayMode: false,
       ignoreAttributes: false,
     });
+
     //console.log(JSON.stringify(result, null, 4));
     expect(result).toStrictEqual(expected);
   });

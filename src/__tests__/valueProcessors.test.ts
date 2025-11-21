@@ -1,9 +1,9 @@
 import { parseString } from 'dynamic-typing';
 import he from 'he'; // HTML entity encoder/decoder
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 /* eslint-disable camelcase */
 
-import { parse } from '../parse';
+import { parse } from '../parse.js';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -19,6 +19,7 @@ describe('XMLParser', () => {
     const result = parse(xmlData, {
       tagValueProcessor: (a) => he.decode(decoder.decode(a)),
     }); //if you really need to work with a string convert it yourself
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -96,6 +97,7 @@ describe('XMLParser', () => {
         return value;
       },
     });
+
     expect(resultMap).toStrictEqual({
       person: [encoder.encode('startmiddleend')],
       name1: [encoder.encode('Jack 1')],

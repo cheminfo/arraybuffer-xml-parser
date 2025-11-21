@@ -1,4 +1,4 @@
-import { decoder } from './utils/utf8Decoder';
+import { decoder } from './utils/utf8Decoder.js';
 
 /**
  * Search for the corresponding closing tag '>'

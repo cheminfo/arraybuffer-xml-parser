@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { arrayIndexOf } from '../arrayIndexOf';
+import { arrayIndexOf } from '../arrayIndexOf.js';
 
 describe('arrayIndexOf', () => {
   it('should find the index pointing to the begining of the found string in array', () => {
@@ -13,9 +13,10 @@ describe('arrayIndexOf', () => {
     const singleTest = new Uint8Array([0x2e]);
     const repeaTest = new Uint8Array([0x5d, 0x5d, 0x3e]);
     const repeats = new Uint8Array([0x5d, 0x5d, 0x5d, 0x5d, 0x3e, 0x5d]);
+
     expect(arrayIndexOf(whole, testString)).toBe(0);
     expect(arrayIndexOf(sandwiched, testString)).toBe(1);
-    expect(arrayIndexOf(notIn, testString)).toStrictEqual(-1);
+    expect(arrayIndexOf(notIn, testString)).toBe(-1);
     expect(arrayIndexOf(new Uint8Array([49, 46, 51, 52]), singleTest)).toBe(1);
     expect(arrayIndexOf(repeats, repeaTest)).toBe(2);
   });
