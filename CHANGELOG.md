@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v1.0.0...v2.0.0) (2025-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate to type:module
+
+### Features
+
+* migrate to type:module ([76f36b3](https://github.com/cheminfo/arraybuffer-xml-parser/commit/76f36b355e4b6756ae63d45e1daa05b60bd292aa))
+
 ## [1.0.0](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v0.6.1...v1.0.0) (2024-12-03)
 
 
