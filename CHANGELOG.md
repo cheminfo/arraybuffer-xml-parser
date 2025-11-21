@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v2.0.0...v2.1.0) (2025-11-21)
+
+
+### Features
+
+* tagNameProcessor callback receives nodes as second argument ([19e0cae](https://github.com/cheminfo/arraybuffer-xml-parser/commit/19e0cae8b4c686a5fd492dae5742d29fe6a8d15c))
+
 ## [2.0.0](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v1.0.0...v2.0.0) (2025-11-21)
 
 
