@@ -1,12 +1,13 @@
-const { readFileSync } = require('fs');
-const { join } = require('path');
+import { on } from 'node:events';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-const pako = require('pako');
-const { decode } = require('uint8-base64');
+import pako from 'pako';
+import { decode } from 'uint8-base64';
 
-const data = readFileSync(join(__dirname, 'big.xml'));
-const { parse } = require('../lib/index.js');
+import { parse } from '../lib/index.js';
 
+const data = readFileSync(join(import.meta.dirname, 'big.xml'));
 const decoder = new TextDecoder();
 
 console.time('start');
@@ -16,16 +17,13 @@ const result = parse(data, {
   dynamicTypingNodeValue: false,
   tagValueProcessor: (value, node) => {
     if (node.tagName !== 'binary') return decoder.decode(value);
-    if (!node.parent.children) {
-      console.log(node);
-    }
     const ontologies = node.parent.children.cvParam.map(
       (entry) => entry.attributes.accession,
     );
     try {
-      return decodeBase64(node.value, { ontologies });
-    } catch (e) {
-      console.log(node);
+      return decodeBase64(node.bytes, { ontologies });
+    } catch (error) {
+      console.log(error);
     }
   },
 });
