@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 // import he from 'he';
 
-import { parse } from '../parse.js';
+import { parse } from '../parse.ts';
 
 const encoder = new TextEncoder();
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { arrayIndexOf } from '../arrayIndexOf.js';
+import { arrayIndexOf } from '../arrayIndexOf.ts';
 
 describe('arrayIndexOf', () => {
   it('should find the index pointing to the begining of the found string in array', () => {

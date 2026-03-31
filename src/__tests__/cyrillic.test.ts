@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse.js';
+import { parse } from '../parse.ts';
 
 describe('XMLParser', () => {
   it('should parse XML with cyrillic characters to JSON string', () => {

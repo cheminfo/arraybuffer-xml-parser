@@ -6,7 +6,7 @@ import { recursiveResolve } from 'ml-spectra-processing';
 import { decode } from 'uint8-base64';
 import { expect, test } from 'vitest';
 
-import { parse } from '../parse.js';
+import { parse } from '../parse.ts';
 
 const decoder = new TextDecoder();
 
@@ -76,7 +76,9 @@ export async function decodeBase64(
   switch (compression.toLowerCase()) {
     case 'zlib': {
       const ds = new DecompressionStream('deflate');
-      const decompressedStream = new Blob([uint8Array])
+      const decompressedStream = new Blob([
+        uint8Array as Uint8Array<ArrayBuffer>,
+      ])
         .stream()
         .pipeThrough(ds);
       const decompressedArrayBuffer = await new Response(
@@ -116,8 +118,8 @@ export async function decodeBase64(
           i += step
         ) {
           for (let j = 0; j < step / 2; j++) {
-            const temp = uint8Array[i + j];
-            uint8Array[i + j] = uint8Array[i + step - 1 - j];
+            const temp = uint8Array[i + j] as number;
+            uint8Array[i + j] = uint8Array[i + step - 1 - j] as number;
             uint8Array[i + step - 1 - j] = temp;
           }
         }

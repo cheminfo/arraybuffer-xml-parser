@@ -115,6 +115,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+.claude
 .DS_Store
 
 lib

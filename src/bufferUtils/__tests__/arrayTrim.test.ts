@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { arrayTrim } from '../arrayTrim.js';
+import { arrayTrim } from '../arrayTrim.ts';
 
 test('arrayTrim', () => {
   const beginning = new Uint8Array([32, 32, 32, 32, 32, 32, 32, 33, 33, 97]);

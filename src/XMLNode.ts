@@ -1,4 +1,4 @@
-import type { TagValueProcessor } from './traversable/defaultOptions.js';
+import type { TagValueProcessor } from './traversable/defaultOptions.ts';
 
 export type XMLNodeValue = string | Uint8Array | number | boolean;
 export type XMLAttributeValue = string | number | boolean;
@@ -44,9 +44,9 @@ export class XMLNode {
     return this.cachedValue;
   }
   public addChild(child: XMLNode) {
-    if (Array.isArray(this.children[child.tagName])) {
-      //already presents
-      this.children[child.tagName].push(child);
+    const existing = this.children[child.tagName];
+    if (Array.isArray(existing)) {
+      existing.push(child);
     } else {
       this.children[child.tagName] = [child];
     }

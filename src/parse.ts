@@ -1,10 +1,10 @@
 import type {
   ParseOptions,
   RealParseOptions,
-} from './traversable/defaultOptions.js';
-import { defaultOptions } from './traversable/defaultOptions.js';
-import { getTraversable } from './traversable/getTraversable.js';
-import { traversableToJSON } from './traversableToJSON.js';
+} from './traversable/defaultOptions.ts';
+import { defaultOptions } from './traversable/defaultOptions.ts';
+import { getTraversable } from './traversable/getTraversable.ts';
+import { traversableToJSON } from './traversableToJSON.ts';
 
 /**
  * Parse an ArrayBuffer or Uint8Array representing an XML and return an object

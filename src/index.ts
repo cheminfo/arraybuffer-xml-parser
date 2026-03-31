@@ -1,2 +1,2 @@
-export * from './parse.js';
-export * from './parseStream.js';
+export * from './parse.ts';
+export * from './parseStream.ts';

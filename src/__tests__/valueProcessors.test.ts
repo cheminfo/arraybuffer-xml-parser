@@ -3,7 +3,7 @@ import he from 'he'; // HTML entity encoder/decoder
 import { describe, expect, it } from 'vitest';
 /* eslint-disable camelcase */
 
-import { parse } from '../parse.js';
+import { parse } from '../parse.ts';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -89,8 +89,9 @@ describe('XMLParser', () => {
     const resultMap: Record<string, Uint8Array[]> = {};
     parse(xmlData, {
       tagValueProcessor: (value, node) => {
-        if (resultMap[node.tagName]) {
-          resultMap[node.tagName].push(value);
+        const existing = resultMap[node.tagName];
+        if (existing) {
+          existing.push(value);
         } else {
           resultMap[node.tagName] = [value];
         }
