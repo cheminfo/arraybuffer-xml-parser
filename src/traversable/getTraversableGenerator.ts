@@ -1,13 +1,13 @@
-import { XMLNode } from '../XMLNode.js';
-import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.js';
-import { arrayTrim } from '../bufferUtils/arrayTrim.js';
+import { XMLNode } from '../XMLNode.ts';
+import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.ts';
+import { arrayTrim } from '../bufferUtils/arrayTrim.ts';
 
-import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.js';
-import type { RealStreamParseOptions } from './defaultOptions.js';
-import { findClosingIndex } from './findClosingIndex.js';
-import { parseAttributesString } from './parseAttributesString.js';
-import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded.js';
-import { decoder } from './utils/utf8Decoder.js';
+import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.ts';
+import type { RealStreamParseOptions } from './defaultOptions.ts';
+import { findClosingIndex } from './findClosingIndex.ts';
+import { parseAttributesString } from './parseAttributesString.ts';
+import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded.ts';
+import { decoder } from './utils/utf8Decoder.ts';
 
 export async function* getTraversableGenerator(
   readableStream: ReadableStream,
@@ -27,7 +27,7 @@ export async function* getTraversableGenerator(
   let endStream = chunk.done;
   let xmlData = new Uint8Array(chunk.value);
 
-  const { maxEntrySize = 1e7, maxBufferSize = 2e8 } = options;
+  const { maxEntrySize, maxBufferSize } = options;
 
   for (let i = 0; i < xmlData.length; i++) {
     if (xmlData.length - i < maxEntrySize && !endStream) {

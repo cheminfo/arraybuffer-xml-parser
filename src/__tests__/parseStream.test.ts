@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { parseStream } from '../parseStream.js';
+import { parseStream } from '../parseStream.ts';
 
 describe('parseStream', () => {
   it('simple case', async () => {

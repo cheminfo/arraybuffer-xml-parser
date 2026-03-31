@@ -1,13 +1,13 @@
-import { XMLNode } from '../XMLNode.js';
-import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.js';
-import { arrayTrim } from '../bufferUtils/arrayTrim.js';
+import { XMLNode } from '../XMLNode.ts';
+import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.ts';
+import { arrayTrim } from '../bufferUtils/arrayTrim.ts';
 
-import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.js';
-import type { RealParseOptions } from './defaultOptions.js';
-import { findClosingIndex } from './findClosingIndex.js';
-import { parseAttributesString } from './parseAttributesString.js';
-import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded.js';
-import { decoder } from './utils/utf8Decoder.js';
+import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.ts';
+import type { RealParseOptions } from './defaultOptions.ts';
+import { findClosingIndex } from './findClosingIndex.ts';
+import { parseAttributesString } from './parseAttributesString.ts';
+import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded.ts';
+import { decoder } from './utils/utf8Decoder.ts';
 
 export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
   const { tagValueProcessor } = options;

@@ -1,7 +1,7 @@
 import { decode as base64decode } from 'uint8-base64';
 import { expect, test } from 'vitest';
 
-import { parse } from '../parse.js';
+import { parse } from '../parse.ts';
 // library to convert base64 <--> arrayBuffer: https://github.com/niklasvh/base64-arraybuffer/blob/master/src/index.ts
 
 const encoder = new TextEncoder();
@@ -15,7 +15,7 @@ test('base64 parsing', () => {
   <binary>AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhA</binary>
 </binaryDataArray>`);
 
-  let result = parse(xmlData, {
+  const result = parse(xmlData, {
     attributeNameProcessor: (name) => name,
     tagValueProcessor: (value, node) => {
       if (node.tagName !== 'binary') return decoder.decode(value);
@@ -23,7 +23,7 @@ test('base64 parsing', () => {
       // isLittleEndian and the data were encoded in littleEndian
       return new Float64Array(decoded.buffer);
     },
-  });
+  }) as Record<string, any>;
 
   expect(result.binaryDataArray.binary).toStrictEqual(
     Float64Array.from([1, 2, 3]),

@@ -1,11 +1,11 @@
-import type { XMLAttributeValue, XMLNode, XMLNodeValue } from './XMLNode.js';
-import type { RealParseOptions } from './traversable/defaultOptions.js';
+import type { XMLAttributeValue, XMLNode, XMLNodeValue } from './XMLNode.ts';
+import type { RealParseOptions } from './traversable/defaultOptions.ts';
 import {
   isEmptyObject,
   isEmptySimpleObject,
   isTagNameInArrayMode,
   merge,
-} from './util.js';
+} from './util.ts';
 
 /**
  *
@@ -49,7 +49,10 @@ export function traversableToJSON(
       const renamedAttributes: Record<string, XMLAttributeValue> = {};
       for (const attributeName in node.attributes) {
         const newAttributeName = attributeNameProcessor(attributeName);
-        renamedAttributes[newAttributeName] = node.attributes[attributeName];
+        const value = node.attributes[attributeName];
+        if (value !== undefined) {
+          renamedAttributes[newAttributeName] = value;
+        }
       }
       attributes = renamedAttributes;
     }
@@ -64,16 +67,19 @@ export function traversableToJSON(
 
   for (const tagName in node.children) {
     const nodes = node.children[tagName];
+    if (!nodes) continue;
     const newTagName = tagNameProcessor
       ? tagNameProcessor(tagName, nodes)
       : tagName;
-    if (nodes?.length > 1) {
+    if (nodes.length > 1) {
       result[tagName] = [];
       for (const child of nodes) {
         result[newTagName].push(traversableToJSON(child, options, tagName));
       }
     } else {
-      const subResult = traversableToJSON(nodes[0], options, tagName);
+      const firstNode = nodes[0];
+      if (!firstNode) continue;
+      const subResult = traversableToJSON(firstNode, options, tagName);
       const asArray =
         (arrayMode === true && typeof subResult === 'object') ||
         isTagNameInArrayMode(

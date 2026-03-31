@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse.js';
+import { parse } from '../parse.ts';
 
 const encoder = new TextEncoder();
 
@@ -15,8 +15,7 @@ describe('XMLParser array with extended prototype props', () => {
       a: { b: [0, 1] },
     };
 
-    // eslint-disable-next-line no-extend-native
-    Array.prototype.someExtentionOfArrayPrototype =
+    (Array.prototype as any).someExtentionOfArrayPrototype =
       'someExtentionOfArrayPrototype';
 
     const result = parse(xmlData, {

@@ -1,4 +1,4 @@
-import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.js';
+import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.ts';
 
 export function findClosingIndex(
   xmlData: Uint8Array,

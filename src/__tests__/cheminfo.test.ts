@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parse } from '../parse.js';
+import { parse } from '../parse.ts';
 
 describe('XMLParser', () => {
   it('Try to parse a very simple example', () => {

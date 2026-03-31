@@ -1,6 +1,6 @@
-import { getAllMatches, isEmptySimpleObject } from '../util.js';
+import { getAllMatches, isEmptySimpleObject } from '../util.ts';
 
-import type { RealParseOptions } from './defaultOptions.js';
+import type { RealParseOptions } from './defaultOptions.ts';
 
 const newLocal = String.raw`([^\s=]+)\s*(=\s*(['"])(.*?)\3)?`;
 const attrsRegx = new RegExp(newLocal, 'g');
@@ -20,7 +20,7 @@ export function parseAttributesString(
   // argument 1 is the key, argument 4 is the value
   const attributes: Record<string, string | number | boolean> = {};
   for (const match of matches) {
-    const attributeName = resolveNameSpace(match[1], options);
+    const attributeName = resolveNameSpace(match[1] as string, options);
     if (attributeName.length > 0) {
       if (match[4] !== undefined) {
         if (options.trimValues) {
@@ -48,7 +48,7 @@ function resolveNameSpace(tagName: string, options: RealParseOptions) {
     if (tags[0] === 'xmlns') {
       return '';
     }
-    if (tags.length === 2) {
+    if (tags.length === 2 && tags[1] !== undefined) {
       tagName = prefix + tags[1];
     }
   }
