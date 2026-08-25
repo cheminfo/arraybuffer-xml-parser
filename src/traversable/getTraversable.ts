@@ -28,7 +28,17 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
   let dataIndex = 0;
 
   for (let i = 0; i < xmlData.length; i++) {
-    if (xmlData[i] === 0x3c) {
+    if (xmlData[i] !== 0x3c) {
+      // Skip to the next '<' with a native scan instead of one JS step per byte.
+      const next = xmlData.indexOf(0x3c, i);
+      if (next === -1) {
+        dataSize += xmlData.length - i;
+        break;
+      }
+      dataSize += next - i;
+      i = next;
+    }
+    {
       // <
       const xmlData1 = xmlData[i + 1];
       const xmlData2 = xmlData[i + 2];
@@ -226,8 +236,6 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
         dataSize = 0;
         dataIndex = i + 1;
       }
-    } else {
-      dataSize++;
     }
   }
   return traversable;
