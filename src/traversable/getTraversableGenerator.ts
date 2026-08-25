@@ -28,6 +28,10 @@ export async function* getTraversableGenerator(
   let dataSize = 0;
   let dataIndex = 0;
   let currentNode: XMLNode | undefined;
+  // Outside an entry no nodes are built, so an enclosing stop node would
+  // otherwise go unnoticed and its contents would still be emitted.
+  let stopTagName: string | undefined;
+  let stopDepth = 0;
   const reader = readableStream.getReader();
   let chunk = await reader.read();
   let endStream = chunk.done;
@@ -119,6 +123,9 @@ export async function* getTraversableGenerator(
         );
         tagName = removeNamespaceIfNeeded(tagName, options);
 
+        if (!currentNode && stopDepth > 0 && tagName === stopTagName) {
+          stopDepth--;
+        }
         if (currentNode) {
           currentNode.append(
             trimValues
@@ -254,19 +261,18 @@ export async function* getTraversableGenerator(
 
         if (tagData.length > 0 && tagData.endsWith('/')) {
           // selfClosing tag
-          // TODO we should check if it match the tag and crete the currentNode
-          if (currentNode) {
-            if (tagAttributes) {
-              // <abc def="123"/>
-              tagAttributes = tagAttributes.slice(
-                0,
-                Math.max(0, tagAttributes.length - 1),
-              );
-            } else {
-              // <abc/>
-              tagName = tagName.slice(0, Math.max(0, tagName.length - 1));
-            }
-
+          if (tagAttributes) {
+            // <abc def="123"/>
+            tagAttributes = tagAttributes.slice(
+              0,
+              Math.max(0, tagAttributes.length - 1),
+            );
+          } else {
+            // <abc/>
+            tagName = tagName.slice(0, Math.max(0, tagName.length - 1));
+          }
+          const matchesLookup = tagName === lookupTagName && stopDepth === 0;
+          if (currentNode || matchesLookup) {
             const childNode = new XMLNode(
               tagName,
               currentNode,
@@ -279,13 +285,27 @@ export async function* getTraversableGenerator(
                 options,
               );
             }
-            currentNode.addChild(childNode);
+            if (currentNode) currentNode.addChild(childNode);
+            // a self-closing tag never reaches the closing-tag branch, so it has
+            // to be emitted here or it is dropped entirely
+            if (matchesLookup) yield childNode;
           }
         } else {
           //opening tag
 
-          // eslint-disable-next-line no-lonely-if
-          if (currentNode || tagName === lookupTagName) {
+          if (!currentNode && stopNodes?.length) {
+            if (stopDepth > 0) {
+              if (tagName === stopTagName) stopDepth++;
+            } else if (
+              tagName !== lookupTagName &&
+              stopNodes.includes(tagName)
+            ) {
+              stopTagName = tagName;
+              stopDepth = 1;
+            }
+          }
+
+          if (currentNode || (tagName === lookupTagName && stopDepth === 0)) {
             const childNode = new XMLNode(
               tagName,
               currentNode,

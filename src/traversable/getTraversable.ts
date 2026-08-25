@@ -57,21 +57,27 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
           i,
           'Closing Tag is not closed.',
         );
+        // a stray closing tag can pop past the root; the whole block has to be
+        // guarded or the next tag dereferences undefined
         if (currentNode) {
           currentNode.append(
             trimValues
               ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
               : xmlData.subarray(dataIndex, dataIndex + dataSize),
           );
-        }
-        if (stopNodes?.length && stopNodes.includes(currentNode.tagName)) {
-          currentNode.children = {};
-          if (currentNode.attributes === undefined) {
-            currentNode.attributes = {};
+          if (stopNodes?.length && stopNodes.includes(currentNode.tagName)) {
+            currentNode.children = {};
+            if (currentNode.attributes === undefined) {
+              currentNode.attributes = {};
+            }
+            currentNode.bytes = xmlData.subarray(currentNode.startIndex + 1, i);
           }
-          currentNode.bytes = xmlData.subarray(currentNode.startIndex + 1, i);
+          // a stray closing tag must not pop past the root: every other branch
+          // assumes currentNode exists
+          if (currentNode.parent !== undefined) {
+            currentNode = currentNode.parent;
+          }
         }
-        currentNode = currentNode.parent as XMLNode;
         i = closeIndex;
         dataSize = 0;
         dataIndex = i + 1;
