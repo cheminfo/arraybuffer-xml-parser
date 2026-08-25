@@ -1,6 +1,7 @@
 import { XMLNode } from '../XMLNode.ts';
 import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.ts';
 import { arrayTrim } from '../bufferUtils/arrayTrim.ts';
+import { nextTagIndex } from '../bufferUtils/nextTagIndex.ts';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.ts';
 import type { RealStreamParseOptions } from './defaultOptions.ts';
@@ -32,6 +33,7 @@ export async function* getTraversableGenerator(
   let chunk = await reader.read();
   let endStream = chunk.done;
   let xmlData = new Uint8Array(chunk.value);
+  let words = wordsOf(xmlData);
 
   const { maxEntrySize, maxBufferSize } = options;
 
@@ -41,6 +43,7 @@ export async function* getTraversableGenerator(
       if (lastMatchingClosedIndex > 0) {
         i -= lastMatchingClosedIndex;
         xmlData = xmlData.slice(lastMatchingClosedIndex);
+        words = wordsOf(xmlData);
         lastMatchingClosedIndex = 0;
       }
       let currentLength = xmlData.length;
@@ -65,6 +68,7 @@ export async function* getTraversableGenerator(
         currentShift += chunk.length;
       }
       xmlData = newXmlData;
+      words = wordsOf(xmlData);
     }
 
     if (xmlData[i] !== 0x3c) {
@@ -75,7 +79,7 @@ export async function* getTraversableGenerator(
         ? xmlData.length
         : xmlData.length - maxEntrySize;
       if (i < scanEnd) {
-        const next = xmlData.indexOf(0x3c, i);
+        const next = nextTagIndex(xmlData, words, i);
         const target = next === -1 || next > scanEnd ? scanEnd : next;
         dataSize += target - i;
         i = target;
@@ -297,4 +301,19 @@ export async function* getTraversableGenerator(
       }
     }
   }
+}
+
+/**
+ * A Uint32Array view over the buffer, or null when it is not 4-byte aligned.
+ * @param data - the buffer to view.
+ * @returns the word view or null.
+ */
+function wordsOf(data: Uint8Array): Uint32Array | null {
+  return data.byteOffset % 4 === 0
+    ? new Uint32Array(
+        data.buffer,
+        data.byteOffset,
+        Math.floor(data.byteLength / 4),
+      )
+    : null;
 }

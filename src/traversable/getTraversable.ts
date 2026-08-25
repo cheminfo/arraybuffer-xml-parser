@@ -1,6 +1,7 @@
 import { XMLNode } from '../XMLNode.ts';
 import { arrayIndexOf } from '../bufferUtils/arrayIndexOf.ts';
 import { arrayTrim } from '../bufferUtils/arrayTrim.ts';
+import { nextTagIndex } from '../bufferUtils/nextTagIndex.ts';
 
 import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.ts';
 import type { RealParseOptions } from './defaultOptions.ts';
@@ -26,11 +27,19 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
   let currentNode = traversable;
   let dataSize = 0;
   let dataIndex = 0;
+  const words =
+    xmlData.byteOffset % 4 === 0
+      ? new Uint32Array(
+          xmlData.buffer,
+          xmlData.byteOffset,
+          Math.floor(xmlData.byteLength / 4),
+        )
+      : null;
 
   for (let i = 0; i < xmlData.length; i++) {
     if (xmlData[i] !== 0x3c) {
       // Skip to the next '<' with a native scan instead of one JS step per byte.
-      const next = xmlData.indexOf(0x3c, i);
+      const next = nextTagIndex(xmlData, words, i);
       if (next === -1) {
         dataSize += xmlData.length - i;
         break;
