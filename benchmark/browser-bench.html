@@ -1,0 +1,261 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>arraybuffer-xml-parser browser benchmark</title>
+<pre id="out">idle</pre>
+<script src="../dist/arraybuffer-xml-parser.umd.js"></script>
+<script>
+  let MAX_IN_FLIGHT = 256;
+  let inFlight = 0;
+  const waiting = [];
+  async function inflateZlib(bytes) {
+    if (inFlight >= MAX_IN_FLIGHT)
+      await new Promise((r) => {
+        waiting.push(r);
+      });
+    inFlight++;
+    try {
+      return await inflateOne(bytes);
+    } finally {
+      inFlight--;
+      waiting.shift()?.();
+    }
+  }
+  async function inflateOne(bytes) {
+    const s = new DecompressionStream('deflate');
+    const w = s.writable.getWriter();
+    void w.write(bytes);
+    void w.close();
+    const r = s.readable.getReader();
+    const chunks = [];
+    let total = 0;
+    for (;;) {
+      const { value, done } = await r.read();
+      if (done) break;
+      chunks.push(value);
+      total += value.length;
+    }
+    if (chunks.length === 1) return chunks[0];
+    const out = new Uint8Array(total);
+    let at = 0;
+    for (const c of chunks) {
+      out.set(c, at);
+      at += c.length;
+    }
+    return out;
+  }
+  window.runBench = async function runBench() {
+    const res = { cores: navigator.hardwareConcurrency };
+    let t = performance.now();
+    const buf = await (await fetch('big.xml')).arrayBuffer();
+    res.fetchMs = +(performance.now() - t).toFixed(0);
+    res.bytes = buf.byteLength;
+    const u8 = new Uint8Array(buf);
+    res.inputCtor = u8.constructor.name;
+
+    // parse only (the library's own work)
+    t = performance.now();
+    const parsed = XMLParser.parse(u8, {
+      ignoreAttributes: false,
+      tagValueProcessor: (v) => v,
+      attributeValueProcessor: (v) => v,
+    });
+    res.parseMs = +(performance.now() - t).toFixed(0);
+    res.spectra = parsed.indexedmzML.mzML.run.spectrumList.spectrum.length;
+
+    // collect the raw base64 binary payloads
+    const bins = [];
+    (function collect(n) {
+      for (const k in n) {
+        if (k === 'binary') bins.push(n[k]);
+        else if (n[k] && typeof n[k] === 'object') collect(n[k]);
+      }
+    })(parsed);
+    res.payloads = bins.length;
+
+    // base64 decode + inflate, same pipeline as big.ts
+    t = performance.now();
+    const decoded = bins.map((b) =>
+      Uint8Array.fromBase64
+        ? Uint8Array.fromBase64(new TextDecoder().decode(b))
+        : Uint8Array.from(atob(new TextDecoder().decode(b)), (c) =>
+            c.charCodeAt(0),
+          ),
+    );
+    res.base64Ms = +(performance.now() - t).toFixed(0);
+
+    t = performance.now();
+    const out = await Promise.all(decoded.map((d) => inflateZlib(d)));
+    res.inflateMs = +(performance.now() - t).toFixed(0);
+    res.inflatedBytes = out.reduce((s, x) => s + x.length, 0);
+    res.nsPerInflatedByte = +(
+      (res.inflateMs * 1e6) /
+      res.inflatedBytes
+    ).toFixed(3);
+    return res;
+  };
+  // mirrors benchmark/big.ts exactly: parse with the decoding tagValueProcessor,
+  // then settle the promises the binary leaves hold. The fetch is outside the
+  // timer, matching big.ts where readFileSync happens before console.time.
+  window.runFull = async function runFull() {
+    const buf = await (await fetch('big.xml')).arrayBuffer();
+    const u8 = new Uint8Array(buf);
+    const dec = new TextDecoder();
+    const marks = {};
+
+    const t0 = performance.now();
+    const result = XMLParser.parse(u8, {
+      ignoreAttributes: false,
+      attributeValueProcessor: (v) => v,
+      tagValueProcessor: (value, node) => {
+        if (node.tagName !== 'binary') return dec.decode(value);
+        const cv = node.parent?.children?.cvParam ?? [];
+        const ontologies = [];
+        for (const e of cv) ontologies.push(String(e.attributes?.accession));
+        return decodeBase64(node.bytes, ontologies);
+      },
+    });
+    marks.parseAndDispatchMs = +(performance.now() - t0).toFixed(0);
+
+    // inline equivalent of recursiveResolve
+    const promises = [];
+    (function walk(o) {
+      for (const k in o) {
+        const v = o[k];
+        if (v && typeof v.then === 'function')
+          promises.push(
+            v.then((r) => {
+              o[k] = r;
+            }),
+          );
+        else if (v && typeof v === 'object') walk(v);
+      }
+    })(result);
+    marks.promises = promises.length;
+    await Promise.all(promises);
+    marks.totalMs = +(performance.now() - t0).toFixed(0);
+    marks.spectra = result.indexedmzML.mzML.run.spectrumList.spectrum.length;
+    return marks;
+  };
+
+  async function decodeBase64(b64bytes, ontologies) {
+    let precision = 0,
+      float = true,
+      compression = '';
+    if (ontologies.includes('MS:1000519')) {
+      precision = 32;
+      float = false;
+    }
+    if (ontologies.includes('MS:1000520')) precision = 16;
+    if (ontologies.includes('MS:1000521')) precision = 32;
+    if (ontologies.includes('MS:1000522')) {
+      float = false;
+      precision = 64;
+    }
+    if (ontologies.includes('MS:1000523')) precision = 64;
+    if (ontologies.includes('MS:1000574')) compression = 'zlib';
+    const s = new TextDecoder().decode(b64bytes);
+    // native base64, the browser equivalent of what uint8-base64 2.1 uses in node
+    let bytes = Uint8Array.fromBase64(s);
+    if (compression === 'zlib') bytes = await inflateZlib(bytes);
+    if (float) {
+      if (precision === 32)
+        return new Float32Array(bytes.buffer, 0, bytes.length / 4);
+      if (precision === 64)
+        return new Float64Array(bytes.buffer, 0, bytes.length / 8);
+    }
+    return bytes;
+  }
+
+  window.runBig = async function runBig() {
+    const buf = await (await fetch('big.xml')).arrayBuffer();
+    const u8 = new Uint8Array(buf);
+    const opts = {
+      ignoreAttributes: false,
+      tagValueProcessor: (v) => v,
+      attributeValueProcessor: (v) => v,
+    };
+    let sink = 0;
+    const runs = [];
+    for (let i = 0; i < 6; i++) {
+      const t = performance.now();
+      sink += XMLParser.parse(u8, opts).indexedmzML.mzML.run.spectrumList
+        .spectrum.length;
+      runs.push(performance.now() - t);
+    }
+    runs.sort((a, b) => a - b);
+    return {
+      sink,
+      bytes: buf.byteLength,
+      runsMs: runs.map((r) => +r.toFixed(0)),
+      minMs: +runs[0].toFixed(0),
+      medianMs: +runs[3].toFixed(0),
+      nsPerByte: +((runs[0] * 1e6) / buf.byteLength).toFixed(3),
+    };
+  };
+
+  window.runSmall = async function runSmall() {
+    const buf = await (await fetch('small.xml')).arrayBuffer();
+    const u8 = new Uint8Array(buf);
+    const opts = {
+      ignoreAttributes: false,
+      tagValueProcessor: (v) => v,
+      attributeValueProcessor: (v) => v,
+    };
+    // warm up, then take the best of many runs
+    let sink = 0;
+    for (let i = 0; i < 5; i++)
+      sink += XMLParser.parse(u8, opts).indexedmzML.mzML.run.spectrumList
+        .spectrum.length;
+    const runs = [];
+    for (let i = 0; i < 30; i++) {
+      const t = performance.now();
+      sink += XMLParser.parse(u8, opts).indexedmzML.mzML.run.spectrumList
+        .spectrum.length;
+      runs.push(performance.now() - t);
+    }
+    runs.sort((a, b) => a - b);
+    return {
+      sink,
+      bytes: buf.byteLength,
+      cores: navigator.hardwareConcurrency,
+      minMs: +runs[0].toFixed(2),
+      medianMs: +runs[15].toFixed(2),
+      maxMs: +runs[29].toFixed(2),
+      nsPerByte: +((runs[0] * 1e6) / buf.byteLength).toFixed(3),
+    };
+  };
+  // sweep the concurrency bound on a fixed subset to see whether the browser
+  // overlaps decompression at all
+  window.sweep = async function sweep() {
+    const buf = await (await fetch('big.xml')).arrayBuffer();
+    const parsed = XMLParser.parse(new Uint8Array(buf), {
+      ignoreAttributes: false,
+      tagValueProcessor: (v) => v,
+      attributeValueProcessor: (v) => v,
+    });
+    const bins = [];
+    (function collect(n) {
+      for (const k in n) {
+        if (k === 'binary') bins.push(n[k]);
+        else if (n[k] && typeof n[k] === 'object') collect(n[k]);
+      }
+    })(parsed);
+    const dec = new TextDecoder();
+    const subset = bins
+      .slice(0, 2000)
+      .map((b) => Uint8Array.from(atob(dec.decode(b)), (c) => c.charCodeAt(0)));
+    const out = {};
+    for (const limit of [1, 2, 4, 8, 32, 256]) {
+      MAX_IN_FLIGHT = limit;
+      const t = performance.now();
+      const r = await Promise.all(subset.map((d) => inflateZlib(d)));
+      const ms = performance.now() - t;
+      const bytes = r.reduce((s, x) => s + x.length, 0);
+      out['limit_' + limit] = {
+        ms: +ms.toFixed(0),
+        nsPerByte: +((ms * 1e6) / bytes).toFixed(3),
+      };
+    }
+    return out;
+  };
+</script>

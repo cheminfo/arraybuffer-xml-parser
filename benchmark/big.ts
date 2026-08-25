@@ -15,6 +15,14 @@ interface DecodeBase64Options {
   ontologies?: string[];
 }
 
+// Every payload is its own zlib stream, so they cannot be batched. What is
+// controllable is how each one is driven and how many run at once: feeding the
+// transform directly beats pipeThrough + Response, and a bound keeps thousands
+// of in-flight streams from swamping the heap.
+const MAX_IN_FLIGHT = 256;
+let inFlight = 0;
+const waiting: Array<() => void> = [];
+
 const data = readFileSync(join(import.meta.dirname, 'big.xml'));
 const decoder = new TextDecoder();
 
@@ -141,12 +149,46 @@ async function decodeBase64(
  * @returns the inflated bytes.
  */
 async function inflateZlib(bytes: Uint8Array): Promise<Uint8Array> {
-  const source = new ReadableStream<ArrayBufferView | ArrayBuffer>({
-    start(controller) {
-      controller.enqueue(bytes);
-      controller.close();
-    },
-  });
-  const inflated = source.pipeThrough(new DecompressionStream('deflate'));
-  return new Uint8Array(await new Response(inflated).arrayBuffer());
+  if (inFlight >= MAX_IN_FLIGHT) {
+    await new Promise<void>((resolve) => {
+      waiting.push(resolve);
+    });
+  }
+  inFlight++;
+  try {
+    return await inflateOne(bytes);
+  } finally {
+    inFlight--;
+    waiting.shift()?.();
+  }
+}
+
+/**
+ * Drive one DecompressionStream directly, without pipeThrough or Response.
+ * @param bytes - the compressed bytes.
+ * @returns the inflated bytes.
+ */
+async function inflateOne(bytes: Uint8Array): Promise<Uint8Array> {
+  const stream = new DecompressionStream('deflate');
+  const writer = stream.writable.getWriter();
+  void writer.write(bytes as Parameters<typeof writer.write>[0]);
+  void writer.close();
+  const reader = stream.readable.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    // eslint-disable-next-line no-await-in-loop -- a stream is read sequentially
+    const { value, done } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    total += value.length;
+  }
+  if (chunks.length === 1) return chunks[0] as Uint8Array;
+  const inflated = new Uint8Array(total);
+  let at = 0;
+  for (const chunk of chunks) {
+    inflated.set(chunk, at);
+    at += chunk.length;
+  }
+  return inflated;
 }
