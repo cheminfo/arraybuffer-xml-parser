@@ -39,10 +39,12 @@
     "dynamic-typing": "^2.0.0"
   },
   "devDependencies": {
+    "@types/benchmark": "^2.1.5",
     "@types/he": "^1.2.3",
     "@types/node": "^26.3.0",
     "@vitest/coverage-v8": "^4.1.11",
     "@zakodium/tsconfig": "^1.0.5",
+    "benchmark": "^2.1.4",
     "cheminfo-build": "^1.4.0",
     "eslint": "^9.39.1",
     "eslint-config-cheminfo-typescript": "^22.1.0",
