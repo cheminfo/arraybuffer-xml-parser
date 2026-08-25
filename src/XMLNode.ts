@@ -3,6 +3,10 @@ import type { TagValueProcessor } from './traversable/defaultOptions.ts';
 export type XMLNodeValue = string | Uint8Array | number | boolean;
 export type XMLAttributeValue = string | number | boolean;
 
+// Shared placeholder so every node still exposes an object-typed `children`
+// without allocating one. addChild swaps in a real map on first use.
+const NO_CHILDREN: Record<string, XMLNode[]> = Object.create(null);
+
 export class XMLNode {
   public tagName: string;
   public parent?: XMLNode;
@@ -20,8 +24,8 @@ export class XMLNode {
   ) {
     this.tagName = tagName;
     this.parent = parent;
-    this.children = Object.create(null); //child tags
-    this.attributes = Object.create(null); //attributes map
+    this.children = NO_CHILDREN; //child tags
+    this.attributes = undefined; //attributes map
     this.bytes = bytes; //text only
     this.tagValueProcessor = tagValueProcessor;
     this.startIndex = -1;
@@ -44,6 +48,9 @@ export class XMLNode {
     return this.cachedValue;
   }
   public addChild(child: XMLNode) {
+    if (this.children === NO_CHILDREN) {
+      this.children = Object.create(null);
+    }
     const existing = this.children[child.tagName];
     if (Array.isArray(existing)) {
       existing.push(child);

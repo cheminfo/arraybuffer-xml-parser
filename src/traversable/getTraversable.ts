@@ -7,8 +7,6 @@ import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.ts';
 import type { RealParseOptions } from './defaultOptions.ts';
 import { findClosingIndex } from './findClosingIndex.ts';
 import { parseAttributesString } from './parseAttributesString.ts';
-import { removeNamespaceIfNeeded } from './utils/removeNamespaceIfNeeded.ts';
-import { decoder } from './utils/utf8Decoder.ts';
 
 export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
   const {
@@ -59,10 +57,6 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
           i,
           'Closing Tag is not closed.',
         );
-        let tagName = decoder.decode(
-          arrayTrim(xmlData.subarray(i + 2, closeIndex), {}),
-        );
-        tagName = removeNamespaceIfNeeded(tagName, options);
         if (currentNode) {
           currentNode.append(
             trimValues
