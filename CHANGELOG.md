@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.2.1](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v2.2.0...v2.2.1) (2026-08-25)
+
+
+### Bug Fixes
+
+* align parseStream with parse on self-closing tags and stopNodes ([07f1070](https://github.com/cheminfo/arraybuffer-xml-parser/commit/07f10700cc818d092c2ce73aa00727672fd84281))
+* never rewind the tag scan past its starting point ([6a0a6c5](https://github.com/cheminfo/arraybuffer-xml-parser/commit/6a0a6c52c99679ef3993fdd07ab21aa22308d651))
+* rebase every offset when the stream buffer is compacted ([40902c6](https://github.com/cheminfo/arraybuffer-xml-parser/commit/40902c614f8c6e8503789e19d4d69533dda97d59))
+
+
+### Performance Improvements
+
+* scan for the next tag with a SWAR word test ([d3e2069](https://github.com/cheminfo/arraybuffer-xml-parser/commit/d3e20696fb8d3e0d733f282ef3629e06401b91f8))
+* scan to the next tag with indexOf ([89a4497](https://github.com/cheminfo/arraybuffer-xml-parser/commit/89a4497b00c031721864b6c762adfb8e3b535de5))
+* scan to the next tag with indexOf when streaming ([df814cc](https://github.com/cheminfo/arraybuffer-xml-parser/commit/df814cca611f985e012ca018cd8ab7277bff28ab))
+* stop allocating dead strings and per-node maps ([8bfda98](https://github.com/cheminfo/arraybuffer-xml-parser/commit/8bfda98b576e7a60415296938fd5819d91cffa85))
+
 ## [2.2.0](https://github.com/cheminfo/arraybuffer-xml-parser/compare/v2.1.0...v2.2.0) (2026-03-31)
 
 
