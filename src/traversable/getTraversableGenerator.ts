@@ -28,7 +28,6 @@ export async function* getTraversableGenerator(
   let dataSize = 0;
   let dataIndex = 0;
   let currentNode: XMLNode | undefined;
-  let lastMatchingClosedIndex = 0;
   const reader = readableStream.getReader();
   let chunk = await reader.read();
   let endStream = chunk.done;
@@ -39,12 +38,25 @@ export async function* getTraversableGenerator(
 
   for (let i = 0; i < xmlData.length; i++) {
     if (xmlData.length - i < maxEntrySize && !endStream) {
-      // TODO we should remove from xmlData what was processed
-      if (lastMatchingClosedIndex > 0) {
-        i -= lastMatchingClosedIndex;
-        xmlData = xmlData.slice(lastMatchingClosedIndex);
+      // Drop everything before the earliest offset still referenced: the cursor,
+      // the pending text run, and the recorded start of any open node. Every
+      // offset that survives has to be rebased by the same amount, otherwise it
+      // keeps pointing into the old buffer and reads the wrong bytes.
+      let shift = i;
+      if (dataIndex < shift) shift = dataIndex;
+      for (let node = currentNode; node !== undefined; node = node.parent) {
+        if (node.startIndex >= 0 && node.startIndex < shift) {
+          shift = node.startIndex;
+        }
+      }
+      if (shift > 0) {
+        i -= shift;
+        dataIndex -= shift;
+        for (let node = currentNode; node !== undefined; node = node.parent) {
+          if (node.startIndex >= 0) node.startIndex -= shift;
+        }
+        xmlData = xmlData.slice(shift);
         words = wordsOf(xmlData);
-        lastMatchingClosedIndex = 0;
       }
       let currentLength = xmlData.length;
       const newChunks = [];
@@ -122,7 +134,6 @@ export async function* getTraversableGenerator(
           }
           if (tagName === lookupTagName) {
             yield currentNode;
-            lastMatchingClosedIndex = i;
           }
           currentNode = currentNode.parent;
         }
