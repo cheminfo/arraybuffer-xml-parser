@@ -67,7 +67,26 @@ export async function* getTraversableGenerator(
       xmlData = newXmlData;
     }
 
-    if (xmlData[i] === 0x3c) {
+    if (xmlData[i] !== 0x3c) {
+      // Jump to the next '<' with a native scan. Never scan past the point
+      // where the refill guard above must run, so a tag is only processed with
+      // the full maxEntrySize lookahead behind it.
+      const scanEnd = endStream
+        ? xmlData.length
+        : xmlData.length - maxEntrySize;
+      if (i < scanEnd) {
+        const next = xmlData.indexOf(0x3c, i);
+        const target = next === -1 || next > scanEnd ? scanEnd : next;
+        dataSize += target - i;
+        i = target;
+      }
+      if (i >= xmlData.length) break;
+      if (xmlData[i] !== 0x3c) {
+        dataSize++;
+        continue;
+      }
+    }
+    {
       // <
       const xmlData1 = xmlData[i + 1];
       const xmlData2 = xmlData[i + 2];
@@ -276,8 +295,6 @@ export async function* getTraversableGenerator(
         dataSize = 0;
         dataIndex = i + 1;
       }
-    } else {
-      dataSize++;
     }
   }
 }
