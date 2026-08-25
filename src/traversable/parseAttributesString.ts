@@ -1,4 +1,4 @@
-import { getAllMatches, isEmptySimpleObject } from '../util.ts';
+import { isEmptySimpleObject } from '../util.ts';
 
 import type { RealParseOptions } from './defaultOptions.ts';
 
@@ -19,21 +19,26 @@ export function parseAttributesString(
   if (ignoreAttributes) {
     return;
   }
-  string = string.replaceAll(/\r?\n/g, ' ');
+  if (string.includes('\n')) {
+    string = string.replaceAll(/\r?\n/g, ' ');
+  }
 
-  const matches = getAllMatches(string, attrsRegx);
   // argument 1 is the key, argument 4 is the value
   const attributes: Record<string, string | number | boolean> = {};
-  for (const match of matches) {
+  let match: RegExpExecArray | null;
+  attrsRegx.lastIndex = 0;
+  while ((match = attrsRegx.exec(string)) !== null) {
+    // attributeValueProcessor is user code and may re-enter this function,
+    // which would move the shared regex. Restore our position after the body.
+    const lastIndex = attrsRegx.lastIndex;
     const attributeName = resolveNamespace(match[1] as string, options);
     if (attributeName.length > 0) {
-      if (match[4] !== undefined) {
-        if (trimValues) {
-          match[4] = match[4].trim();
-        }
+      const rawValue = match[4];
+      if (rawValue !== undefined) {
+        const value = trimValues ? rawValue.trim() : rawValue;
         if (attributeValueProcessor) {
           attributes[attributeName] = attributeValueProcessor(
-            match[4],
+            value,
             attributeName,
           );
         }
@@ -41,6 +46,7 @@ export function parseAttributesString(
         attributes[attributeName] = true;
       }
     }
+    attrsRegx.lastIndex = lastIndex;
   }
   if (isEmptySimpleObject(attributes)) return;
   return attributes;
