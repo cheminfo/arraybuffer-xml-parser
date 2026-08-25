@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { inflate } from 'pako';
+import { recursiveResolve } from 'ml-spectra-processing';
 import { decode } from 'uint8-base64';
 
 import type { XMLNode } from '../src/XMLNode.ts';
@@ -32,12 +32,17 @@ const result = parse(data, {
   },
   attributeValueProcessor: (value) => value,
 }) as Record<string, any>;
+// tagValueProcessor is sync, so the binary leaves hold promises until now
+await recursiveResolve(result);
 console.timeEnd('start');
 console.log(
   result.indexedmzML.mzML.run.spectrumList.spectrum[1].binaryDataArrayList,
 );
 
-function decodeBase64(base64: Uint8Array, options: DecodeBase64Options = {}) {
+async function decodeBase64(
+  base64: Uint8Array,
+  options: DecodeBase64Options = {},
+) {
   const { endian = 'little', ontologies } = options;
   // 0 is not a valid precision and falls through to the same throw as undefined.
   let { precision = 0, float = true, compression = '' } = options;
@@ -60,7 +65,7 @@ function decodeBase64(base64: Uint8Array, options: DecodeBase64Options = {}) {
   let uint8Array = decode(base64);
   switch (compression.toLowerCase()) {
     case 'zlib':
-      uint8Array = inflate(uint8Array);
+      uint8Array = await inflateZlib(uint8Array);
       break;
     case '':
     case 'none':
@@ -127,4 +132,21 @@ function decodeBase64(base64: Uint8Array, options: DecodeBase64Options = {}) {
         throw new TypeError(`Incorrect precision: ${precision}`);
     }
   }
+}
+
+/**
+ * Inflate a zlib stream with the platform decompressor, so this runs unchanged
+ * in the browser. 'deflate' is zlib-wrapped deflate (RFC 1950), what mzML uses.
+ * @param bytes - the compressed bytes.
+ * @returns the inflated bytes.
+ */
+async function inflateZlib(bytes: Uint8Array): Promise<Uint8Array> {
+  const source = new ReadableStream<ArrayBufferView | ArrayBuffer>({
+    start(controller) {
+      controller.enqueue(bytes);
+      controller.close();
+    },
+  });
+  const inflated = source.pipeThrough(new DecompressionStream('deflate'));
+  return new Uint8Array(await new Response(inflated).arrayBuffer());
 }
