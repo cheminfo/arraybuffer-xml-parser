@@ -54,7 +54,9 @@ export function nextTagIndex(
     const mask = (x - LOW_BITS) & ~x & HIGH_BITS;
     if (mask !== 0) return word * 4 + byteOfMask(mask);
   }
-  for (index = wordCount * 4; index < length; index++) {
+  // never rewind: index is already past the last whole word when the scan
+  // started inside the trailing bytes
+  for (index = Math.max(index, wordCount * 4); index < length; index++) {
     if (data[index] === LT) return index;
   }
   return -1;
