@@ -19,8 +19,14 @@ export function traversableToJSON(
   options: RealParseOptions,
   parentTagName?: string,
 ): XMLNodeValue | Record<string, XMLNodeValue> {
-  const { arrayMode, tagNameProcessor, attributeNameProcessor, textNodeName } =
-    options;
+  const {
+    arrayMode,
+    tagNameProcessor,
+    attributeNameProcessor,
+    textNodeName,
+    parseAttributesString,
+    attributesNodeName,
+  } = options;
   const result: Record<string, any> = {};
 
   // when no child node or attr is present
@@ -43,7 +49,7 @@ export function traversableToJSON(
   }
 
   if (node.attributes && !isEmptySimpleObject(node.attributes)) {
-    let attributes = options.parseAttributesString ? {} : node.attributes;
+    let attributes = parseAttributesString ? {} : node.attributes;
     if (attributeNameProcessor) {
       // need to rename the attributes
       const renamedAttributes: Record<string, XMLAttributeValue> = {};
@@ -56,13 +62,13 @@ export function traversableToJSON(
       }
       attributes = renamedAttributes;
     }
-    if (options.attributesNodeName) {
+    if (attributesNodeName) {
       const encapsulatedAttributes: Record<string, any> = {
-        [options.attributesNodeName]: attributes,
+        [attributesNodeName]: attributes,
       };
       attributes = encapsulatedAttributes;
     }
-    merge(result, attributes, arrayMode as string);
+    merge(result, attributes, arrayMode);
   }
 
   for (const tagName in node.children) {
@@ -82,11 +88,7 @@ export function traversableToJSON(
       const subResult = traversableToJSON(firstNode, options, tagName);
       const asArray =
         (arrayMode === true && typeof subResult === 'object') ||
-        isTagNameInArrayMode(
-          tagName,
-          arrayMode as string,
-          parentTagName as string,
-        );
+        isTagNameInArrayMode(tagName, arrayMode, parentTagName as string);
       result[newTagName] = asArray ? [subResult] : subResult;
     }
   }

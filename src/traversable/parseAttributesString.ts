@@ -10,7 +10,12 @@ export function parseAttributesString(
   string: string,
   options: RealParseOptions,
 ) {
-  const { ignoreAttributes } = options;
+  const {
+    ignoreAttributes,
+    trimValues,
+    attributeValueProcessor,
+    allowBooleanAttributes,
+  } = options;
   if (ignoreAttributes) {
     return;
   }
@@ -20,19 +25,19 @@ export function parseAttributesString(
   // argument 1 is the key, argument 4 is the value
   const attributes: Record<string, string | number | boolean> = {};
   for (const match of matches) {
-    const attributeName = resolveNameSpace(match[1] as string, options);
+    const attributeName = resolveNamespace(match[1] as string, options);
     if (attributeName.length > 0) {
       if (match[4] !== undefined) {
-        if (options.trimValues) {
+        if (trimValues) {
           match[4] = match[4].trim();
         }
-        if (options.attributeValueProcessor) {
-          attributes[attributeName] = options.attributeValueProcessor(
+        if (attributeValueProcessor) {
+          attributes[attributeName] = attributeValueProcessor(
             match[4],
             attributeName,
           );
         }
-      } else if (options.allowBooleanAttributes) {
+      } else if (allowBooleanAttributes) {
         attributes[attributeName] = true;
       }
     }
@@ -41,7 +46,7 @@ export function parseAttributesString(
   return attributes;
 }
 
-function resolveNameSpace(tagName: string, options: RealParseOptions) {
+function resolveNamespace(tagName: string, options: RealParseOptions) {
   if (options.ignoreNameSpace) {
     const tags = tagName.split(':');
     const prefix = tagName.startsWith('/') ? '/' : '';

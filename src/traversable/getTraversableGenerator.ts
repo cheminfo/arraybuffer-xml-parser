@@ -6,7 +6,7 @@ import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.ts';
 import type { RealStreamParseOptions } from './defaultOptions.ts';
 import { findClosingIndex } from './findClosingIndex.ts';
 import { parseAttributesString } from './parseAttributesString.ts';
-import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded.ts';
+import { removeNamespaceIfNeeded } from './utils/removeNamespaceIfNeeded.ts';
 import { decoder } from './utils/utf8Decoder.ts';
 
 export async function* getTraversableGenerator(
@@ -17,7 +17,13 @@ export async function* getTraversableGenerator(
   // streamParseOptions: StreamParseOptions,
   options: RealStreamParseOptions,
 ) {
-  const { tagValueProcessor } = options;
+  const {
+    tagValueProcessor,
+    trimValues,
+    stopNodes,
+    cdataTagName,
+    ignoreNameSpace,
+  } = options;
   let dataSize = 0;
   let dataIndex = 0;
   let currentNode: XMLNode | undefined;
@@ -76,18 +82,15 @@ export async function* getTraversableGenerator(
         let tagName = decoder.decode(
           arrayTrim(xmlData.subarray(i + 2, closeIndex), {}),
         );
-        tagName = removeNameSpaceIfNeeded(tagName, options);
+        tagName = removeNamespaceIfNeeded(tagName, options);
 
         if (currentNode) {
           currentNode.append(
-            options.trimValues
+            trimValues
               ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
               : xmlData.subarray(dataIndex, dataIndex + dataSize),
           );
-          if (
-            options.stopNodes?.length &&
-            options.stopNodes.includes(currentNode.tagName)
-          ) {
+          if (stopNodes?.length && stopNodes.includes(currentNode.tagName)) {
             currentNode.children = {};
             if (currentNode.attributes === undefined) {
               currentNode.attributes = {};
@@ -98,7 +101,7 @@ export async function* getTraversableGenerator(
             yield currentNode;
             lastMatchingClosedIndex = i;
           }
-          currentNode = currentNode.parent as XMLNode;
+          currentNode = currentNode.parent;
         }
         i = closeIndex;
         dataSize = 0;
@@ -120,7 +123,7 @@ export async function* getTraversableGenerator(
         );
         if (currentNode && dataSize !== 0 && currentNode.tagName !== '!xml') {
           currentNode.append(
-            options.trimValues
+            trimValues
               ? arrayTrim(xmlData.subarray(dataIndex, dataSize + dataIndex))
               : xmlData.subarray(dataIndex, dataSize + dataIndex),
           );
@@ -157,17 +160,17 @@ export async function* getTraversableGenerator(
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if (dataSize !== 0) {
-          const value = options.trimValues
+          const value = trimValues
             ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
             : xmlData.subarray(dataIndex, dataIndex + dataSize);
 
           currentNode?.append(value);
         }
 
-        if (options.cdataTagName) {
+        if (cdataTagName) {
           //add cdata node
           const childNode = new XMLNode(
-            options.cdataTagName,
+            cdataTagName,
             currentNode,
             tagExp,
             tagValueProcessor,
@@ -197,7 +200,7 @@ export async function* getTraversableGenerator(
             : tagData;
         let tagAttributes =
           separatorIndex !== -1 ? tagData.slice(separatorIndex + 1) : '';
-        if (options.ignoreNameSpace) {
+        if (ignoreNameSpace) {
           const colonIndex = tagName.indexOf(':');
           if (colonIndex !== -1) {
             tagName = tagName.slice(colonIndex + 1);
@@ -209,7 +212,7 @@ export async function* getTraversableGenerator(
         //save text to parent node
         if (currentNode && dataSize !== 0 && currentNode.tagName !== '!xml') {
           currentNode.append(
-            options.trimValues
+            trimValues
               ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
               : xmlData.subarray(dataIndex, dataIndex + dataSize),
           );
@@ -255,10 +258,7 @@ export async function* getTraversableGenerator(
               new Uint8Array(0),
               tagValueProcessor,
             );
-            if (
-              options.stopNodes?.length &&
-              options.stopNodes.includes(childNode.tagName)
-            ) {
+            if (stopNodes?.length && stopNodes.includes(childNode.tagName)) {
               childNode.startIndex = closeIndex;
             }
             if (tagAttributes && shouldBuildAttributesMap) {

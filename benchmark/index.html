@@ -1,4 +1,4 @@
-<script src="../dist/arraybuffer-xml-parser.js"></script>
+<script src="../dist/arraybuffer-xml-parser.umd.js"></script>
 
 <script>
   async function doAll() {
@@ -9,12 +9,9 @@
 
     console.time('start');
     const result = XMLParser.parse(data, {
-      dynamicTypingAttributeValue: false,
       ignoreAttributes: false,
-      dynamicTypingNodeValue: false,
-      tagValueProcessor: (value, name) => {
-        return value;
-      },
+      tagValueProcessor: (value) => value,
+      attributeValueProcessor: (value) => value,
     });
     console.timeEnd('start');
 

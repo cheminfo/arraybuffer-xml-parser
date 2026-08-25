@@ -1,6 +1,6 @@
 import type { ParseOptions } from '../defaultOptions.ts';
 
-export function removeNameSpaceIfNeeded(
+export function removeNamespaceIfNeeded(
   tagName: string,
   options: ParseOptions,
 ) {

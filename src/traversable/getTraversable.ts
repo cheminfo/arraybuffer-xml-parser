@@ -6,11 +6,17 @@ import { closingIndexForOpeningTag } from './closingIndexForOpeningTag.ts';
 import type { RealParseOptions } from './defaultOptions.ts';
 import { findClosingIndex } from './findClosingIndex.ts';
 import { parseAttributesString } from './parseAttributesString.ts';
-import { removeNameSpaceIfNeeded } from './utils/removeNameSpaceIfNeeded.ts';
+import { removeNamespaceIfNeeded } from './utils/removeNamespaceIfNeeded.ts';
 import { decoder } from './utils/utf8Decoder.ts';
 
 export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
-  const { tagValueProcessor } = options;
+  const {
+    tagValueProcessor,
+    trimValues,
+    stopNodes,
+    cdataTagName,
+    ignoreNameSpace,
+  } = options;
   const traversable = new XMLNode(
     '!xml',
     undefined,
@@ -37,18 +43,15 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
         let tagName = decoder.decode(
           arrayTrim(xmlData.subarray(i + 2, closeIndex), {}),
         );
-        tagName = removeNameSpaceIfNeeded(tagName, options);
+        tagName = removeNamespaceIfNeeded(tagName, options);
         if (currentNode) {
           currentNode.append(
-            options.trimValues
+            trimValues
               ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
               : xmlData.subarray(dataIndex, dataIndex + dataSize),
           );
         }
-        if (
-          options.stopNodes?.length &&
-          options.stopNodes.includes(currentNode.tagName)
-        ) {
+        if (stopNodes?.length && stopNodes.includes(currentNode.tagName)) {
           currentNode.children = {};
           if (currentNode.attributes === undefined) {
             currentNode.attributes = {};
@@ -76,7 +79,7 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
         );
         if (currentNode && dataSize !== 0 && currentNode.tagName !== '!xml') {
           currentNode.append(
-            options.trimValues
+            trimValues
               ? arrayTrim(xmlData.subarray(dataIndex, dataSize + dataIndex))
               : xmlData.subarray(dataIndex, dataSize + dataIndex),
           );
@@ -113,17 +116,17 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
         if (dataSize !== 0) {
-          const value = options.trimValues
+          const value = trimValues
             ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
             : xmlData.subarray(dataIndex, dataIndex + dataSize);
 
           currentNode.append(value);
         }
 
-        if (options.cdataTagName) {
+        if (cdataTagName) {
           //add cdata node
           const childNode = new XMLNode(
-            options.cdataTagName,
+            cdataTagName,
             currentNode,
             tagExp,
             tagValueProcessor,
@@ -153,7 +156,7 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
             : tagData;
         let tagAttributes =
           separatorIndex !== -1 ? tagData.slice(separatorIndex + 1) : '';
-        if (options.ignoreNameSpace) {
+        if (ignoreNameSpace) {
           const colonIndex = tagName.indexOf(':');
           if (colonIndex !== -1) {
             tagName = tagName.slice(colonIndex + 1);
@@ -165,7 +168,7 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
         //save text to parent node
         if (currentNode && dataSize !== 0 && currentNode.tagName !== '!xml') {
           currentNode.append(
-            options.trimValues
+            trimValues
               ? arrayTrim(xmlData.subarray(dataIndex, dataIndex + dataSize))
               : xmlData.subarray(dataIndex, dataIndex + dataSize),
           );
@@ -207,10 +210,7 @@ export function getTraversable(xmlData: Uint8Array, options: RealParseOptions) {
             new Uint8Array(0),
             tagValueProcessor,
           );
-          if (
-            options.stopNodes?.length &&
-            options.stopNodes.includes(childNode.tagName)
-          ) {
+          if (stopNodes?.length && stopNodes.includes(childNode.tagName)) {
             childNode.startIndex = closeIndex;
           }
           if (tagAttributes && shouldBuildAttributesMap) {
