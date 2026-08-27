@@ -52,16 +52,33 @@ export function parseAttributesString(
   return attributes;
 }
 
+/**
+ * Strip a single namespace prefix from an attribute name.
+ *
+ * Written without `split` because it runs once per attribute of every element:
+ * a 344 MB mzML carries about 1.4 million of them, and an array allocated for
+ * each is 1.4 million arrays for a question two `indexOf` calls answer.
+ *
+ * The bare `xmlns` case is deliberate and must not be simplified away. The
+ * previous form asked `tagName.split(':')[0] === 'xmlns'`, which is true both of
+ * `xmlns:mz` and of a colon-free `xmlns`, so both were dropped — an early return
+ * for "no colon" would silently start keeping the second one.
+ * @param tagName - The attribute's name as written.
+ * @param options - The parse options, read for `ignoreNameSpace`.
+ * @returns The local name, or `''` for a namespace declaration.
+ */
 function resolveNamespace(tagName: string, options: RealParseOptions) {
-  if (options.ignoreNameSpace) {
-    const tags = tagName.split(':');
-    const prefix = tagName.startsWith('/') ? '/' : '';
-    if (tags[0] === 'xmlns') {
-      return '';
-    }
-    if (tags.length === 2 && tags[1] !== undefined) {
-      tagName = prefix + tags[1];
-    }
-  }
-  return tagName;
+  if (!options.ignoreNameSpace) return tagName;
+
+  const colon = tagName.indexOf(':');
+  if (colon === -1) return tagName === 'xmlns' ? '' : tagName;
+  if (colon === 5 && tagName.startsWith('xmlns')) return '';
+  // Only a single prefix is stripped; `a:b:c` is left as it was written.
+  if (tagName.includes(':', colon + 1)) return tagName;
+
+  const local = tagName.slice(colon + 1);
+  return tagName.codePointAt(0) === SLASH ? `/${local}` : local;
 }
+
+/** `/`, which opens the name of a closing tag. */
+const SLASH = 47;

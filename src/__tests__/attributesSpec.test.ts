@@ -147,4 +147,23 @@ describe('XMLParser', () => {
 
     expect(result).toStrictEqual(expected);
   });
+
+  it('should leave an attribute name holding more than one colon alone', () => {
+    // Only a single prefix is a namespace prefix. A name with two colons is not
+    // one this parser can take apart, so it is passed through as written rather
+    // than guessed at — and a bare `xmlns` is still dropped beside it.
+    const xmlData = encoder.encode(
+      `<a xmlns="urn:x" ns:one:two="kept" ns:plain="stripped"></a>`,
+    );
+
+    const result = parse(xmlData, {
+      attributeNameProcessor: (name) => name,
+      ignoreAttributes: false,
+      ignoreNameSpace: true,
+    });
+
+    expect(result).toStrictEqual({
+      a: { 'ns:one:two': 'kept', plain: 'stripped' },
+    });
+  });
 });
